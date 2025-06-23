@@ -1,0 +1,1000 @@
+cod_detector,id_carril,fecha,hora,dsc_avenida,dsc_int_anterior,dsc_int_siguiente,latitud,longitud,velocidad
+206,1,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Joanico,8 de Octubre,-34.878960,-56.148300,36.0
+306,1,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Cabrera,8 de Octubre,-34.879770,-56.147220,44.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Palmar,Canaro,-34.899594,-56.164421,39.0
+306,1,2025-05-01,23:55:00.0,L A de Herrera,Setembrino Pereda,Varela S,-34.869125,-56.166318,40.0
+206,1,2025-05-01,23:55:00.0,Ponce,Ricaldoni,Rivera,-34.902150,-56.160830,0.0
+305,1,2025-05-01,23:55:00.0,Bv Artigas,Cufre,Gral Flores,-34.870230,-56.173220,105.0
+111,1,2025-05-01,23:55:00.0,Gral Flores,Gallinal,Bv Artigas,-34.871100,-56.175180,26.0
+206,1,2025-05-01,23:55:00.0,Varela,Bv Batlle y Ordonez,L A de Herrera,-34.869993,-56.165974,32.0
+107,1,2025-05-01,23:55:00.0,Solano Lopez,Rivera,Rambla,-34.897400,-56.120289,36.0
+107,1,2025-05-01,23:55:00.0,Rambla,Morales,Jackson,-34.914494,-56.173994,41.0
+107,1,2025-05-01,23:55:00.0,8 de Octubre,Sanguinetti,Bv Batlle y Ordonez,-34.878660,-56.147140,30.0
+306,1,2025-05-01,23:55:00.0,Av Italia,Avelino Miranda,Bv Artigas,-34.894478,-56.163857,42.0
+408,1,2025-05-01,23:55:00.0,Av Brasil,26 de Marzo,Benito Blanco,-34.913389,-56.150044,39.0
+206,1,2025-05-01,23:55:00.0,Daniel Munoz,Martin C Martinez,Acevedo Diaz,-34.896109,-56.167913,61.0
+206,1,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Ramon Anador,Rivera,-34.896940,-56.125230,35.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,L A de Herrera,Gallinal,-34.871960,-56.167490,0.0
+107,1,2025-05-01,23:55:00.0,Rambla,L A de Herrera,Buxareo,-34.909600,-56.140944,40.0
+107,1,2025-05-01,23:55:00.0,26 de Marzo,Tezanos,Bonavita,-34.905325,-56.134761,42.0
+306,1,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Pereyra,Rivera,-34.898010,-56.124030,38.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Sosa,21 de Setiembre,-34.913860,-56.162715,36.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Caribes,Colorado,-34.877335,-56.166706,51.0
+306,1,2025-05-01,23:55:00.0,Av Italia,Gallinal,Hipolito Yrigoyen,-34.886696,-56.109244,56.0
+206,1,2025-05-01,23:55:00.0,8 de Octubre,Serrato,Cipriano Miro,-34.874910,-56.140170,44.0
+206,1,2025-05-01,23:55:00.0,Hipolito Yrigoyen,Rivera,Av Italia,-34.887927,-56.110028,20.0
+107,1,2025-05-01,23:55:00.0,Rambla,Arrascaeta,Hipolito Yrigoyen,-34.895919,-56.109447,63.0
+107,1,2025-05-01,23:55:00.0,Rivera,14 de Julio,Rosell y Rius,-34.903100,-56.147470,44.0
+306,1,2025-05-01,23:55:00.0,Canelones,Acevedo Diaz,Bv Artigas,-34.906735,-56.164427,31.0
+206,1,2025-05-01,23:55:00.0,Marcelino Sosa,Yatay,Agraciada,-34.889123,-56.187513,40.0
+107,1,2025-05-01,23:55:00.0,18 de Julio,Andes,Convencion,-34.906393,-56.197508,19.0
+206,1,2025-05-01,23:55:00.0,Joanico,Comercio,Bv Batlle y Ordonez,-34.878133,-56.148014,42.0
+206,1,2025-05-01,23:55:00.0,Bv Artigas,Bv Espana,Canelones,-34.907443,-56.163561,38.0
+214,1,2025-05-01,23:55:00.0,Bv Artigas,Caribes,Martin Fierro,-34.881836,-56.166420,51.0
+107,1,2025-05-01,23:55:00.0,Rio Negro,Libertador,Colonia,-34.904899,-56.193673,0.0
+305,1,2025-05-01,23:55:00.0,Gral Flores,Gallinal,Garibaldi,-34.875670,-56.178980,37.0
+111,1,2025-05-01,23:55:00.0,Garibaldi,Terra,Gral Flores,-34.876960,-56.177630,64.0
+215,1,2025-05-01,23:55:00.0,Garibaldi,Pando,Gral Flores,-34.876080,-56.180390,29.0
+111,1,2025-05-01,23:55:00.0,Centenario,Cibils,L A de Herrera,-34.883490,-56.152320,0.0
+107,1,2025-05-01,23:55:00.0,Av Brasil,Ellauri,26 de Marzo,-34.911150,-56.151809,35.0
+107,1,2025-05-01,23:55:00.0,Acevedo Diaz,18 de Julio,Rivera,-34.901269,-56.166669,27.0
+107,1,2025-05-01,23:55:00.0,Millan,Bell,Garzon,-34.834811,-56.221060,40.0
+206,1,2025-05-01,23:55:00.0,Ejido,18 de Julio,Colonia,-34.905312,-56.186851,34.0
+306,1,2025-05-01,23:55:00.0,18 de Julio,8 de Octubre,Bv Artigas,-34.897926,-56.165434,32.0
+107,1,2025-05-01,23:55:00.0,Saravia,Mendoza,Gral Flores,-34.833109,-56.145628,50.0
+206,1,2025-05-01,23:55:00.0,C M Ramirez,Llupes,M Herrera y Obes,-34.857615,-56.225499,39.0
+206,1,2025-05-01,23:55:00.0,Morquio,Ricaldoni,Bv Artigas,-34.897095,-56.163972,48.0
+107,1,2025-05-01,23:55:00.0,Fernandez Crespo,La Paz,Miguelete,-34.896103,-56.181280,44.0
+206,1,2025-05-01,23:55:00.0,Garzon,Casavalle,Saravia,-34.814485,-56.220677,48.0
+109,1,2025-05-01,23:55:00.0,San Quintin,Santa Lucia,Garzon,-34.852648,-56.223283,45.0
+205,1,2025-05-01,23:55:00.0,Carreras Nacionales,Sainz Rosas,Gral Flores,-34.844938,-56.152969,39.0
+107,1,2025-05-01,23:55:00.0,Magallanes,Mercedes,Colonia,-34.901957,-56.180331,0.0
+109,1,2025-05-01,23:55:00.0,Garzon,Calderon de la Barca,Duran,-34.799264,-56.224509,54.0
+206,1,2025-05-01,23:55:00.0,Ricaldoni,Ponce,Merola,-34.897084,-56.159030,0.0
+206,1,2025-05-01,23:55:00.0,Saravia,Belloni,Gral Flores,-34.833040,-56.143735,57.0
+206,1,2025-05-01,23:55:00.0,Miguelete,Magallanes,Fernandez Crespo,-34.896064,-56.182073,39.0
+107,1,2025-05-01,23:55:00.0,M Herrera y Obes,Angel Salvo,C M Ramirez,-34.858336,-56.225519,37.0
+107,1,2025-05-01,23:55:00.0,Luis Batlle Berres,Tomkinson,C M Ramirez,-34.858360,-56.227729,30.0
+107,1,2025-05-01,23:55:00.0,Ellauri,21 de Setiembre,Bv Espana,-34.914572,-56.153585,20.0
+109,1,2025-05-01,23:55:00.0,Garzon,San Quintin N,Emancipacion,-34.850334,-56.223620,0.0
+206,1,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Carafi,Garzon,-34.827224,-56.220600,25.0
+306,1,2025-05-01,23:55:00.0,Gral Flores,Corrales,Carreras Nacionales,-34.845098,-56.154306,43.0
+206,1,2025-05-01,23:55:00.0,Millan,Eugenio Alsina,Garzon,-34.834099,-56.222302,61.0
+107,1,2025-05-01,23:55:00.0,C M Ramirez,Camambu,Acceso Ta-Ta,-34.873417,-56.246279,0.0
+107,1,2025-05-01,23:55:00.0,Gral Flores,Bv Batlle y Ordonez,Salari,-34.861922,-56.168100,38.0
+107,1,2025-05-01,23:55:00.0,Colonia,Arenal Grande,Fernandez Crespo,-34.900375,-56.175142,39.0
+206,1,2025-05-01,23:55:00.0,Av Italia,Zum Felde,Bolivia,-34.883363,-56.085006,49.0
+319,1,2025-05-01,23:55:00.0,Bv Artigas,San Martin,Ramon Marquez,-34.870833,-56.183974,50.0
+107,1,2025-05-01,23:55:00.0,Cerro Largo,Magallanes,Ejido,-34.900766,-56.186738,0.0
+112,1,2025-05-01,23:55:00.0,Mercedes,Andes,Convencion,-34.904463,-56.197815,35.0
+206,1,2025-05-01,23:55:00.0,Paullier,E V Haedo,Colonia,-34.897433,-56.169554,37.0
+107,1,2025-05-01,23:55:00.0,Burgues,San Martin,Bv Artigas,-34.871627,-56.185855,34.0
+308,1,2025-05-01,23:55:00.0,Bolivia,Rivera,Av Italia,-34.884218,-56.082956,37.0
+206,1,2025-05-01,23:55:00.0,Rambla,Sarmiento,Errazquin,-34.929158,-56.160908,63.0
+408,1,2025-05-01,23:55:00.0,L A de Herrera,Placido Ellauri,26 de Marzo,-34.905423,-56.137037,62.0
+106,1,2025-05-01,23:55:00.0,Rivera,Rosell y Rius,14 de Julio,-34.902720,-56.147240,96.0
+206,1,2025-05-01,23:55:00.0,Comercio,8 de Octubre,Av Italia,-34.886170,-56.130966,0.0
+107,1,2025-05-01,23:55:00.0,Rambla,Gral Paz,Gallinal,-34.895172,-56.089158,62.0
+107,1,2025-05-01,23:55:00.0,Av Italia,Cooper,Bolonia,-34.880827,-56.077112,48.0
+206,1,2025-05-01,23:55:00.0,Bv Espana,Ellauri,Benito Blanco,-34.914897,-56.150400,40.0
+206,1,2025-05-01,23:55:00.0,Bv Artigas,Hocquart,Miguelete,-34.890943,-56.165560,49.0
+107,1,2025-05-01,23:55:00.0,Sarmiento,Requena,Rambla,-34.915369,-56.168358,34.0
+306,1,2025-05-01,23:55:00.0,Avelino Miranda,8 de Octubre,Bv Artigas,-34.893083,-56.164427,37.0
+106,1,2025-05-01,23:55:00.0,8 de Octubre,Avelino Miranda,Presidente Berro,-34.892460,-56.162690,37.0
+109,1,2025-05-01,23:55:00.0,Gral Flores,Quesada,L A de Herrera,-34.866070,-56.171180,0.0
+206,1,2025-05-01,23:55:00.0,Av Brasil,Brito del Pino,Bv Artigas,-34.906097,-56.162718,41.0
+107,1,2025-05-01,23:55:00.0,Garibaldi,Urquiza,8 de Octubre,-34.888870,-56.160850,26.0
+107,1,2025-05-01,23:55:00.0,San Martin,Martin Garcia,Agraciada,-34.887872,-56.188664,46.0
+107,1,2025-05-01,23:55:00.0,Suarez,Grito de Asencio,Bv Artigas,-34.872536,-56.196429,31.0
+112,1,2025-05-01,23:55:00.0,Gral Flores,Aramburu,Blandengues,-34.883180,-56.182980,74.0
+107,1,2025-05-01,23:55:00.0,Rambla,L A de Herrera,26 de Marzo,-34.906333,-56.133078,67.0
+206,1,2025-05-01,23:55:00.0,Rivera,Ponce,Bv Artigas,-34.902620,-56.163050,53.0
+107,1,2025-05-01,23:55:00.0,8 de Octubre,Gral Villagran,Raissignier,-34.869880,-56.134890,64.0
+306,1,2025-05-01,23:55:00.0,Rodo,Requena,Bv Artigas,-34.902829,-56.164944,33.0
+410,1,2025-05-01,23:55:00.0,Rivera,Bv Artigas,Acevedo Diaz,-34.902088,-56.164534,0.0
+206,1,2025-05-01,23:55:00.0,Paraguay,18 de Julio,Colonia,-34.905501,-56.192532,38.0
+107,1,2025-05-01,23:55:00.0,Joanico,Bv Batlle y Ordonez,Larranaga,-34.880150,-56.151490,42.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Hocquart,Nueva Palmira,-34.889533,-56.165523,44.0
+206,1,2025-05-01,23:55:00.0,Soriano,Santiago de Chile,Ejido,-34.907420,-56.185940,31.0
+306,1,2025-05-01,23:55:00.0,Bv Artigas,Accesos,Uruguayana,-34.873224,-56.205881,43.0
+107,1,2025-05-01,23:55:00.0,San Jose,Andes,Convencion,-34.907371,-56.197516,14.0
+407,1,2025-05-01,23:55:00.0,Fernandez Crespo,18 de Julio,Colonia,-34.901342,-56.175176,39.0
+206,1,2025-05-01,23:55:00.0,Paraguay,Canelones,Soriano,-34.908372,-56.192213,36.0
+107,1,2025-05-01,23:55:00.0,Libertador,Uruguay,Mercedes,-34.903623,-56.193266,29.0
+206,1,2025-05-01,23:55:00.0,La Paz,Yaguaron,Libertador,-34.899267,-56.190369,33.0
+107,1,2025-05-01,23:55:00.0,Uruguay,Vazquez,Ejido,-34.902768,-56.186559,49.0
+206,1,2025-05-01,23:55:00.0,Uruguayana,Capurro,Bv Artigas,-34.872699,-56.205994,24.0
+107,1,2025-05-01,23:55:00.0,Soriano,Convencion,Andes,-34.908243,-56.197326,18.0
+205,1,2025-05-01,23:55:00.0,Gral Flores,Blandengues,Aramburu,-34.882920,-56.182840,43.0
+106,1,2025-05-01,23:55:00.0,Lezica,Calderon de la Barca,Eduardo Raiz,-34.804487,-56.224491,32.0
+107,1,2025-05-01,23:55:00.0,Cerro Largo,Yaguaron,Rondeau,-34.901163,-56.190841,34.0
+306,1,2025-05-01,23:55:00.0,Larranaga,Monte Caseros,Joanico,-34.879760,-56.152480,44.0
+107,1,2025-05-01,23:55:00.0,Soca,Gestido,Rivera,-34.903760,-56.155750,34.0
+206,1,2025-05-01,23:55:00.0,Raissignier,Cno Carrasco,8 de Octubre,-34.871110,-56.134320,37.0
+306,1,2025-05-01,23:55:00.0,Hocquart,Justicia,Bv Artigas,-34.888996,-56.166795,65.0
+107,1,2025-05-01,23:55:00.0,Comercio,Joanico,8 de Octubre,-34.875750,-56.143440,0.0
+206,1,2025-05-01,23:55:00.0,Suarez,Lucas Obes,Bv Artigas,-34.871423,-56.196600,29.0
+305,1,2025-05-01,23:55:00.0,Aramburu,Terra,Gral Flores,-34.882790,-56.181890,29.0
+114,1,2025-05-01,23:55:00.0,Acevedo Diaz,Garibaldi,Ferrer Serra,-34.894152,-56.167498,0.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Palmar,Rivera,-34.900440,-56.164380,40.0
+107,1,2025-05-01,23:55:00.0,8 de Octubre,Bv Batlle y Ordonez,Sanguinetti,-34.878660,-56.146580,101.0
+205,1,2025-05-01,23:55:00.0,Soca,Brito del Pino,Rivera,-34.902187,-56.156460,26.0
+107,1,2025-05-01,23:55:00.0,Hipolito Yrigoyen,Igua,Av Italia,-34.885966,-56.110576,40.0
+107,1,2025-05-01,23:55:00.0,Benito Blanco,21 de Setiembre,Bv Espana,-34.915828,-56.149900,38.0
+406,1,2025-05-01,23:55:00.0,Ricaldoni,Canning,Av Italia,-34.892799,-56.158819,39.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Gral Flores,Penco,-34.870392,-56.177658,0.0
+206,1,2025-05-01,23:55:00.0,Albo,8 de Octubre,Av Italia,-34.891367,-56.158957,37.0
+107,1,2025-05-01,23:55:00.0,Av Italia,Solano Lopez,Mataojo,-34.887117,-56.122775,51.0
+306,1,2025-05-01,23:55:00.0,Bv Espana,Libertad,Bv Artigas,-34.911249,-56.162091,78.0
+107,1,2025-05-01,23:55:00.0,Rivera,Colombes,Asturias,-34.894310,-56.118470,71.0
+107,1,2025-05-01,23:55:00.0,Rivera,Acceso Cementerio,Bv Batlle y Ordonez,-34.897900,-56.125370,37.0
+107,1,2025-05-01,23:55:00.0,Libertador,Galicia,La Paz,-34.900095,-56.191491,28.0
+206,1,2025-05-01,23:55:00.0,Burgues,L A de Herrera,Bv Artigas,-34.870429,-56.185998,43.0
+107,1,2025-05-01,23:55:00.0,Andes,18 de Julio,Colonia,-34.906008,-56.198115,19.0
+107,1,2025-05-01,23:55:00.0,Gral Caraballo,Mendoza,Agraciada,-34.885789,-56.192950,31.0
+107,1,2025-05-01,23:55:00.0,Uruguay,Arenal Grande,Fernandez Crespo,-34.898911,-56.176615,0.0
+107,1,2025-05-01,23:55:00.0,Grito de Asencio,Suarez,Agraciada,-34.875242,-56.198863,26.0
+107,1,2025-05-01,23:55:00.0,Colonia,Acevedo Diaz,Paullier,-34.897857,-56.168614,57.0
+107,1,2025-05-01,23:55:00.0,Capurro,Uruguayana,Agraciada,-34.868470,-56.206937,28.0
+107,1,2025-05-01,23:55:00.0,San Jose,Rio Negro,Paraguay,-34.907094,-56.193086,29.0
+406,1,2025-05-01,23:55:00.0,Bv Artigas,Millan,Burgues,-34.871279,-56.187329,37.0
+206,1,2025-05-01,23:55:00.0,Arenal Grande,Mercedes,Colonia,-34.899763,-56.174753,71.0
+107,1,2025-05-01,23:55:00.0,Julio Herrera y Obes,Mercedes,Colonia,-34.904753,-56.194854,29.0
+107,1,2025-05-01,23:55:00.0,Yaguaron,Colonia,18 de Julio,-34.905242,-56.188052,27.0
+208,1,2025-05-01,23:55:00.0,Rivera,Arenal Grande,Brandzen,-34.902055,-56.174177,31.0
+106,1,2025-05-01,23:55:00.0,18 de Julio,Eduardo Acevedo,Rivera,-34.901707,-56.175376,25.0
+107,1,2025-05-01,23:55:00.0,Uruguayana,12 de Diciembre,Bv Artigas,-34.873600,-56.204285,26.0
+319,1,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,82.0
+107,1,2025-05-01,23:55:00.0,Ejido,Canelones,Soriano,-34.907976,-56.186627,35.0
+107,1,2025-05-01,23:55:00.0,Zufriategui,Coraceros,Agraciada,-34.862684,-56.212248,39.0
+107,1,2025-05-01,23:55:00.0,San Jose,Aquiles Lanza,Ejido,-34.906626,-56.187543,35.0
+113,1,2025-05-01,23:55:00.0,Agraciada,C M Ramirez,Freire,-34.855372,-56.221586,24.0
+107,1,2025-05-01,23:55:00.0,Requena,18 de Julio,Colonia,-34.899083,-56.170060,22.0
+107,1,2025-05-01,23:55:00.0,Soriano,Gutierrez Ruiz,Paraguay,-34.907839,-56.191690,21.0
+206,1,2025-05-01,23:55:00.0,Bv Artigas,Penco,Gral Flores,-34.870410,-56.175380,39.0
+421,1,2025-05-01,23:55:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,47.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Gallinal,L A de Herrera,-34.870406,-56.167448,48.0
+305,1,2025-05-01,23:55:00.0,Rivera,Bv Artigas,Ponce,-34.902720,-56.162320,63.0
+107,1,2025-05-01,23:55:00.0,L A de Herrera,Placido Ellauri,Rivera,-34.901934,-56.138191,36.0
+305,1,2025-05-01,23:55:00.0,Garibaldi,Amezaga,Bv Artigas,-34.884370,-56.166584,54.0
+107,1,2025-05-01,23:55:00.0,Ponce,Av Brasil,Rivera,-34.903500,-56.161940,26.0
+306,1,2025-05-01,23:55:00.0,Av Brasil,Benito Blanco,26 de Marzo,-34.911658,-56.151278,35.0
+107,1,2025-05-01,23:55:00.0,Agraciada,Av de Las Leyes,Marcelino Sosa,-34.889938,-56.187259,37.0
+313,1,2025-05-01,23:55:00.0,Bv Artigas,Martin Fierro,Caribes,-34.882196,-56.166261,47.0
+112,1,2025-05-01,23:55:00.0,Libertador,Mercedes,Colonia,-34.904899,-56.193673,0.0
+107,1,2025-05-01,23:55:00.0,Bv Artigas,Colorado,Caribes,-34.880982,-56.166511,44.0
+407,1,2025-05-01,23:55:00.0,Bv Artigas,Ponce,Canelones,-34.906121,-56.163729,37.0
+108,1,2025-05-01,23:55:00.0,Bolivia,Cno Carrasco,Av Italia,-34.882342,-56.083577,43.0
+206,1,2025-05-01,23:55:00.0,26 de Marzo,Pereira,Av Brasil,-34.911057,-56.151196,35.0
+107,1,2025-05-01,23:55:00.0,C M Ramirez,Puerto Rico,Grecia,-34.874317,-56.252240,9.0
+107,1,2025-05-01,23:55:00.0,E V Haedo,Paullier,Acevedo Diaz,-34.895946,-56.168014,54.0
+107,1,2025-05-01,23:55:00.0,Rambla,Bv Espana,Montero,-34.922861,-56.152192,43.0
+111,1,2025-05-01,23:55:00.0,8 de Octubre,Cipriano Miro,Serrato,-34.874790,-56.140310,40.0
+206,1,2025-05-01,23:55:00.0,Centenario,Jaime Cibils,Av Italia,-34.890634,-56.155365,18.0
+107,1,2025-05-01,23:55:00.0,Av Italia,L A de Herrera,Las Heras,-34.889656,-56.149612,46.0
+107,1,2025-05-01,23:55:00.0,Benito Blanco,Buxareo,Julio Cesar,-34.906759,-56.140034,26.0
+206,1,2025-05-01,23:55:00.0,21 de Setiembre,Bv Espana,Bv Artigas,-34.912363,-56.164099,44.0
+304,1,2025-05-01,23:55:00.0,21 de Setiembre,Sarmiento,Bv Artigas,-34.913284,-56.162377,34.0
+107,1,2025-05-01,23:55:00.0,Rambla,Pereyra,Paiva,-34.904958,-56.128464,48.0
+315,1,2025-05-01,23:55:00.0,Larravide,Isla de Gaspar,8 de Octubre,-34.874480,-56.138380,12.0
+111,1,2025-05-01,23:55:00.0,Amezaga,Arenal Grande,Gral Flores,-34.886220,-56.183720,32.0
+305,1,2025-05-01,23:55:00.0,Solano Lopez,Rivera,Av Italia,-34.887512,-56.129107,101.0
+107,1,2025-05-01,23:55:00.0,Av Italia,Mataojo,Solano Lopez,-34.886792,-56.129075,0.0
+309,1,2025-05-01,23:55:00.0,Bv Espana,Rambla,Benito Blanco,-34.915119,-56.149044,47.0
+107,1,2025-05-01,23:55:00.0,Miguelete,Justicia,Bv Artigas,-34.891865,-56.166402,21.0
+306,1,2025-05-01,23:55:00.0,Sarmiento,Rambla,Requena y Garcia,-34.915536,-56.168299,37.0
+206,1,2025-05-01,23:55:00.0,Av Italia,Hipolito Yrigoyen,Gallinal,-34.886028,-56.100543,43.0
+206,1,2025-05-01,23:55:00.0,Rambla,Errazquin,Sarmiento,-34.916586,-56.168989,50.0
+107,1,2025-05-01,23:55:00.0,Rambla,Montero,Bv Espana,-34.916417,-56.148942,54.0
+107,1,2025-05-01,23:55:00.0,Colonia,German Barbato,Ejido,-34.904613,-56.186306,32.0
+107,1,2025-05-01,23:55:00.0,L A de Herrera,Rambla,26 de Marzo,-34.906172,-56.136634,30.0
+111,1,2025-05-01,23:55:00.0,Gral Flores,Av de las Leyes,Yatay,-34.889350,-56.186440,33.0
+107,1,2025-05-01,23:55:00.0,Ponce,Rivera,Bv Artigas,-34.904713,-56.162828,43.0
+206,1,2025-05-01,23:55:00.0,26 de Marzo,Bonavita,Tezanos,-34.905258,-56.134153,47.0
+114,11,2025-05-01,23:55:00.0,Av Italia,Bolonia,Ancona,-34.882306,-56.081664,36.0
+414,11,2025-05-01,23:55:00.0,Bv Artigas,Martin Fierro,Garibaldi,-34.884592,-56.166100,16.0
+214,11,2025-05-01,23:55:00.0,Av Italia,Bolivia,Ancona,-34.882333,-56.081649,92.0
+114,11,2025-05-01,23:55:00.0,Bv Artigas,Garibaldi,Martin Fierro,-34.883460,-56.166214,4.0
+226,11,2025-05-01,23:55:00.0,L A de Herrera,Rambla,Rambla,-34.909636,-56.135381,0.0
+114,11,2025-05-01,23:55:00.0,Belloni,8 de Octubre,Acceso Terminal S,-34.854810,-56.132300,0.0
+114,11,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,8 de Octubre,Cabrera,-34.880461,-56.146350,11.0
+114,11,2025-05-01,23:55:00.0,Av Italia,Caldas,Colombes,-34.887157,-56.118535,14.0
+114,11,2025-05-01,23:55:00.0,Rambla,Montero,Solano Antuna,-34.919713,-56.148934,21.0
+214,11,2025-05-01,23:55:00.0,Alejandro Korn,Rambla Euskal Erria,Av Italia,-34.886948,-56.118688,0.0
+326,11,2025-05-01,23:55:00.0,L A de Herrera,Rambla,26 de Marzo,-34.905897,-56.136828,18.0
+313,11,2025-05-01,23:55:00.0,26 de Marzo,Bonavita,Tezanos,-34.905258,-56.134153,9.0
+114,11,2025-05-01,23:55:00.0,Av Italia,Matias Abacu,Francisco Simon,-34.887681,-56.144224,17.0
+410,11,2025-05-01,23:55:00.0,Bv Artigas,Maturana,Uruguayana,-34.873040,-56.205170,19.0
+114,11,2025-05-01,23:55:00.0,Av Italia,Gral French,Santa Monica,-34.877207,-56.058004,12.0
+124,11,2025-05-01,23:55:00.0,Av Italia,Centenario,Albo,-34.892014,-56.158914,31.0
+114,11,2025-05-01,23:55:00.0,L A de Herrera,Marne,Entrada Nuevocentro,-34.868283,-56.169768,70.0
+124,11,2025-05-01,23:55:00.0,Bv Artigas,Ponce,Canelones,-34.906600,-56.163642,14.0
+214,11,2025-05-01,23:55:00.0,26 de Marzo,L A de Herrera,Bonavita,-34.905612,-56.135593,0.0
+114,11,2025-05-01,23:55:00.0,Rambla,Piaggio,Pereyra,-34.901555,-56.123936,13.0
+214,11,2025-05-01,23:55:00.0,Bv Artigas,18 de julio,Canaro,-34.898792,-56.164361,7.0
+213,11,2025-05-01,23:55:00.0,Bv Artigas,Nueva Palmira,Garibaldi,-34.884889,-56.166067,10.0
+109,2,2025-05-01,23:55:00.0,Bv Artigas,Palmar,Canaro,-34.899594,-56.164421,32.0
+305,2,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Cabrera,8 de Octubre,-34.879770,-56.147220,37.0
+315,2,2025-05-01,23:55:00.0,Bv Artigas,Cufre,Gral Flores,-34.870230,-56.173220,90.0
+306,2,2025-05-01,23:55:00.0,Rivera,Bv Artigas,Ponce,-34.902720,-56.162320,54.0
+106,2,2025-05-01,23:55:00.0,Solano Lopez,Rivera,Rambla,-34.897400,-56.120289,0.0
+109,2,2025-05-01,23:55:00.0,8 de Octubre,Sanguinetti,Bv Batlle y Ordonez,-34.878660,-56.147140,28.0
+420,2,2025-05-01,23:55:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,42.0
+109,2,2025-05-01,23:55:00.0,Rivera,14 de Julio,Rosell y Rius,-34.903100,-56.147470,40.0
+106,2,2025-05-01,23:55:00.0,Benito Blanco,21 de Setiembre,Bv Espana,-34.915828,-56.149900,37.0
+305,2,2025-05-01,23:55:00.0,Bv Espana,Libertad,Bv Artigas,-34.911249,-56.162091,62.0
+106,2,2025-05-01,23:55:00.0,Rambla,Bv Espana,Montero,-34.922861,-56.152192,37.0
+106,2,2025-05-01,23:55:00.0,Av Italia,Solano Lopez,Mataojo,-34.887117,-56.122775,51.0
+404,2,2025-05-01,23:55:00.0,Av Brasil,26 de Marzo,Benito Blanco,-34.913389,-56.150044,78.0
+106,2,2025-05-01,23:55:00.0,Bv Artigas,Gral Flores,Penco,-34.870392,-56.177658,0.0
+106,2,2025-05-01,23:55:00.0,Av Italia,L A de Herrera,Las Heras,-34.889656,-56.149612,51.0
+112,2,2025-05-01,23:55:00.0,8 de Octubre,Cipriano Miro,Serrato,-34.874790,-56.140310,34.0
+113,2,2025-05-01,23:55:00.0,Libertador,Mercedes,Colonia,-34.904899,-56.193673,20.0
+106,2,2025-05-01,23:55:00.0,Bv Artigas,Colorado,Caribes,-34.880982,-56.166511,41.0
+109,2,2025-05-01,23:55:00.0,Av Brasil,Ellauri,26 de Marzo,-34.911150,-56.151809,21.0
+106,2,2025-05-01,23:55:00.0,Agraciada,Av de Las Leyes,Marcelino Sosa,-34.889938,-56.187259,33.0
+315,2,2025-05-01,23:55:00.0,Gral Flores,Gallinal,Garibaldi,-34.875670,-56.178980,28.0
+109,2,2025-05-01,23:55:00.0,Centenario,Cibils,L A de Herrera,-34.883490,-56.152320,31.0
+305,2,2025-05-01,23:55:00.0,Av Brasil,Benito Blanco,26 de Marzo,-34.911658,-56.151278,37.0
+205,2,2025-05-01,23:55:00.0,26 de Marzo,Pereira,Av Brasil,-34.911057,-56.151196,37.0
+312,2,2025-05-01,23:55:00.0,Bv Artigas,Martin Fierro,Caribes,-34.882196,-56.166261,45.0
+111,2,2025-05-01,23:55:00.0,San Quintin,Santa Lucia,Garzon,-34.852648,-56.223283,39.0
+106,2,2025-05-01,23:55:00.0,Colonia,German Barbato,Ejido,-34.904613,-56.186306,36.0
+111,2,2025-05-01,23:55:00.0,Garzon,Calderon de la Barca,Duran,-34.799264,-56.224509,45.0
+207,2,2025-05-01,23:55:00.0,Miguelete,Magallanes,Fernandez Crespo,-34.896064,-56.182073,43.0
+106,2,2025-05-01,23:55:00.0,Gral Flores,Bv Batlle y Ordonez,Salari,-34.861922,-56.168100,36.0
+305,2,2025-05-01,23:55:00.0,Gral Flores,Corrales,Carreras Nacionales,-34.845098,-56.154306,41.0
+109,2,2025-05-01,23:55:00.0,Millan,Bell,Garzon,-34.834811,-56.221060,30.0
+205,2,2025-05-01,23:55:00.0,Garzon,Casavalle,Saravia,-34.814485,-56.220677,46.0
+104,2,2025-05-01,23:55:00.0,Fernandez Crespo,La Paz,Miguelete,-34.896103,-56.181280,41.0
+205,2,2025-05-01,23:55:00.0,Morquio,Ricaldoni,Bv Artigas,-34.897095,-56.163972,0.0
+109,2,2025-05-01,23:55:00.0,Luis Batlle Berres,Tomkinson,C M Ramirez,-34.858360,-56.227729,71.0
+205,2,2025-05-01,23:55:00.0,Ricaldoni,Ponce,Merola,-34.897084,-56.159030,40.0
+106,2,2025-05-01,23:55:00.0,Magallanes,Mercedes,Colonia,-34.901957,-56.180331,22.0
+111,2,2025-05-01,23:55:00.0,Garzon,San Quintin N,Emancipacion,-34.850334,-56.223620,0.0
+103,2,2025-05-01,23:55:00.0,C M Ramirez,Camambu,Acceso Ta-Ta,-34.873417,-56.246279,54.0
+205,2,2025-05-01,23:55:00.0,Ejido,18 de Julio,Colonia,-34.905312,-56.186851,36.0
+305,2,2025-05-01,23:55:00.0,18 de Julio,8 de Octubre,Bv Artigas,-34.897926,-56.165434,30.0
+106,2,2025-05-01,23:55:00.0,San Jose,Rio Negro,Paraguay,-34.907094,-56.193086,0.0
+106,2,2025-05-01,23:55:00.0,Gral Caraballo,Mendoza,Agraciada,-34.885789,-56.192950,0.0
+106,2,2025-05-01,23:55:00.0,Uruguay,Arenal Grande,Fernandez Crespo,-34.898911,-56.176615,0.0
+106,2,2025-05-01,23:55:00.0,Julio Herrera y Obes,Mercedes,Colonia,-34.904753,-56.194854,26.0
+405,2,2025-05-01,23:55:00.0,Bv Artigas,Millan,Burgues,-34.871279,-56.187329,35.0
+106,2,2025-05-01,23:55:00.0,Colonia,Acevedo Diaz,Paullier,-34.897857,-56.168614,59.0
+106,2,2025-05-01,23:55:00.0,Andes,18 de Julio,Colonia,-34.906008,-56.198115,30.0
+205,2,2025-05-01,23:55:00.0,Arenal Grande,Mercedes,Colonia,-34.899763,-56.174753,59.0
+308,2,2025-05-01,23:55:00.0,Bv Espana,Rambla,Benito Blanco,-34.915119,-56.149044,23.0
+112,2,2025-05-01,23:55:00.0,Gral Flores,Av de las Leyes,Yatay,-34.889350,-56.186440,0.0
+106,2,2025-05-01,23:55:00.0,Rambla,Montero,Bv Espana,-34.916417,-56.148942,45.0
+111,2,2025-05-01,23:55:00.0,Gral Flores,Quesada,L A de Herrera,-34.866070,-56.171180,40.0
+104,2,2025-05-01,23:55:00.0,Miguelete,Justicia,Bv Artigas,-34.891865,-56.166402,33.0
+305,2,2025-05-01,23:55:00.0,Sarmiento,Rambla,Requena y Garcia,-34.915536,-56.168299,26.0
+106,2,2025-05-01,23:55:00.0,Av Italia,Mataojo,Solano Lopez,-34.886792,-56.129075,0.0
+205,2,2025-05-01,23:55:00.0,Rambla,Errazquin,Sarmiento,-34.916586,-56.168989,50.0
+114,2,2025-05-01,23:55:00.0,8 de Octubre,Avelino Miranda,Presidente Berro,-34.892460,-56.162690,30.0
+205,2,2025-05-01,23:55:00.0,L A de Herrera,Gualeguay,Gral Flores,-34.867630,-56.170840,40.0
+109,2,2025-05-01,23:55:00.0,Garibaldi,Urquiza,8 de Octubre,-34.888870,-56.160850,22.0
+205,2,2025-05-01,23:55:00.0,26 de Marzo,Bonavita,Tezanos,-34.905258,-56.134153,38.0
+111,2,2025-05-01,23:55:00.0,Suarez,Grito de Asencio,Bv Artigas,-34.872536,-56.196429,25.0
+305,2,2025-05-01,23:55:00.0,Larranaga,Monte Caseros,Joanico,-34.879760,-56.152480,42.0
+109,2,2025-05-01,23:55:00.0,8 de Octubre,Gral Villagran,Raissignier,-34.869880,-56.134890,62.0
+305,2,2025-05-01,23:55:00.0,Hocquart,Justicia,Bv Artigas,-34.888996,-56.166795,46.0
+205,2,2025-05-01,23:55:00.0,Raissignier,Cno Carrasco,8 de Octubre,-34.871110,-56.134320,0.0
+106,2,2025-05-01,23:55:00.0,8 de Octubre,Bv Batlle y Ordonez,Sanguinetti,-34.878660,-56.146580,25.0
+109,2,2025-05-01,23:55:00.0,Bv Artigas,Hocquart,Nueva Palmira,-34.889533,-56.165523,50.0
+207,2,2025-05-01,23:55:00.0,Rivera,Arenal Grande,Brandzen,-34.902055,-56.174177,32.0
+106,2,2025-05-01,23:55:00.0,Requena,18 de Julio,Colonia,-34.899083,-56.170060,27.0
+112,2,2025-05-01,23:55:00.0,Agraciada,C M Ramirez,Freire,-34.855372,-56.221586,35.0
+106,2,2025-05-01,23:55:00.0,San Jose,Aquiles Lanza,Ejido,-34.906626,-56.187543,26.0
+107,2,2025-05-01,23:55:00.0,18 de Julio,Eduardo Acevedo,Rivera,-34.901707,-56.175376,15.0
+110,2,2025-05-01,23:55:00.0,Mercedes,Andes,Convencion,-34.904463,-56.197815,30.0
+106,2,2025-05-01,23:55:00.0,Libertador,Galicia,La Paz,-34.900095,-56.191491,0.0
+306,2,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,85.0
+106,2,2025-05-01,23:55:00.0,Yaguaron,Colonia,18 de Julio,-34.905242,-56.188052,27.0
+106,2,2025-05-01,23:55:00.0,Soriano,Gutierrez Ruiz,Paraguay,-34.907839,-56.191690,33.0
+106,2,2025-05-01,23:55:00.0,Ejido,Canelones,Soriano,-34.907976,-56.186627,33.0
+210,2,2025-05-01,23:55:00.0,Suarez,Lucas Obes,Bv Artigas,-34.871423,-56.196600,23.0
+315,2,2025-05-01,23:55:00.0,Aramburu,Terra,Gral Flores,-34.882790,-56.181890,29.0
+207,2,2025-05-01,23:55:00.0,Paraguay,18 de Julio,Colonia,-34.905501,-56.192532,43.0
+111,2,2025-05-01,23:55:00.0,Bv Artigas,Palmar,Rivera,-34.900440,-56.164380,34.0
+106,2,2025-05-01,23:55:00.0,Acevedo Diaz,Garibaldi,Ferrer Serra,-34.894152,-56.167498,73.0
+106,2,2025-05-01,23:55:00.0,San Martin,Martin Garcia,Agraciada,-34.887872,-56.188664,21.0
+103,2,2025-05-01,23:55:00.0,Gral Flores,Aramburu,Blandengues,-34.883180,-56.182980,60.0
+205,2,2025-05-01,23:55:00.0,Rivera,Ponce,Bv Artigas,-34.902620,-56.163050,38.0
+411,2,2025-05-01,23:55:00.0,Rivera,Bv Artigas,Acevedo Diaz,-34.902088,-56.164534,34.0
+305,2,2025-05-01,23:55:00.0,Rodo,Requena,Bv Artigas,-34.902829,-56.164944,36.0
+106,2,2025-05-01,23:55:00.0,Bv Artigas,Caribes,Colorado,-34.877335,-56.166706,50.0
+205,2,2025-05-01,23:55:00.0,Hipolito Yrigoyen,Rivera,Av Italia,-34.887927,-56.110028,29.0
+106,2,2025-05-01,23:55:00.0,Rambla,L A de Herrera,Buxareo,-34.909600,-56.140944,37.0
+106,2,2025-05-01,23:55:00.0,26 de Marzo,Tezanos,Bonavita,-34.905325,-56.134761,45.0
+109,2,2025-05-01,23:55:00.0,Rivera,Acceso Cementerio,Bv Batlle y Ordonez,-34.897900,-56.125370,27.0
+205,2,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Ramon Anador,Rivera,-34.896940,-56.125230,76.0
+408,2,2025-05-01,23:55:00.0,Bv Artigas,Ponce,Canelones,-34.906121,-56.163729,41.0
+305,2,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Pereyra,Rivera,-34.898010,-56.124030,34.0
+305,2,2025-05-01,23:55:00.0,Av Italia,Gallinal,Hipolito Yrigoyen,-34.886696,-56.109244,53.0
+106,2,2025-05-01,23:55:00.0,Cerro Largo,Magallanes,Ejido,-34.900766,-56.186738,76.0
+205,2,2025-05-01,23:55:00.0,Av Italia,Zum Felde,Bolivia,-34.883363,-56.085006,46.0
+205,2,2025-05-01,23:55:00.0,La Paz,Yaguaron,Libertador,-34.899267,-56.190369,31.0
+205,2,2025-05-01,23:55:00.0,Paullier,E V Haedo,Colonia,-34.897433,-56.169554,30.0
+205,2,2025-05-01,23:55:00.0,Rambla,Sarmiento,Errazquin,-34.929158,-56.160908,49.0
+306,2,2025-05-01,23:55:00.0,Bv Artigas,San Martin,Ramon Marquez,-34.870833,-56.183974,43.0
+106,2,2025-05-01,23:55:00.0,Libertador,Uruguay,Mercedes,-34.903623,-56.193266,29.0
+107,2,2025-05-01,23:55:00.0,Bolivia,Cno Carrasco,Av Italia,-34.882342,-56.083577,44.0
+106,2,2025-05-01,23:55:00.0,Colonia,Arenal Grande,Fernandez Crespo,-34.900375,-56.175142,41.0
+406,2,2025-05-01,23:55:00.0,Fernandez Crespo,18 de Julio,Colonia,-34.901342,-56.175176,33.0
+206,2,2025-05-01,23:55:00.0,Soca,Brito del Pino,Rivera,-34.902187,-56.156460,25.0
+111,2,2025-05-01,23:55:00.0,Uruguayana,12 de Diciembre,Bv Artigas,-34.873600,-56.204285,23.0
+106,2,2025-05-01,23:55:00.0,San Jose,Andes,Convencion,-34.907371,-56.197516,56.0
+205,2,2025-05-01,23:55:00.0,Soriano,Santiago de Chile,Ejido,-34.907420,-56.185940,36.0
+310,2,2025-05-01,23:55:00.0,18 de Julio,Arenal Grande,Fernandez Crespo,-34.901274,-56.174566,37.0
+106,2,2025-05-01,23:55:00.0,Cerro Largo,Yaguaron,Rondeau,-34.901163,-56.190841,33.0
+305,2,2025-05-01,23:55:00.0,Bv Artigas,Accesos,Uruguayana,-34.873224,-56.205881,42.0
+106,2,2025-05-01,23:55:00.0,Soriano,Convencion,Andes,-34.908243,-56.197326,30.0
+106,2,2025-05-01,23:55:00.0,Uruguay,Vazquez,Ejido,-34.902768,-56.186559,59.0
+205,2,2025-05-01,23:55:00.0,Paraguay,Canelones,Soriano,-34.908372,-56.192213,36.0
+311,2,2025-05-01,23:55:00.0,Garibaldi,Amezaga,Bv Artigas,-34.884370,-56.166584,40.0
+109,2,2025-05-01,23:55:00.0,Bv Artigas,Gallinal,L A de Herrera,-34.870406,-56.167448,34.0
+305,2,2025-05-01,23:55:00.0,L A de Herrera,Setembrino Pereda,Varela S,-34.869125,-56.166318,41.0
+106,2,2025-05-01,23:55:00.0,Rambla,Pereyra,Paiva,-34.904958,-56.128464,48.0
+106,2,2025-05-01,23:55:00.0,Rambla,Morales,Jackson,-34.914494,-56.173994,50.0
+305,2,2025-05-01,23:55:00.0,Av Italia,Avelino Miranda,Bv Artigas,-34.894478,-56.163857,43.0
+112,2,2025-05-01,23:55:00.0,Gral Flores,Gallinal,Bv Artigas,-34.871100,-56.175180,23.0
+205,2,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Joanico,8 de Octubre,-34.878960,-56.148300,31.0
+205,2,2025-05-01,23:55:00.0,Varela,Bv Batlle y Ordonez,L A de Herrera,-34.869993,-56.165974,28.0
+310,2,2025-05-01,23:55:00.0,Bolivia,Rivera,Av Italia,-34.884218,-56.082956,35.0
+205,2,2025-05-01,23:55:00.0,Bv Artigas,Bv Espana,Canelones,-34.907443,-56.163561,39.0
+106,2,2025-05-01,23:55:00.0,18 de Julio,Andes,Convencion,-34.906393,-56.197508,16.0
+112,2,2025-05-01,23:55:00.0,Garibaldi,Terra,Gral Flores,-34.876960,-56.177630,52.0
+205,2,2025-05-01,23:55:00.0,Albo,8 de Octubre,Av Italia,-34.891367,-56.158957,37.0
+305,2,2025-05-01,23:55:00.0,Av Italia,Avelino Miranda,Albo,-34.892557,-56.159733,35.0
+215,2,2025-05-01,23:55:00.0,Bv Artigas,Caribes,Martin Fierro,-34.881836,-56.166420,41.0
+205,2,2025-05-01,23:55:00.0,Joanico,Comercio,Bv Batlle y Ordonez,-34.878133,-56.148014,37.0
+106,2,2025-05-01,23:55:00.0,Rio Negro,Libertador,Colonia,-34.904899,-56.193673,20.0
+305,2,2025-05-01,23:55:00.0,Canelones,Acevedo Diaz,Bv Artigas,-34.906735,-56.164427,20.0
+205,2,2025-05-01,23:55:00.0,Marcelino Sosa,Yatay,Agraciada,-34.889123,-56.187513,37.0
+205,2,2025-05-01,23:55:00.0,Bv Artigas,Penco,Gral Flores,-34.870410,-56.175380,29.0
+214,2,2025-05-01,23:55:00.0,Centenario,Jaime Cibils,Av Italia,-34.890634,-56.155365,32.0
+106,2,2025-05-01,23:55:00.0,Rambla,Arrascaeta,Hipolito Yrigoyen,-34.895919,-56.109447,68.0
+106,2,2025-05-01,23:55:00.0,L A de Herrera,Placido Ellauri,Rivera,-34.901934,-56.138191,35.0
+205,2,2025-05-01,23:55:00.0,Daniel Munoz,Martin C Martinez,Acevedo Diaz,-34.896109,-56.167913,57.0
+205,2,2025-05-01,23:55:00.0,8 de Octubre,Serrato,Cipriano Miro,-34.874910,-56.140170,52.0
+106,2,2025-05-01,23:55:00.0,Bv Artigas,L A de Herrera,Gallinal,-34.871960,-56.167490,52.0
+106,2,2025-05-01,23:55:00.0,Bv Artigas,Sosa,21 de Setiembre,-34.913860,-56.162715,0.0
+109,2,2025-05-01,23:55:00.0,E V Haedo,Paullier,Acevedo Diaz,-34.895946,-56.168014,47.0
+305,2,2025-05-01,23:55:00.0,Avelino Miranda,8 de Octubre,Bv Artigas,-34.893083,-56.164427,41.0
+106,2,2025-05-01,23:55:00.0,Sarmiento,Requena,Rambla,-34.915369,-56.168358,32.0
+205,2,2025-05-01,23:55:00.0,Bv Artigas,Hocquart,Miguelete,-34.890943,-56.165560,43.0
+205,2,2025-05-01,23:55:00.0,Av Brasil,Brito del Pino,Bv Artigas,-34.906097,-56.162718,39.0
+107,2,2025-05-01,23:55:00.0,Rivera,Rosell y Rius,14 de Julio,-34.902720,-56.147240,75.0
+106,2,2025-05-01,23:55:00.0,Av Italia,Cooper,Bolonia,-34.880827,-56.077112,43.0
+106,2,2025-05-01,23:55:00.0,Rambla,L A de Herrera,26 de Marzo,-34.906333,-56.133078,55.0
+106,2,2025-05-01,23:55:00.0,Rambla,Gral Paz,Gallinal,-34.895172,-56.089158,43.0
+205,2,2025-05-01,23:55:00.0,Bv Espana,Ellauri,Benito Blanco,-34.914897,-56.150400,30.0
+214,2,2025-05-01,23:55:00.0,Av Italia,Hipolito Yrigoyen,Gallinal,-34.886028,-56.100543,45.0
+407,2,2025-05-01,23:55:00.0,L A de Herrera,Placido Ellauri,26 de Marzo,-34.905423,-56.137037,67.0
+215,3,2025-05-01,23:55:00.0,Bv Artigas,Penco,Gral Flores,-34.870410,-56.175380,40.0
+406,3,2025-05-01,23:55:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,39.0
+111,3,2025-05-01,23:55:00.0,Bv Artigas,Palmar,Canaro,-34.899594,-56.164421,33.0
+315,3,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Cabrera,8 de Octubre,-34.879770,-56.147220,29.0
+114,3,2025-05-01,23:55:00.0,Av Italia,Solano Lopez,Mataojo,-34.887117,-56.122775,60.0
+214,3,2025-05-01,23:55:00.0,Daniel Munoz,Martin C Martinez,Acevedo Diaz,-34.896109,-56.167913,42.0
+114,3,2025-05-01,23:55:00.0,Bv Artigas,Gral Flores,Penco,-34.870392,-56.177658,0.0
+114,3,2025-05-01,23:55:00.0,Bv Artigas,Colorado,Caribes,-34.880982,-56.166511,37.0
+107,3,2025-05-01,23:55:00.0,Centenario,Cibils,L A de Herrera,-34.883490,-56.152320,25.0
+216,3,2025-05-01,23:55:00.0,Bv Artigas,Caribes,Martin Fierro,-34.881836,-56.166420,49.0
+315,3,2025-05-01,23:55:00.0,L A de Herrera,Rep Dominicana,Av Italia,-34.888379,-56.147844,24.0
+114,3,2025-05-01,23:55:00.0,Gral Flores,Bv Batlle y Ordonez,Salari,-34.861922,-56.168100,36.0
+315,3,2025-05-01,23:55:00.0,18 de Julio,8 de Octubre,Bv Artigas,-34.897926,-56.165434,0.0
+215,3,2025-05-01,23:55:00.0,Ejido,18 de Julio,Colonia,-34.905312,-56.186851,0.0
+305,3,2025-05-01,23:55:00.0,Bv Artigas,San Martin,Ramon Marquez,-34.870833,-56.183974,41.0
+415,3,2025-05-01,23:55:00.0,Bv Artigas,Millan,Burgues,-34.871279,-56.187329,33.0
+113,3,2025-05-01,23:55:00.0,Colonia,Arenal Grande,Fernandez Crespo,-34.900375,-56.175142,40.0
+214,3,2025-05-01,23:55:00.0,Rambla,Sarmiento,Errazquin,-34.929158,-56.160908,0.0
+205,3,2025-05-01,23:55:00.0,Av Italia,Hipolito Yrigoyen,Gallinal,-34.886028,-56.100543,47.0
+314,3,2025-05-01,23:55:00.0,Avelino Miranda,8 de Octubre,Bv Artigas,-34.893083,-56.164427,42.0
+103,3,2025-05-01,23:55:00.0,Sarmiento,Requena,Rambla,-34.915369,-56.168358,0.0
+315,3,2025-05-01,23:55:00.0,Sarmiento,Rambla,Requena y Garcia,-34.915536,-56.168299,0.0
+107,3,2025-05-01,23:55:00.0,Acevedo Diaz,Garibaldi,Ferrer Serra,-34.894152,-56.167498,79.0
+114,3,2025-05-01,23:55:00.0,8 de Octubre,Bv Batlle y Ordonez,Sanguinetti,-34.878660,-56.146580,0.0
+111,3,2025-05-01,23:55:00.0,Bv Artigas,Hocquart,Nueva Palmira,-34.889533,-56.165523,21.0
+303,3,2025-05-01,23:55:00.0,18 de Julio,Arenal Grande,Fernandez Crespo,-34.901274,-56.174566,28.0
+315,3,2025-05-01,23:55:00.0,Rodo,Requena,Bv Artigas,-34.902829,-56.164944,34.0
+109,3,2025-05-01,23:55:00.0,Bv Artigas,Palmar,Rivera,-34.900440,-56.164380,7.0
+315,3,2025-05-01,23:55:00.0,Av Italia,Gallinal,Hipolito Yrigoyen,-34.886696,-56.109244,54.0
+114,3,2025-05-01,23:55:00.0,Bv Artigas,Caribes,Colorado,-34.877335,-56.166706,0.0
+114,3,2025-05-01,23:55:00.0,Uruguay,Vazquez,Ejido,-34.902768,-56.186559,61.0
+305,3,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,39.0
+205,3,2025-05-01,23:55:00.0,Centenario,Jaime Cibils,Av Italia,-34.890634,-56.155365,31.0
+315,3,2025-05-01,23:55:00.0,Av Italia,Avelino Miranda,Bv Artigas,-34.894478,-56.163857,26.0
+114,3,2025-05-01,23:55:00.0,Rambla,Morales,Jackson,-34.914494,-56.173994,0.0
+111,3,2025-05-01,23:55:00.0,Bv Artigas,Gallinal,L A de Herrera,-34.870406,-56.167448,35.0
+114,3,2025-05-01,23:55:00.0,Rambla,Pereyra,Paiva,-34.904958,-56.128464,53.0
+215,3,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Joanico,8 de Octubre,-34.878960,-56.148300,24.0
+114,3,2025-05-01,23:55:00.0,Av Italia,L A de Herrera,Las Heras,-34.889656,-56.149612,49.0
+311,3,2025-05-01,23:55:00.0,Bv Artigas,Martin Fierro,Caribes,-34.882196,-56.166261,0.0
+409,3,2025-05-01,23:55:00.0,Bv Artigas,Ponce,Canelones,-34.906121,-56.163729,27.0
+215,3,2025-05-01,23:55:00.0,8 de Octubre,Serrato,Cipriano Miro,-34.874910,-56.140170,0.0
+114,3,2025-05-01,23:55:00.0,Rambla,Arrascaeta,Hipolito Yrigoyen,-34.895919,-56.109447,61.0
+111,3,2025-05-01,23:55:00.0,E V Haedo,Paullier,Acevedo Diaz,-34.895946,-56.168014,33.0
+114,3,2025-05-01,23:55:00.0,Bv Artigas,L A de Herrera,Gallinal,-34.871960,-56.167490,44.0
+307,3,2025-05-01,23:55:00.0,Bv Espana,Rambla,Benito Blanco,-34.915119,-56.149044,52.0
+114,3,2025-05-01,23:55:00.0,Rambla,L A de Herrera,26 de Marzo,-34.906333,-56.133078,0.0
+103,3,2025-05-01,23:55:00.0,Rambla,Montero,Bv Espana,-34.916417,-56.148942,0.0
+214,3,2025-05-01,23:55:00.0,Rambla,Errazquin,Sarmiento,-34.916586,-56.168989,33.0
+109,3,2025-05-01,23:55:00.0,Av Italia,Mataojo,Solano Lopez,-34.886792,-56.129075,0.0
+215,3,2025-05-01,23:55:00.0,Bv Artigas,Hocquart,Miguelete,-34.890943,-56.165560,39.0
+216,9,2025-05-01,23:55:00.0,Garzon,Casavalle,Saravia,-34.814485,-56.220677,0.0
+110,9,2025-05-01,23:55:00.0,Garzon,San Quintin N,Emancipacion,-34.850334,-56.223620,0.0
+321,9,2025-05-01,23:55:00.0,Gral Flores,Corrales,Carreras Nacionales,-34.845098,-56.154306,0.0
+108,9,2025-05-01,23:55:00.0,Garzon,Calderon de la Barca,Duran,-34.799264,-56.224509,0.0
+110,9,2025-05-01,23:55:00.0,San Quintin,Santa Lucia,Garzon,-34.852648,-56.223283,0.0
+119,12,2025-05-01,23:55:00.0,Av Italia,Centenario,Albo,-34.892014,-56.158914,32.0
+121,12,2025-05-01,23:55:00.0,Bv Artigas,Ponce,Canelones,-34.906600,-56.163642,13.0
+114,131,2025-05-01,23:55:00.0,20 de Febrero,Cno Carrasco,8 de Octubre,-34.867070,-56.134340,19.0
+114,131,2025-05-01,23:55:00.0,Piccioli,Osvaldo Cruz,8 de Octubre,-34.858120,-56.133570,6.0
+315,4,2025-05-01,23:55:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,33.0
+405,4,2025-05-01,23:55:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,21.0
+306,1,2025-05-01,23:50:00.0,L A de Herrera,Setembrino Pereda,Varela S,-34.869125,-56.166318,48.0
+107,1,2025-05-01,23:50:00.0,8 de Octubre,Sanguinetti,Bv Batlle y Ordonez,-34.878660,-56.147140,30.0
+305,1,2025-05-01,23:50:00.0,Bv Artigas,Cufre,Gral Flores,-34.870230,-56.173220,106.0
+206,1,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Joanico,8 de Octubre,-34.878960,-56.148300,32.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Palmar,Canaro,-34.899594,-56.164421,48.0
+111,1,2025-05-01,23:50:00.0,Gral Flores,Gallinal,Bv Artigas,-34.871100,-56.175180,25.0
+107,1,2025-05-01,23:50:00.0,Rambla,Morales,Jackson,-34.914494,-56.173994,59.0
+107,1,2025-05-01,23:50:00.0,Solano Lopez,Rivera,Rambla,-34.897400,-56.120289,41.0
+206,1,2025-05-01,23:50:00.0,Ponce,Ricaldoni,Rivera,-34.902150,-56.160830,0.0
+306,1,2025-05-01,23:50:00.0,Av Italia,Avelino Miranda,Bv Artigas,-34.894478,-56.163857,39.0
+206,1,2025-05-01,23:50:00.0,Varela,Bv Batlle y Ordonez,L A de Herrera,-34.869993,-56.165974,42.0
+306,1,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Cabrera,8 de Octubre,-34.879770,-56.147220,39.0
+408,1,2025-05-01,23:50:00.0,Av Brasil,26 de Marzo,Benito Blanco,-34.913389,-56.150044,42.0
+206,1,2025-05-01,23:50:00.0,Daniel Munoz,Martin C Martinez,Acevedo Diaz,-34.896109,-56.167913,41.0
+206,1,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Ramon Anador,Rivera,-34.896940,-56.125230,37.0
+107,1,2025-05-01,23:50:00.0,26 de Marzo,Tezanos,Bonavita,-34.905325,-56.134761,50.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,L A de Herrera,Gallinal,-34.871960,-56.167490,0.0
+107,1,2025-05-01,23:50:00.0,Rambla,L A de Herrera,Buxareo,-34.909600,-56.140944,48.0
+306,1,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Pereyra,Rivera,-34.898010,-56.124030,29.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Sosa,21 de Setiembre,-34.913860,-56.162715,46.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Caribes,Colorado,-34.877335,-56.166706,51.0
+306,1,2025-05-01,23:50:00.0,Av Italia,Gallinal,Hipolito Yrigoyen,-34.886696,-56.109244,50.0
+206,1,2025-05-01,23:50:00.0,8 de Octubre,Serrato,Cipriano Miro,-34.874910,-56.140170,47.0
+206,1,2025-05-01,23:50:00.0,Hipolito Yrigoyen,Rivera,Av Italia,-34.887927,-56.110028,26.0
+107,1,2025-05-01,23:50:00.0,Rambla,Arrascaeta,Hipolito Yrigoyen,-34.895919,-56.109447,56.0
+107,1,2025-05-01,23:50:00.0,Rivera,14 de Julio,Rosell y Rius,-34.903100,-56.147470,53.0
+306,1,2025-05-01,23:50:00.0,Canelones,Acevedo Diaz,Bv Artigas,-34.906735,-56.164427,21.0
+206,1,2025-05-01,23:50:00.0,Joanico,Comercio,Bv Batlle y Ordonez,-34.878133,-56.148014,45.0
+107,1,2025-05-01,23:50:00.0,18 de Julio,Andes,Convencion,-34.906393,-56.197508,21.0
+206,1,2025-05-01,23:50:00.0,Marcelino Sosa,Yatay,Agraciada,-34.889123,-56.187513,40.0
+206,1,2025-05-01,23:50:00.0,Bv Artigas,Bv Espana,Canelones,-34.907443,-56.163561,36.0
+214,1,2025-05-01,23:50:00.0,Bv Artigas,Caribes,Martin Fierro,-34.881836,-56.166420,58.0
+107,1,2025-05-01,23:50:00.0,Rio Negro,Libertador,Colonia,-34.904899,-56.193673,22.0
+305,1,2025-05-01,23:50:00.0,Gral Flores,Gallinal,Garibaldi,-34.875670,-56.178980,46.0
+215,1,2025-05-01,23:50:00.0,Garibaldi,Pando,Gral Flores,-34.876080,-56.180390,42.0
+111,1,2025-05-01,23:50:00.0,Centenario,Cibils,L A de Herrera,-34.883490,-56.152320,41.0
+111,1,2025-05-01,23:50:00.0,Garibaldi,Terra,Gral Flores,-34.876960,-56.177630,68.0
+107,1,2025-05-01,23:50:00.0,Av Brasil,Ellauri,26 de Marzo,-34.911150,-56.151809,29.0
+107,1,2025-05-01,23:50:00.0,Acevedo Diaz,18 de Julio,Rivera,-34.901269,-56.166669,30.0
+107,1,2025-05-01,23:50:00.0,Millan,Bell,Garzon,-34.834811,-56.221060,30.0
+206,1,2025-05-01,23:50:00.0,Ejido,18 de Julio,Colonia,-34.905312,-56.186851,30.0
+306,1,2025-05-01,23:50:00.0,18 de Julio,8 de Octubre,Bv Artigas,-34.897926,-56.165434,0.0
+206,1,2025-05-01,23:50:00.0,C M Ramirez,Llupes,M Herrera y Obes,-34.857615,-56.225499,45.0
+107,1,2025-05-01,23:50:00.0,Saravia,Mendoza,Gral Flores,-34.833109,-56.145628,58.0
+107,1,2025-05-01,23:50:00.0,Fernandez Crespo,La Paz,Miguelete,-34.896103,-56.181280,40.0
+206,1,2025-05-01,23:50:00.0,Garzon,Casavalle,Saravia,-34.814485,-56.220677,52.0
+109,1,2025-05-01,23:50:00.0,San Quintin,Santa Lucia,Garzon,-34.852648,-56.223283,38.0
+206,1,2025-05-01,23:50:00.0,Morquio,Ricaldoni,Bv Artigas,-34.897095,-56.163972,0.0
+205,1,2025-05-01,23:50:00.0,Carreras Nacionales,Sainz Rosas,Gral Flores,-34.844938,-56.152969,32.0
+107,1,2025-05-01,23:50:00.0,Magallanes,Mercedes,Colonia,-34.901957,-56.180331,37.0
+109,1,2025-05-01,23:50:00.0,Garzon,Calderon de la Barca,Duran,-34.799264,-56.224509,80.0
+206,1,2025-05-01,23:50:00.0,Ricaldoni,Ponce,Merola,-34.897084,-56.159030,0.0
+206,1,2025-05-01,23:50:00.0,Saravia,Belloni,Gral Flores,-34.833040,-56.143735,39.0
+206,1,2025-05-01,23:50:00.0,Miguelete,Magallanes,Fernandez Crespo,-34.896064,-56.182073,45.0
+107,1,2025-05-01,23:50:00.0,M Herrera y Obes,Angel Salvo,C M Ramirez,-34.858336,-56.225519,37.0
+107,1,2025-05-01,23:50:00.0,Luis Batlle Berres,Tomkinson,C M Ramirez,-34.858360,-56.227729,0.0
+107,1,2025-05-01,23:50:00.0,Ellauri,21 de Setiembre,Bv Espana,-34.914572,-56.153585,20.0
+109,1,2025-05-01,23:50:00.0,Garzon,San Quintin N,Emancipacion,-34.850334,-56.223620,0.0
+206,1,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Carafi,Garzon,-34.827224,-56.220600,23.0
+306,1,2025-05-01,23:50:00.0,Gral Flores,Corrales,Carreras Nacionales,-34.845098,-56.154306,47.0
+206,1,2025-05-01,23:50:00.0,Millan,Eugenio Alsina,Garzon,-34.834099,-56.222302,39.0
+107,1,2025-05-01,23:50:00.0,C M Ramirez,Camambu,Acceso Ta-Ta,-34.873417,-56.246279,57.0
+107,1,2025-05-01,23:50:00.0,Gral Flores,Bv Batlle y Ordonez,Salari,-34.861922,-56.168100,41.0
+107,1,2025-05-01,23:50:00.0,Colonia,Arenal Grande,Fernandez Crespo,-34.900375,-56.175142,34.0
+206,1,2025-05-01,23:50:00.0,Av Italia,Zum Felde,Bolivia,-34.883363,-56.085006,51.0
+319,1,2025-05-01,23:50:00.0,Bv Artigas,San Martin,Ramon Marquez,-34.870833,-56.183974,45.0
+112,1,2025-05-01,23:50:00.0,Mercedes,Andes,Convencion,-34.904463,-56.197815,27.0
+107,1,2025-05-01,23:50:00.0,Cerro Largo,Magallanes,Ejido,-34.900766,-56.186738,37.0
+206,1,2025-05-01,23:50:00.0,Paullier,E V Haedo,Colonia,-34.897433,-56.169554,39.0
+107,1,2025-05-01,23:50:00.0,Burgues,San Martin,Bv Artigas,-34.871627,-56.185855,37.0
+308,1,2025-05-01,23:50:00.0,Bolivia,Rivera,Av Italia,-34.884218,-56.082956,36.0
+206,1,2025-05-01,23:50:00.0,Rambla,Sarmiento,Errazquin,-34.929158,-56.160908,58.0
+106,1,2025-05-01,23:50:00.0,Rivera,Rosell y Rius,14 de Julio,-34.902720,-56.147240,93.0
+107,1,2025-05-01,23:50:00.0,Rambla,Gral Paz,Gallinal,-34.895172,-56.089158,64.0
+206,1,2025-05-01,23:50:00.0,Comercio,8 de Octubre,Av Italia,-34.886170,-56.130966,0.0
+107,1,2025-05-01,23:50:00.0,Av Italia,Cooper,Bolonia,-34.880827,-56.077112,52.0
+206,1,2025-05-01,23:50:00.0,Bv Espana,Ellauri,Benito Blanco,-34.914897,-56.150400,40.0
+206,1,2025-05-01,23:50:00.0,Bv Artigas,Hocquart,Miguelete,-34.890943,-56.165560,48.0
+107,1,2025-05-01,23:50:00.0,Sarmiento,Requena,Rambla,-34.915369,-56.168358,32.0
+306,1,2025-05-01,23:50:00.0,Avelino Miranda,8 de Octubre,Bv Artigas,-34.893083,-56.164427,34.0
+106,1,2025-05-01,23:50:00.0,8 de Octubre,Avelino Miranda,Presidente Berro,-34.892460,-56.162690,49.0
+109,1,2025-05-01,23:50:00.0,Gral Flores,Quesada,L A de Herrera,-34.866070,-56.171180,0.0
+206,1,2025-05-01,23:50:00.0,Av Brasil,Brito del Pino,Bv Artigas,-34.906097,-56.162718,48.0
+107,1,2025-05-01,23:50:00.0,Garibaldi,Urquiza,8 de Octubre,-34.888870,-56.160850,23.0
+408,1,2025-05-01,23:50:00.0,L A de Herrera,Placido Ellauri,26 de Marzo,-34.905423,-56.137037,49.0
+107,1,2025-05-01,23:50:00.0,San Martin,Martin Garcia,Agraciada,-34.887872,-56.188664,46.0
+107,1,2025-05-01,23:50:00.0,Suarez,Grito de Asencio,Bv Artigas,-34.872536,-56.196429,32.0
+112,1,2025-05-01,23:50:00.0,Gral Flores,Aramburu,Blandengues,-34.883180,-56.182980,82.0
+107,1,2025-05-01,23:50:00.0,Rambla,L A de Herrera,26 de Marzo,-34.906333,-56.133078,61.0
+206,1,2025-05-01,23:50:00.0,Rivera,Ponce,Bv Artigas,-34.902620,-56.163050,42.0
+107,1,2025-05-01,23:50:00.0,8 de Octubre,Gral Villagran,Raissignier,-34.869880,-56.134890,76.0
+306,1,2025-05-01,23:50:00.0,Rodo,Requena,Bv Artigas,-34.902829,-56.164944,35.0
+410,1,2025-05-01,23:50:00.0,Rivera,Bv Artigas,Acevedo Diaz,-34.902088,-56.164534,0.0
+206,1,2025-05-01,23:50:00.0,Paraguay,18 de Julio,Colonia,-34.905501,-56.192532,30.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Hocquart,Nueva Palmira,-34.889533,-56.165523,22.0
+107,1,2025-05-01,23:50:00.0,Joanico,Bv Batlle y Ordonez,Larranaga,-34.880150,-56.151490,47.0
+206,1,2025-05-01,23:50:00.0,Uruguayana,Capurro,Bv Artigas,-34.872699,-56.205994,24.0
+206,1,2025-05-01,23:50:00.0,Soriano,Santiago de Chile,Ejido,-34.907420,-56.185940,0.0
+306,1,2025-05-01,23:50:00.0,Bv Artigas,Accesos,Uruguayana,-34.873224,-56.205881,48.0
+206,1,2025-05-01,23:50:00.0,Paraguay,Canelones,Soriano,-34.908372,-56.192213,33.0
+407,1,2025-05-01,23:50:00.0,Fernandez Crespo,18 de Julio,Colonia,-34.901342,-56.175176,37.0
+107,1,2025-05-01,23:50:00.0,San Jose,Andes,Convencion,-34.907371,-56.197516,32.0
+107,1,2025-05-01,23:50:00.0,Libertador,Uruguay,Mercedes,-34.903623,-56.193266,23.0
+206,1,2025-05-01,23:50:00.0,La Paz,Yaguaron,Libertador,-34.899267,-56.190369,39.0
+107,1,2025-05-01,23:50:00.0,Uruguay,Vazquez,Ejido,-34.902768,-56.186559,0.0
+106,1,2025-05-01,23:50:00.0,Lezica,Calderon de la Barca,Eduardo Raiz,-34.804487,-56.224491,26.0
+107,1,2025-05-01,23:50:00.0,Soca,Gestido,Rivera,-34.903760,-56.155750,31.0
+205,1,2025-05-01,23:50:00.0,Gral Flores,Blandengues,Aramburu,-34.882920,-56.182840,46.0
+107,1,2025-05-01,23:50:00.0,Cerro Largo,Yaguaron,Rondeau,-34.901163,-56.190841,31.0
+306,1,2025-05-01,23:50:00.0,Larranaga,Monte Caseros,Joanico,-34.879760,-56.152480,42.0
+107,1,2025-05-01,23:50:00.0,Soriano,Convencion,Andes,-34.908243,-56.197326,36.0
+306,1,2025-05-01,23:50:00.0,Hocquart,Justicia,Bv Artigas,-34.888996,-56.166795,71.0
+206,1,2025-05-01,23:50:00.0,Raissignier,Cno Carrasco,8 de Octubre,-34.871110,-56.134320,40.0
+107,1,2025-05-01,23:50:00.0,Comercio,Joanico,8 de Octubre,-34.875750,-56.143440,0.0
+305,1,2025-05-01,23:50:00.0,Aramburu,Terra,Gral Flores,-34.882790,-56.181890,1.0
+114,1,2025-05-01,23:50:00.0,Acevedo Diaz,Garibaldi,Ferrer Serra,-34.894152,-56.167498,0.0
+107,1,2025-05-01,23:50:00.0,8 de Octubre,Bv Batlle y Ordonez,Sanguinetti,-34.878660,-56.146580,113.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Palmar,Rivera,-34.900440,-56.164380,40.0
+206,1,2025-05-01,23:50:00.0,Suarez,Lucas Obes,Bv Artigas,-34.871423,-56.196600,30.0
+205,1,2025-05-01,23:50:00.0,Soca,Brito del Pino,Rivera,-34.902187,-56.156460,26.0
+107,1,2025-05-01,23:50:00.0,Hipolito Yrigoyen,Igua,Av Italia,-34.885966,-56.110576,42.0
+406,1,2025-05-01,23:50:00.0,Ricaldoni,Canning,Av Italia,-34.892799,-56.158819,35.0
+107,1,2025-05-01,23:50:00.0,Benito Blanco,21 de Setiembre,Bv Espana,-34.915828,-56.149900,28.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Gral Flores,Penco,-34.870392,-56.177658,0.0
+206,1,2025-05-01,23:50:00.0,Albo,8 de Octubre,Av Italia,-34.891367,-56.158957,39.0
+107,1,2025-05-01,23:50:00.0,Av Italia,Solano Lopez,Mataojo,-34.887117,-56.122775,49.0
+306,1,2025-05-01,23:50:00.0,Bv Espana,Libertad,Bv Artigas,-34.911249,-56.162091,87.0
+107,1,2025-05-01,23:50:00.0,Rivera,Colombes,Asturias,-34.894310,-56.118470,68.0
+107,1,2025-05-01,23:50:00.0,Rivera,Acceso Cementerio,Bv Batlle y Ordonez,-34.897900,-56.125370,47.0
+107,1,2025-05-01,23:50:00.0,Libertador,Galicia,La Paz,-34.900095,-56.191491,0.0
+206,1,2025-05-01,23:50:00.0,Burgues,L A de Herrera,Bv Artigas,-34.870429,-56.185998,33.0
+107,1,2025-05-01,23:50:00.0,Andes,18 de Julio,Colonia,-34.906008,-56.198115,27.0
+107,1,2025-05-01,23:50:00.0,Gral Caraballo,Mendoza,Agraciada,-34.885789,-56.192950,26.0
+107,1,2025-05-01,23:50:00.0,Uruguay,Arenal Grande,Fernandez Crespo,-34.898911,-56.176615,20.0
+107,1,2025-05-01,23:50:00.0,Grito de Asencio,Suarez,Agraciada,-34.875242,-56.198863,37.0
+107,1,2025-05-01,23:50:00.0,Colonia,Acevedo Diaz,Paullier,-34.897857,-56.168614,59.0
+107,1,2025-05-01,23:50:00.0,Capurro,Uruguayana,Agraciada,-34.868470,-56.206937,27.0
+107,1,2025-05-01,23:50:00.0,San Jose,Rio Negro,Paraguay,-34.907094,-56.193086,32.0
+406,1,2025-05-01,23:50:00.0,Bv Artigas,Millan,Burgues,-34.871279,-56.187329,42.0
+206,1,2025-05-01,23:50:00.0,Arenal Grande,Mercedes,Colonia,-34.899763,-56.174753,85.0
+107,1,2025-05-01,23:50:00.0,Julio Herrera y Obes,Mercedes,Colonia,-34.904753,-56.194854,32.0
+107,1,2025-05-01,23:50:00.0,Yaguaron,Colonia,18 de Julio,-34.905242,-56.188052,28.0
+208,1,2025-05-01,23:50:00.0,Rivera,Arenal Grande,Brandzen,-34.902055,-56.174177,31.0
+106,1,2025-05-01,23:50:00.0,18 de Julio,Eduardo Acevedo,Rivera,-34.901707,-56.175376,27.0
+107,1,2025-05-01,23:50:00.0,Uruguayana,12 de Diciembre,Bv Artigas,-34.873600,-56.204285,24.0
+107,1,2025-05-01,23:50:00.0,Ejido,Canelones,Soriano,-34.907976,-56.186627,32.0
+107,1,2025-05-01,23:50:00.0,Zufriategui,Coraceros,Agraciada,-34.862684,-56.212248,26.0
+319,1,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,60.0
+107,1,2025-05-01,23:50:00.0,San Jose,Aquiles Lanza,Ejido,-34.906626,-56.187543,33.0
+107,1,2025-05-01,23:50:00.0,Requena,18 de Julio,Colonia,-34.899083,-56.170060,45.0
+113,1,2025-05-01,23:50:00.0,Agraciada,C M Ramirez,Freire,-34.855372,-56.221586,32.0
+107,1,2025-05-01,23:50:00.0,Soriano,Gutierrez Ruiz,Paraguay,-34.907839,-56.191690,0.0
+206,1,2025-05-01,23:50:00.0,Bv Artigas,Penco,Gral Flores,-34.870410,-56.175380,38.0
+421,1,2025-05-01,23:50:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,49.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Gallinal,L A de Herrera,-34.870406,-56.167448,39.0
+305,1,2025-05-01,23:50:00.0,Rivera,Bv Artigas,Ponce,-34.902720,-56.162320,62.0
+107,1,2025-05-01,23:50:00.0,L A de Herrera,Placido Ellauri,Rivera,-34.901934,-56.138191,35.0
+305,1,2025-05-01,23:50:00.0,Garibaldi,Amezaga,Bv Artigas,-34.884370,-56.166584,55.0
+107,1,2025-05-01,23:50:00.0,Ponce,Av Brasil,Rivera,-34.903500,-56.161940,23.0
+206,1,2025-05-01,23:50:00.0,26 de Marzo,Pereira,Av Brasil,-34.911057,-56.151196,38.0
+306,1,2025-05-01,23:50:00.0,Av Brasil,Benito Blanco,26 de Marzo,-34.911658,-56.151278,36.0
+407,1,2025-05-01,23:50:00.0,Bv Artigas,Ponce,Canelones,-34.906121,-56.163729,35.0
+108,1,2025-05-01,23:50:00.0,Bolivia,Cno Carrasco,Av Italia,-34.882342,-56.083577,44.0
+107,1,2025-05-01,23:50:00.0,Agraciada,Av de Las Leyes,Marcelino Sosa,-34.889938,-56.187259,35.0
+313,1,2025-05-01,23:50:00.0,Bv Artigas,Martin Fierro,Caribes,-34.882196,-56.166261,51.0
+112,1,2025-05-01,23:50:00.0,Libertador,Mercedes,Colonia,-34.904899,-56.193673,0.0
+107,1,2025-05-01,23:50:00.0,Bv Artigas,Colorado,Caribes,-34.880982,-56.166511,48.0
+107,1,2025-05-01,23:50:00.0,C M Ramirez,Puerto Rico,Grecia,-34.874317,-56.252240,9.0
+107,1,2025-05-01,23:50:00.0,Av Italia,L A de Herrera,Las Heras,-34.889656,-56.149612,48.0
+107,1,2025-05-01,23:50:00.0,Rambla,Bv Espana,Montero,-34.922861,-56.152192,44.0
+111,1,2025-05-01,23:50:00.0,8 de Octubre,Cipriano Miro,Serrato,-34.874790,-56.140310,44.0
+206,1,2025-05-01,23:50:00.0,Centenario,Jaime Cibils,Av Italia,-34.890634,-56.155365,12.0
+107,1,2025-05-01,23:50:00.0,Benito Blanco,Buxareo,Julio Cesar,-34.906759,-56.140034,26.0
+107,1,2025-05-01,23:50:00.0,E V Haedo,Paullier,Acevedo Diaz,-34.895946,-56.168014,45.0
+206,1,2025-05-01,23:50:00.0,21 de Setiembre,Bv Espana,Bv Artigas,-34.912363,-56.164099,43.0
+304,1,2025-05-01,23:50:00.0,21 de Setiembre,Sarmiento,Bv Artigas,-34.913284,-56.162377,42.0
+107,1,2025-05-01,23:50:00.0,Rambla,Pereyra,Paiva,-34.904958,-56.128464,48.0
+315,1,2025-05-01,23:50:00.0,Larravide,Isla de Gaspar,8 de Octubre,-34.874480,-56.138380,16.0
+111,1,2025-05-01,23:50:00.0,Amezaga,Arenal Grande,Gral Flores,-34.886220,-56.183720,26.0
+309,1,2025-05-01,23:50:00.0,Bv Espana,Rambla,Benito Blanco,-34.915119,-56.149044,23.0
+107,1,2025-05-01,23:50:00.0,L A de Herrera,Rambla,26 de Marzo,-34.906172,-56.136634,31.0
+206,1,2025-05-01,23:50:00.0,Av Italia,Hipolito Yrigoyen,Gallinal,-34.886028,-56.100543,40.0
+107,1,2025-05-01,23:50:00.0,Av Italia,Mataojo,Solano Lopez,-34.886792,-56.129075,0.0
+107,1,2025-05-01,23:50:00.0,Miguelete,Justicia,Bv Artigas,-34.891865,-56.166402,0.0
+206,1,2025-05-01,23:50:00.0,Rambla,Errazquin,Sarmiento,-34.916586,-56.168989,53.0
+206,1,2025-05-01,23:50:00.0,26 de Marzo,Bonavita,Tezanos,-34.905258,-56.134153,46.0
+306,1,2025-05-01,23:50:00.0,Sarmiento,Rambla,Requena y Garcia,-34.915536,-56.168299,38.0
+107,1,2025-05-01,23:50:00.0,Colonia,German Barbato,Ejido,-34.904613,-56.186306,38.0
+107,1,2025-05-01,23:50:00.0,Rambla,Montero,Bv Espana,-34.916417,-56.148942,55.0
+107,1,2025-05-01,23:50:00.0,Ponce,Rivera,Bv Artigas,-34.904713,-56.162828,59.0
+305,1,2025-05-01,23:50:00.0,Solano Lopez,Rivera,Av Italia,-34.887512,-56.129107,53.0
+111,1,2025-05-01,23:50:00.0,Gral Flores,Av de las Leyes,Yatay,-34.889350,-56.186440,40.0
+214,11,2025-05-01,23:50:00.0,Av Italia,Bolivia,Ancona,-34.882333,-56.081649,89.0
+114,11,2025-05-01,23:50:00.0,Bv Artigas,Garibaldi,Martin Fierro,-34.883460,-56.166214,0.0
+114,11,2025-05-01,23:50:00.0,Av Italia,Bolonia,Ancona,-34.882306,-56.081664,52.0
+414,11,2025-05-01,23:50:00.0,Bv Artigas,Martin Fierro,Garibaldi,-34.884592,-56.166100,17.0
+226,11,2025-05-01,23:50:00.0,L A de Herrera,Rambla,Rambla,-34.909636,-56.135381,0.0
+114,11,2025-05-01,23:50:00.0,Belloni,8 de Octubre,Acceso Terminal S,-34.854810,-56.132300,0.0
+114,11,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,8 de Octubre,Cabrera,-34.880461,-56.146350,10.0
+214,11,2025-05-01,23:50:00.0,Alejandro Korn,Rambla Euskal Erria,Av Italia,-34.886948,-56.118688,0.0
+114,11,2025-05-01,23:50:00.0,Av Italia,Caldas,Colombes,-34.887157,-56.118535,0.0
+114,11,2025-05-01,23:50:00.0,Rambla,Montero,Solano Antuna,-34.919713,-56.148934,0.0
+326,11,2025-05-01,23:50:00.0,L A de Herrera,Rambla,26 de Marzo,-34.905897,-56.136828,34.0
+114,11,2025-05-01,23:50:00.0,Av Italia,Matias Abacu,Francisco Simon,-34.887681,-56.144224,0.0
+313,11,2025-05-01,23:50:00.0,26 de Marzo,Bonavita,Tezanos,-34.905258,-56.134153,8.0
+410,11,2025-05-01,23:50:00.0,Bv Artigas,Maturana,Uruguayana,-34.873040,-56.205170,26.0
+114,11,2025-05-01,23:50:00.0,Av Italia,Gral French,Santa Monica,-34.877207,-56.058004,0.0
+124,11,2025-05-01,23:50:00.0,Av Italia,Centenario,Albo,-34.892014,-56.158914,35.0
+114,11,2025-05-01,23:50:00.0,L A de Herrera,Marne,Entrada Nuevocentro,-34.868283,-56.169768,0.0
+124,11,2025-05-01,23:50:00.0,Bv Artigas,Ponce,Canelones,-34.906600,-56.163642,15.0
+214,11,2025-05-01,23:50:00.0,26 de Marzo,L A de Herrera,Bonavita,-34.905612,-56.135593,0.0
+114,11,2025-05-01,23:50:00.0,Rambla,Piaggio,Pereyra,-34.901555,-56.123936,12.0
+213,11,2025-05-01,23:50:00.0,Bv Artigas,Nueva Palmira,Garibaldi,-34.884889,-56.166067,6.0
+214,11,2025-05-01,23:50:00.0,Bv Artigas,18 de julio,Canaro,-34.898792,-56.164361,6.0
+306,2,2025-05-01,23:50:00.0,Rivera,Bv Artigas,Ponce,-34.902720,-56.162320,57.0
+109,2,2025-05-01,23:50:00.0,Bv Artigas,Palmar,Canaro,-34.899594,-56.164421,47.0
+305,2,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Cabrera,8 de Octubre,-34.879770,-56.147220,36.0
+315,2,2025-05-01,23:50:00.0,Bv Artigas,Cufre,Gral Flores,-34.870230,-56.173220,98.0
+420,2,2025-05-01,23:50:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,51.0
+106,2,2025-05-01,23:50:00.0,Solano Lopez,Rivera,Rambla,-34.897400,-56.120289,0.0
+109,2,2025-05-01,23:50:00.0,8 de Octubre,Sanguinetti,Bv Batlle y Ordonez,-34.878660,-56.147140,13.0
+109,2,2025-05-01,23:50:00.0,Rivera,14 de Julio,Rosell y Rius,-34.903100,-56.147470,48.0
+106,2,2025-05-01,23:50:00.0,Benito Blanco,21 de Setiembre,Bv Espana,-34.915828,-56.149900,26.0
+305,2,2025-05-01,23:50:00.0,Bv Espana,Libertad,Bv Artigas,-34.911249,-56.162091,62.0
+106,2,2025-05-01,23:50:00.0,Rambla,Bv Espana,Montero,-34.922861,-56.152192,36.0
+106,2,2025-05-01,23:50:00.0,Av Italia,Solano Lopez,Mataojo,-34.887117,-56.122775,51.0
+404,2,2025-05-01,23:50:00.0,Av Brasil,26 de Marzo,Benito Blanco,-34.913389,-56.150044,59.0
+112,2,2025-05-01,23:50:00.0,8 de Octubre,Cipriano Miro,Serrato,-34.874790,-56.140310,0.0
+106,2,2025-05-01,23:50:00.0,Bv Artigas,Gral Flores,Penco,-34.870392,-56.177658,0.0
+106,2,2025-05-01,23:50:00.0,Av Italia,L A de Herrera,Las Heras,-34.889656,-56.149612,48.0
+113,2,2025-05-01,23:50:00.0,Libertador,Mercedes,Colonia,-34.904899,-56.193673,15.0
+106,2,2025-05-01,23:50:00.0,Bv Artigas,Colorado,Caribes,-34.880982,-56.166511,45.0
+109,2,2025-05-01,23:50:00.0,Av Brasil,Ellauri,26 de Marzo,-34.911150,-56.151809,17.0
+315,2,2025-05-01,23:50:00.0,Gral Flores,Gallinal,Garibaldi,-34.875670,-56.178980,22.0
+106,2,2025-05-01,23:50:00.0,Agraciada,Av de Las Leyes,Marcelino Sosa,-34.889938,-56.187259,30.0
+109,2,2025-05-01,23:50:00.0,Centenario,Cibils,L A de Herrera,-34.883490,-56.152320,25.0
+305,2,2025-05-01,23:50:00.0,Av Brasil,Benito Blanco,26 de Marzo,-34.911658,-56.151278,36.0
+205,2,2025-05-01,23:50:00.0,26 de Marzo,Pereira,Av Brasil,-34.911057,-56.151196,33.0
+312,2,2025-05-01,23:50:00.0,Bv Artigas,Martin Fierro,Caribes,-34.882196,-56.166261,52.0
+111,2,2025-05-01,23:50:00.0,San Quintin,Santa Lucia,Garzon,-34.852648,-56.223283,41.0
+111,2,2025-05-01,23:50:00.0,Garzon,Calderon de la Barca,Duran,-34.799264,-56.224509,32.0
+207,2,2025-05-01,23:50:00.0,Miguelete,Magallanes,Fernandez Crespo,-34.896064,-56.182073,45.0
+106,2,2025-05-01,23:50:00.0,Gral Flores,Bv Batlle y Ordonez,Salari,-34.861922,-56.168100,37.0
+106,2,2025-05-01,23:50:00.0,Colonia,German Barbato,Ejido,-34.904613,-56.186306,42.0
+305,2,2025-05-01,23:50:00.0,Gral Flores,Corrales,Carreras Nacionales,-34.845098,-56.154306,40.0
+109,2,2025-05-01,23:50:00.0,Millan,Bell,Garzon,-34.834811,-56.221060,31.0
+205,2,2025-05-01,23:50:00.0,Garzon,Casavalle,Saravia,-34.814485,-56.220677,49.0
+104,2,2025-05-01,23:50:00.0,Fernandez Crespo,La Paz,Miguelete,-34.896103,-56.181280,38.0
+205,2,2025-05-01,23:50:00.0,Morquio,Ricaldoni,Bv Artigas,-34.897095,-56.163972,30.0
+109,2,2025-05-01,23:50:00.0,Luis Batlle Berres,Tomkinson,C M Ramirez,-34.858360,-56.227729,42.0
+205,2,2025-05-01,23:50:00.0,Ricaldoni,Ponce,Merola,-34.897084,-56.159030,31.0
+106,2,2025-05-01,23:50:00.0,Magallanes,Mercedes,Colonia,-34.901957,-56.180331,45.0
+111,2,2025-05-01,23:50:00.0,Garzon,San Quintin N,Emancipacion,-34.850334,-56.223620,0.0
+103,2,2025-05-01,23:50:00.0,C M Ramirez,Camambu,Acceso Ta-Ta,-34.873417,-56.246279,54.0
+205,2,2025-05-01,23:50:00.0,Ejido,18 de Julio,Colonia,-34.905312,-56.186851,31.0
+305,2,2025-05-01,23:50:00.0,18 de Julio,8 de Octubre,Bv Artigas,-34.897926,-56.165434,32.0
+106,2,2025-05-01,23:50:00.0,Gral Caraballo,Mendoza,Agraciada,-34.885789,-56.192950,0.0
+106,2,2025-05-01,23:50:00.0,San Jose,Rio Negro,Paraguay,-34.907094,-56.193086,38.0
+106,2,2025-05-01,23:50:00.0,Uruguay,Arenal Grande,Fernandez Crespo,-34.898911,-56.176615,42.0
+106,2,2025-05-01,23:50:00.0,Julio Herrera y Obes,Mercedes,Colonia,-34.904753,-56.194854,33.0
+405,2,2025-05-01,23:50:00.0,Bv Artigas,Millan,Burgues,-34.871279,-56.187329,38.0
+106,2,2025-05-01,23:50:00.0,Colonia,Acevedo Diaz,Paullier,-34.897857,-56.168614,56.0
+106,2,2025-05-01,23:50:00.0,Andes,18 de Julio,Colonia,-34.906008,-56.198115,25.0
+205,2,2025-05-01,23:50:00.0,Arenal Grande,Mercedes,Colonia,-34.899763,-56.174753,70.0
+112,2,2025-05-01,23:50:00.0,Gral Flores,Av de las Leyes,Yatay,-34.889350,-56.186440,0.0
+308,2,2025-05-01,23:50:00.0,Bv Espana,Rambla,Benito Blanco,-34.915119,-56.149044,27.0
+106,2,2025-05-01,23:50:00.0,Rambla,Montero,Bv Espana,-34.916417,-56.148942,40.0
+111,2,2025-05-01,23:50:00.0,Gral Flores,Quesada,L A de Herrera,-34.866070,-56.171180,44.0
+104,2,2025-05-01,23:50:00.0,Miguelete,Justicia,Bv Artigas,-34.891865,-56.166402,32.0
+305,2,2025-05-01,23:50:00.0,Sarmiento,Rambla,Requena y Garcia,-34.915536,-56.168299,37.0
+205,2,2025-05-01,23:50:00.0,Rambla,Errazquin,Sarmiento,-34.916586,-56.168989,46.0
+114,2,2025-05-01,23:50:00.0,8 de Octubre,Avelino Miranda,Presidente Berro,-34.892460,-56.162690,29.0
+106,2,2025-05-01,23:50:00.0,Av Italia,Mataojo,Solano Lopez,-34.886792,-56.129075,0.0
+205,2,2025-05-01,23:50:00.0,L A de Herrera,Gualeguay,Gral Flores,-34.867630,-56.170840,44.0
+109,2,2025-05-01,23:50:00.0,Garibaldi,Urquiza,8 de Octubre,-34.888870,-56.160850,20.0
+109,2,2025-05-01,23:50:00.0,Bv Artigas,Hocquart,Nueva Palmira,-34.889533,-56.165523,31.0
+205,2,2025-05-01,23:50:00.0,26 de Marzo,Bonavita,Tezanos,-34.905258,-56.134153,38.0
+111,2,2025-05-01,23:50:00.0,Suarez,Grito de Asencio,Bv Artigas,-34.872536,-56.196429,50.0
+305,2,2025-05-01,23:50:00.0,Larranaga,Monte Caseros,Joanico,-34.879760,-56.152480,36.0
+109,2,2025-05-01,23:50:00.0,8 de Octubre,Gral Villagran,Raissignier,-34.869880,-56.134890,10.0
+305,2,2025-05-01,23:50:00.0,Hocquart,Justicia,Bv Artigas,-34.888996,-56.166795,56.0
+205,2,2025-05-01,23:50:00.0,Raissignier,Cno Carrasco,8 de Octubre,-34.871110,-56.134320,0.0
+106,2,2025-05-01,23:50:00.0,8 de Octubre,Bv Batlle y Ordonez,Sanguinetti,-34.878660,-56.146580,2.0
+110,2,2025-05-01,23:50:00.0,Mercedes,Andes,Convencion,-34.904463,-56.197815,33.0
+106,2,2025-05-01,23:50:00.0,San Jose,Aquiles Lanza,Ejido,-34.906626,-56.187543,27.0
+112,2,2025-05-01,23:50:00.0,Agraciada,C M Ramirez,Freire,-34.855372,-56.221586,30.0
+106,2,2025-05-01,23:50:00.0,Requena,18 de Julio,Colonia,-34.899083,-56.170060,28.0
+107,2,2025-05-01,23:50:00.0,18 de Julio,Eduardo Acevedo,Rivera,-34.901707,-56.175376,0.0
+106,2,2025-05-01,23:50:00.0,Libertador,Galicia,La Paz,-34.900095,-56.191491,36.0
+306,2,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,95.0
+106,2,2025-05-01,23:50:00.0,Yaguaron,Colonia,18 de Julio,-34.905242,-56.188052,26.0
+106,2,2025-05-01,23:50:00.0,Ejido,Canelones,Soriano,-34.907976,-56.186627,28.0
+207,2,2025-05-01,23:50:00.0,Rivera,Arenal Grande,Brandzen,-34.902055,-56.174177,33.0
+106,2,2025-05-01,23:50:00.0,Soriano,Gutierrez Ruiz,Paraguay,-34.907839,-56.191690,38.0
+111,2,2025-05-01,23:50:00.0,Bv Artigas,Palmar,Rivera,-34.900440,-56.164380,32.0
+106,2,2025-05-01,23:50:00.0,Acevedo Diaz,Garibaldi,Ferrer Serra,-34.894152,-56.167498,99.0
+207,2,2025-05-01,23:50:00.0,Paraguay,18 de Julio,Colonia,-34.905501,-56.192532,43.0
+315,2,2025-05-01,23:50:00.0,Aramburu,Terra,Gral Flores,-34.882790,-56.181890,24.0
+103,2,2025-05-01,23:50:00.0,Gral Flores,Aramburu,Blandengues,-34.883180,-56.182980,60.0
+106,2,2025-05-01,23:50:00.0,San Martin,Martin Garcia,Agraciada,-34.887872,-56.188664,0.0
+305,2,2025-05-01,23:50:00.0,Rodo,Requena,Bv Artigas,-34.902829,-56.164944,33.0
+210,2,2025-05-01,23:50:00.0,Suarez,Lucas Obes,Bv Artigas,-34.871423,-56.196600,39.0
+205,2,2025-05-01,23:50:00.0,Rivera,Ponce,Bv Artigas,-34.902620,-56.163050,37.0
+411,2,2025-05-01,23:50:00.0,Rivera,Bv Artigas,Acevedo Diaz,-34.902088,-56.164534,33.0
+106,2,2025-05-01,23:50:00.0,Bv Artigas,Caribes,Colorado,-34.877335,-56.166706,44.0
+205,2,2025-05-01,23:50:00.0,Hipolito Yrigoyen,Rivera,Av Italia,-34.887927,-56.110028,36.0
+106,2,2025-05-01,23:50:00.0,Rambla,L A de Herrera,Buxareo,-34.909600,-56.140944,37.0
+106,2,2025-05-01,23:50:00.0,26 de Marzo,Tezanos,Bonavita,-34.905325,-56.134761,49.0
+109,2,2025-05-01,23:50:00.0,Rivera,Acceso Cementerio,Bv Batlle y Ordonez,-34.897900,-56.125370,62.0
+305,2,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Pereyra,Rivera,-34.898010,-56.124030,33.0
+205,2,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Ramon Anador,Rivera,-34.896940,-56.125230,35.0
+408,2,2025-05-01,23:50:00.0,Bv Artigas,Ponce,Canelones,-34.906121,-56.163729,39.0
+305,2,2025-05-01,23:50:00.0,Av Italia,Gallinal,Hipolito Yrigoyen,-34.886696,-56.109244,48.0
+106,2,2025-05-01,23:50:00.0,Cerro Largo,Magallanes,Ejido,-34.900766,-56.186738,47.0
+205,2,2025-05-01,23:50:00.0,La Paz,Yaguaron,Libertador,-34.899267,-56.190369,36.0
+205,2,2025-05-01,23:50:00.0,Av Italia,Zum Felde,Bolivia,-34.883363,-56.085006,48.0
+205,2,2025-05-01,23:50:00.0,Paullier,E V Haedo,Colonia,-34.897433,-56.169554,43.0
+205,2,2025-05-01,23:50:00.0,Rambla,Sarmiento,Errazquin,-34.929158,-56.160908,56.0
+306,2,2025-05-01,23:50:00.0,Bv Artigas,San Martin,Ramon Marquez,-34.870833,-56.183974,44.0
+106,2,2025-05-01,23:50:00.0,Libertador,Uruguay,Mercedes,-34.903623,-56.193266,29.0
+107,2,2025-05-01,23:50:00.0,Bolivia,Cno Carrasco,Av Italia,-34.882342,-56.083577,57.0
+106,2,2025-05-01,23:50:00.0,Colonia,Arenal Grande,Fernandez Crespo,-34.900375,-56.175142,37.0
+406,2,2025-05-01,23:50:00.0,Fernandez Crespo,18 de Julio,Colonia,-34.901342,-56.175176,34.0
+205,2,2025-05-01,23:50:00.0,Paraguay,Canelones,Soriano,-34.908372,-56.192213,32.0
+206,2,2025-05-01,23:50:00.0,Soca,Brito del Pino,Rivera,-34.902187,-56.156460,29.0
+106,2,2025-05-01,23:50:00.0,San Jose,Andes,Convencion,-34.907371,-56.197516,31.0
+111,2,2025-05-01,23:50:00.0,Uruguayana,12 de Diciembre,Bv Artigas,-34.873600,-56.204285,0.0
+205,2,2025-05-01,23:50:00.0,Soriano,Santiago de Chile,Ejido,-34.907420,-56.185940,34.0
+310,2,2025-05-01,23:50:00.0,18 de Julio,Arenal Grande,Fernandez Crespo,-34.901274,-56.174566,40.0
+305,2,2025-05-01,23:50:00.0,Bv Artigas,Accesos,Uruguayana,-34.873224,-56.205881,44.0
+106,2,2025-05-01,23:50:00.0,Soriano,Convencion,Andes,-34.908243,-56.197326,27.0
+106,2,2025-05-01,23:50:00.0,Uruguay,Vazquez,Ejido,-34.902768,-56.186559,0.0
+106,2,2025-05-01,23:50:00.0,Cerro Largo,Yaguaron,Rondeau,-34.901163,-56.190841,41.0
+205,2,2025-05-01,23:50:00.0,Varela,Bv Batlle y Ordonez,L A de Herrera,-34.869993,-56.165974,30.0
+311,2,2025-05-01,23:50:00.0,Garibaldi,Amezaga,Bv Artigas,-34.884370,-56.166584,50.0
+305,2,2025-05-01,23:50:00.0,L A de Herrera,Setembrino Pereda,Varela S,-34.869125,-56.166318,67.0
+109,2,2025-05-01,23:50:00.0,Bv Artigas,Gallinal,L A de Herrera,-34.870406,-56.167448,35.0
+106,2,2025-05-01,23:50:00.0,Rambla,Pereyra,Paiva,-34.904958,-56.128464,50.0
+106,2,2025-05-01,23:50:00.0,Rambla,Morales,Jackson,-34.914494,-56.173994,47.0
+305,2,2025-05-01,23:50:00.0,Av Italia,Avelino Miranda,Bv Artigas,-34.894478,-56.163857,42.0
+112,2,2025-05-01,23:50:00.0,Gral Flores,Gallinal,Bv Artigas,-34.871100,-56.175180,20.0
+205,2,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Joanico,8 de Octubre,-34.878960,-56.148300,30.0
+106,2,2025-05-01,23:50:00.0,18 de Julio,Andes,Convencion,-34.906393,-56.197508,12.0
+112,2,2025-05-01,23:50:00.0,Garibaldi,Terra,Gral Flores,-34.876960,-56.177630,64.0
+205,2,2025-05-01,23:50:00.0,Joanico,Comercio,Bv Batlle y Ordonez,-34.878133,-56.148014,42.0
+215,2,2025-05-01,23:50:00.0,Bv Artigas,Caribes,Martin Fierro,-34.881836,-56.166420,42.0
+205,2,2025-05-01,23:50:00.0,Marcelino Sosa,Yatay,Agraciada,-34.889123,-56.187513,0.0
+305,2,2025-05-01,23:50:00.0,Canelones,Acevedo Diaz,Bv Artigas,-34.906735,-56.164427,26.0
+305,2,2025-05-01,23:50:00.0,Av Italia,Avelino Miranda,Albo,-34.892557,-56.159733,41.0
+106,2,2025-05-01,23:50:00.0,Rio Negro,Libertador,Colonia,-34.904899,-56.193673,0.0
+205,2,2025-05-01,23:50:00.0,Bv Artigas,Bv Espana,Canelones,-34.907443,-56.163561,40.0
+205,2,2025-05-01,23:50:00.0,Albo,8 de Octubre,Av Italia,-34.891367,-56.158957,37.0
+310,2,2025-05-01,23:50:00.0,Bolivia,Rivera,Av Italia,-34.884218,-56.082956,38.0
+205,2,2025-05-01,23:50:00.0,Bv Artigas,Penco,Gral Flores,-34.870410,-56.175380,32.0
+214,2,2025-05-01,23:50:00.0,Centenario,Jaime Cibils,Av Italia,-34.890634,-56.155365,28.0
+106,2,2025-05-01,23:50:00.0,Rambla,Arrascaeta,Hipolito Yrigoyen,-34.895919,-56.109447,71.0
+106,2,2025-05-01,23:50:00.0,L A de Herrera,Placido Ellauri,Rivera,-34.901934,-56.138191,33.0
+205,2,2025-05-01,23:50:00.0,Daniel Munoz,Martin C Martinez,Acevedo Diaz,-34.896109,-56.167913,54.0
+106,2,2025-05-01,23:50:00.0,Bv Artigas,L A de Herrera,Gallinal,-34.871960,-56.167490,47.0
+205,2,2025-05-01,23:50:00.0,8 de Octubre,Serrato,Cipriano Miro,-34.874910,-56.140170,41.0
+106,2,2025-05-01,23:50:00.0,Bv Artigas,Sosa,21 de Setiembre,-34.913860,-56.162715,40.0
+109,2,2025-05-01,23:50:00.0,E V Haedo,Paullier,Acevedo Diaz,-34.895946,-56.168014,39.0
+407,2,2025-05-01,23:50:00.0,L A de Herrera,Placido Ellauri,26 de Marzo,-34.905423,-56.137037,48.0
+305,2,2025-05-01,23:50:00.0,Avelino Miranda,8 de Octubre,Bv Artigas,-34.893083,-56.164427,47.0
+106,2,2025-05-01,23:50:00.0,Rambla,L A de Herrera,26 de Marzo,-34.906333,-56.133078,49.0
+205,2,2025-05-01,23:50:00.0,Bv Artigas,Hocquart,Miguelete,-34.890943,-56.165560,45.0
+106,2,2025-05-01,23:50:00.0,Sarmiento,Requena,Rambla,-34.915369,-56.168358,32.0
+205,2,2025-05-01,23:50:00.0,Av Brasil,Brito del Pino,Bv Artigas,-34.906097,-56.162718,35.0
+107,2,2025-05-01,23:50:00.0,Rivera,Rosell y Rius,14 de Julio,-34.902720,-56.147240,62.0
+106,2,2025-05-01,23:50:00.0,Av Italia,Cooper,Bolonia,-34.880827,-56.077112,43.0
+106,2,2025-05-01,23:50:00.0,Rambla,Gral Paz,Gallinal,-34.895172,-56.089158,43.0
+214,2,2025-05-01,23:50:00.0,Av Italia,Hipolito Yrigoyen,Gallinal,-34.886028,-56.100543,45.0
+205,2,2025-05-01,23:50:00.0,Bv Espana,Ellauri,Benito Blanco,-34.914897,-56.150400,38.0
+215,3,2025-05-01,23:50:00.0,Bv Artigas,Penco,Gral Flores,-34.870410,-56.175380,33.0
+406,3,2025-05-01,23:50:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,52.0
+111,3,2025-05-01,23:50:00.0,Bv Artigas,Palmar,Canaro,-34.899594,-56.164421,45.0
+315,3,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Cabrera,8 de Octubre,-34.879770,-56.147220,27.0
+114,3,2025-05-01,23:50:00.0,Av Italia,Solano Lopez,Mataojo,-34.887117,-56.122775,70.0
+214,3,2025-05-01,23:50:00.0,Daniel Munoz,Martin C Martinez,Acevedo Diaz,-34.896109,-56.167913,56.0
+114,3,2025-05-01,23:50:00.0,Bv Artigas,Gral Flores,Penco,-34.870392,-56.177658,0.0
+114,3,2025-05-01,23:50:00.0,Bv Artigas,Colorado,Caribes,-34.880982,-56.166511,35.0
+107,3,2025-05-01,23:50:00.0,Centenario,Cibils,L A de Herrera,-34.883490,-56.152320,30.0
+216,3,2025-05-01,23:50:00.0,Bv Artigas,Caribes,Martin Fierro,-34.881836,-56.166420,38.0
+315,3,2025-05-01,23:50:00.0,L A de Herrera,Rep Dominicana,Av Italia,-34.888379,-56.147844,27.0
+114,3,2025-05-01,23:50:00.0,Gral Flores,Bv Batlle y Ordonez,Salari,-34.861922,-56.168100,29.0
+215,3,2025-05-01,23:50:00.0,Ejido,18 de Julio,Colonia,-34.905312,-56.186851,7.0
+315,3,2025-05-01,23:50:00.0,18 de Julio,8 de Octubre,Bv Artigas,-34.897926,-56.165434,0.0
+305,3,2025-05-01,23:50:00.0,Bv Artigas,San Martin,Ramon Marquez,-34.870833,-56.183974,35.0
+415,3,2025-05-01,23:50:00.0,Bv Artigas,Millan,Burgues,-34.871279,-56.187329,33.0
+113,3,2025-05-01,23:50:00.0,Colonia,Arenal Grande,Fernandez Crespo,-34.900375,-56.175142,39.0
+214,3,2025-05-01,23:50:00.0,Rambla,Sarmiento,Errazquin,-34.929158,-56.160908,0.0
+205,3,2025-05-01,23:50:00.0,Av Italia,Hipolito Yrigoyen,Gallinal,-34.886028,-56.100543,39.0
+314,3,2025-05-01,23:50:00.0,Avelino Miranda,8 de Octubre,Bv Artigas,-34.893083,-56.164427,38.0
+103,3,2025-05-01,23:50:00.0,Sarmiento,Requena,Rambla,-34.915369,-56.168358,25.0
+315,3,2025-05-01,23:50:00.0,Sarmiento,Rambla,Requena y Garcia,-34.915536,-56.168299,33.0
+107,3,2025-05-01,23:50:00.0,Acevedo Diaz,Garibaldi,Ferrer Serra,-34.894152,-56.167498,88.0
+114,3,2025-05-01,23:50:00.0,8 de Octubre,Bv Batlle y Ordonez,Sanguinetti,-34.878660,-56.146580,0.0
+111,3,2025-05-01,23:50:00.0,Bv Artigas,Hocquart,Nueva Palmira,-34.889533,-56.165523,25.0
+303,3,2025-05-01,23:50:00.0,18 de Julio,Arenal Grande,Fernandez Crespo,-34.901274,-56.174566,24.0
+109,3,2025-05-01,23:50:00.0,Bv Artigas,Palmar,Rivera,-34.900440,-56.164380,26.0
+315,3,2025-05-01,23:50:00.0,Rodo,Requena,Bv Artigas,-34.902829,-56.164944,29.0
+315,3,2025-05-01,23:50:00.0,Av Italia,Gallinal,Hipolito Yrigoyen,-34.886696,-56.109244,48.0
+114,3,2025-05-01,23:50:00.0,Bv Artigas,Caribes,Colorado,-34.877335,-56.166706,45.0
+114,3,2025-05-01,23:50:00.0,Uruguay,Vazquez,Ejido,-34.902768,-56.186559,61.0
+305,3,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,121.0
+215,3,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Joanico,8 de Octubre,-34.878960,-56.148300,21.0
+205,3,2025-05-01,23:50:00.0,Centenario,Jaime Cibils,Av Italia,-34.890634,-56.155365,47.0
+315,3,2025-05-01,23:50:00.0,Av Italia,Avelino Miranda,Bv Artigas,-34.894478,-56.163857,0.0
+111,3,2025-05-01,23:50:00.0,Bv Artigas,Gallinal,L A de Herrera,-34.870406,-56.167448,32.0
+114,3,2025-05-01,23:50:00.0,Rambla,Morales,Jackson,-34.914494,-56.173994,0.0
+114,3,2025-05-01,23:50:00.0,Rambla,Pereyra,Paiva,-34.904958,-56.128464,49.0
+114,3,2025-05-01,23:50:00.0,Av Italia,L A de Herrera,Las Heras,-34.889656,-56.149612,69.0
+311,3,2025-05-01,23:50:00.0,Bv Artigas,Martin Fierro,Caribes,-34.882196,-56.166261,31.0
+409,3,2025-05-01,23:50:00.0,Bv Artigas,Ponce,Canelones,-34.906121,-56.163729,27.0
+215,3,2025-05-01,23:50:00.0,8 de Octubre,Serrato,Cipriano Miro,-34.874910,-56.140170,0.0
+114,3,2025-05-01,23:50:00.0,Rambla,Arrascaeta,Hipolito Yrigoyen,-34.895919,-56.109447,70.0
+111,3,2025-05-01,23:50:00.0,E V Haedo,Paullier,Acevedo Diaz,-34.895946,-56.168014,0.0
+114,3,2025-05-01,23:50:00.0,Bv Artigas,L A de Herrera,Gallinal,-34.871960,-56.167490,43.0
+214,3,2025-05-01,23:50:00.0,Rambla,Errazquin,Sarmiento,-34.916586,-56.168989,49.0
+307,3,2025-05-01,23:50:00.0,Bv Espana,Rambla,Benito Blanco,-34.915119,-56.149044,35.0
+114,3,2025-05-01,23:50:00.0,Rambla,L A de Herrera,26 de Marzo,-34.906333,-56.133078,0.0
+103,3,2025-05-01,23:50:00.0,Rambla,Montero,Bv Espana,-34.916417,-56.148942,0.0
+109,3,2025-05-01,23:50:00.0,Av Italia,Mataojo,Solano Lopez,-34.886792,-56.129075,0.0
+215,3,2025-05-01,23:50:00.0,Bv Artigas,Hocquart,Miguelete,-34.890943,-56.165560,37.0
+216,9,2025-05-01,23:50:00.0,Garzon,Casavalle,Saravia,-34.814485,-56.220677,0.0
+321,9,2025-05-01,23:50:00.0,Gral Flores,Corrales,Carreras Nacionales,-34.845098,-56.154306,0.0
+110,9,2025-05-01,23:50:00.0,Garzon,San Quintin N,Emancipacion,-34.850334,-56.223620,0.0
+108,9,2025-05-01,23:50:00.0,Garzon,Calderon de la Barca,Duran,-34.799264,-56.224509,0.0
+110,9,2025-05-01,23:50:00.0,San Quintin,Santa Lucia,Garzon,-34.852648,-56.223283,32.0
+119,12,2025-05-01,23:50:00.0,Av Italia,Centenario,Albo,-34.892014,-56.158914,24.0
+121,12,2025-05-01,23:50:00.0,Bv Artigas,Ponce,Canelones,-34.906600,-56.163642,13.0
+114,131,2025-05-01,23:50:00.0,20 de Febrero,Cno Carrasco,8 de Octubre,-34.867070,-56.134340,17.0
+114,131,2025-05-01,23:50:00.0,Piccioli,Osvaldo Cruz,8 de Octubre,-34.858120,-56.133570,3.0
+315,4,2025-05-01,23:50:00.0,Bv Batlle y Ordonez,Rousseau,Monte Caseros,-34.876518,-56.151419,0.0
+405,4,2025-05-01,23:50:00.0,Bv Artigas,Goes,Av Italia,-34.893284,-56.165144,41.0
+107,1,2025-05-01,23:45:00.0,8 de Octubre,Sanguinetti,Bv Batlle y Ordonez,-34.878660,-56.147140,31.0
+107,1,2025-05-01,23:45:00.0,Bv Artigas,Palmar,Canaro,-34.899594,-56.164421,41.0
+206,1,2025-05-01,23:45:00.0,Varela,Bv Batlle y Ordonez,L A de Herrera,-34.869993,-56.165974,34.0
+206,1,2025-05-01,23:45:00.0,Ponce,Ricaldoni,Rivera,-34.902150,-56.160830,0.0
+306,1,2025-05-01,23:45:00.0,L A de Herrera,Setembrino Pereda,Varela S,-34.869125,-56.166318,42.0
+111,1,2025-05-01,23:45:00.0,Gral Flores,Gallinal,Bv Artigas,-34.871100,-56.175180,19.0
+206,1,2025-05-01,23:45:00.0,Bv Batlle y Ordonez,Joanico,8 de Octubre,-34.878960,-56.148300,36.0
+107,1,2025-05-01,23:45:00.0,Solano Lopez,Rivera,Rambla,-34.897400,-56.120289,36.0
+305,1,2025-05-01,23:45:00.0,Bv Artigas,Cufre,Gral Flores,-34.870230,-56.173220,93.0
+107,1,2025-05-01,23:45:00.0,Rambla,Morales,Jackson,-34.914494,-56.173994,37.0
+306,1,2025-05-01,23:45:00.0,Av Italia,Avelino Miranda,Bv Artigas,-34.894478,-56.163857,36.0
+306,1,2025-05-01,23:45:00.0,Bv Batlle y Ordonez,Cabrera,8 de Octubre,-34.879770,-56.147220,33.0
+107,1,2025-05-01,23:45:00.0,26 de Marzo,Tezanos,Bonavita,-34.905325,-56.134761,46.0
+408,1,2025-05-01,23:45:00.0,Av Brasil,26 de Marzo,Benito Blanco,-34.913389,-56.150044,50.0
+206,1,2025-05-01,23:45:00.0,Daniel Munoz,Martin C Martinez,Acevedo Diaz,-34.896109,-56.167913,34.0
+206,1,2025-05-01,23:45:00.0,Bv Batlle y Ordonez,Ramon Anador,Rivera,-34.896940,-56.125230,52.0
+107,1,2025-05-01,23:45:00.0,Bv Artigas,Sosa,21 de Setiembre,-34.913860,-56.162715,54.0
+107,1,2025-05-01,23:45:00.0,Bv Artigas,L A de Herrera,Gallinal,-34.871960,-56.167490,58.0
+107,1,2025-05-01,23:45:00.0,Rambla,L A de Herrera,Buxareo,-34.909600,-56.140944,38.0
+306,1,2025-05-01,23:45:00.0,Bv Batlle y Ordonez,Pereyra,Rivera,-34.898010,-56.124030,27.0
+306,1,2025-05-01,23:45:00.0,Av Italia,Gallinal,Hipolito Yrigoyen,-34.886696,-56.109244,49.0
+107,1,2025-05-01,23:45:00.0,Bv Artigas,Caribes,Colorado,-34.877335,-56.166706,54.0
+206,1,2025-05-01,23:45:00.0,8 de Octubre,Serrato,Cipriano Miro,-34.874910,-56.140170,46.0
+206,1,2025-05-01,23:45:00.0,Hipolito Yrigoyen,Rivera,Av Italia,-34.887927,-56.110028,37.0
+107,1,2025-05-01,23:45:00.0,Rambla,Arrascaeta,Hipolito Yrigoyen,-34.895919,-56.109447,53.0
+107,1,2025-05-01,23:45:00.0,Rivera,14 de Julio,Rosell y Rius,-34.903100,-56.147470,43.0
+306,1,2025-05-01,23:45:00.0,Canelones,Acevedo Diaz,Bv Artigas,-34.906735,-56.164427,27.0
+206,1,2025-05-01,23:45:00.0,Joanico,Comercio,Bv Batlle y Ordonez,-34.878133,-56.148014,41.0
+107,1,2025-05-01,23:45:00.0,18 de Julio,Andes,Convencion,-34.906393,-56.197508,0.0
+206,1,2025-05-01,23:45:00.0,Marcelino Sosa,Yatay,Agraciada,-34.889123,-56.187513,34.0
+206,1,2025-05-01,23:45:00.0,Bv Artigas,Bv Espana,Canelones,-34.907443,-56.163561,34.0
+214,1,2025-05-01,23:45:00.0,Bv Artigas,Caribes,Martin Fierro,-34.881836,-56.166420,56.0
+107,1,2025-05-01,23:45:00.0,Rio Negro,Libertador,Colonia,-34.904899,-56.193673,14.0
+305,1,2025-05-01,23:45:00.0,Gral Flores,Gallinal,Garibaldi,-34.875670,-56.178980,40.0
+215,1,2025-05-01,23:45:00.0,Garibaldi,Pando,Gral Flores,-34.876080,-56.180390,45.0
+111,1,2025-05-01,23:45:00.0,Centenario,Cibils,L A de Herrera,-34.883490,-56.152320,43.0
+111,1,2025-05-01,23:45:00.0,Garibaldi,Terra,Gral Flores,-34.876960,-56.177630,75.0
+107,1,2025-05-01,23:45:00.0,Av Brasil,Ellauri,26 de Marzo,-34.911150,-56.151809,37.0
+107,1,2025-05-01,23:45:00.0,Acevedo Diaz,18 de Julio,Rivera,-34.901269,-56.166669,27.0
+107,1,2025-05-01,23:45:00.0,Millan,Bell,Garzon,-34.834811,-56.221060,30.0
+206,1,2025-05-01,23:45:00.0,Ejido,18 de Julio,Colonia,-34.905312,-56.186851,20.0
+306,1,2025-05-01,23:45:00.0,18 de Julio,8 de Octubre,Bv Artigas,-34.897926,-56.165434,0.0
+206,1,2025-05-01,23:45:00.0,C M Ramirez,Llupes,M Herrera y Obes,-34.857615,-56.225499,41.0
+109,1,2025-05-01,23:45:00.0,San Quintin,Santa Lucia,Garzon,-34.852648,-56.223283,41.0
+107,1,2025-05-01,23:45:00.0,Saravia,Mendoza,Gral Flores,-34.833109,-56.145628,40.0
+206,1,2025-05-01,23:45:00.0,Morquio,Ricaldoni,Bv Artigas,-34.897095,-56.163972,48.0
+107,1,2025-05-01,23:45:00.0,Fernandez Crespo,La Paz,Miguelete,-34.896103,-56.181280,39.0
+206,1,2025-05-01,23:45:00.0,Garzon,Casavalle,Saravia,-34.814485,-56.220677,41.0
+205,1,2025-05-01,23:45:00.0,Carreras Nacionales,Sainz Rosas,Gral Flores,-34.844938,-56.152969,32.0
+107,1,2025-05-01,23:45:00.0,Magallanes,Mercedes,Colonia,-34.901957,-56.180331,30.0
+109,1,2025-05-01,23:45:00.0,Garzon,Calderon de la Barca,Duran,-34.799264,-56.224509,66.0
+206,1,2025-05-01,23:45:00.0,Ricaldoni,Ponce,Merola,-34.897084,-56.159030,0.0
+206,1,2025-05-01,23:45:00.0,Saravia,Belloni,Gral Flores,-34.833040,-56.143735,33.0
+206,1,2025-05-01,23:45:00.0,Miguelete,Magallanes,Fernandez Crespo,-34.896064,-56.182073,38.0
+107,1,2025-05-01,23:45:00.0,M Herrera y Obes,Angel Salvo,C M Ramirez,-34.858336,-56.225519,33.0
+107,1,2025-05-01,23:45:00.0,Luis Batlle Berres,Tomkinson,C M Ramirez,-34.858360,-56.227729,32.0
+107,1,2025-05-01,23:45:00.0,Ellauri,21 de Setiembre,Bv Espana,-34.914572,-56.153585,20.0
+109,1,2025-05-01,23:45:00.0,Garzon,San Quintin N,Emancipacion,-34.850334,-56.223620,0.0
+206,1,2025-05-01,23:45:00.0,Bv Batlle y Ordonez,Carafi,Garzon,-34.827224,-56.220600,22.0
+306,1,2025-05-01,23:45:00.0,Gral Flores,Corrales,Carreras Nacionales,-34.845098,-56.154306,47.0
+206,1,2025-05-01,23:45:00.0,Millan,Eugenio Alsina,Garzon,-34.834099,-56.222302,47.0
+107,1,2025-05-01,23:45:00.0,C M Ramirez,Camambu,Acceso Ta-Ta,-34.873417,-56.246279,60.0
+107,1,2025-05-01,23:45:00.0,Gral Flores,Bv Batlle y Ordonez,Salari,-34.861922,-56.168100,52.0
+107,1,2025-05-01,23:45:00.0,Colonia,Arenal Grande,Fernandez Crespo,-34.900375,-56.175142,32.0
+112,1,2025-05-01,23:45:00.0,Mercedes,Andes,Convencion,-34.904463,-56.197815,29.0
+206,1,2025-05-01,23:45:00.0,Av Italia,Zum Felde,Bolivia,-34.883363,-56.085006,51.0
+319,1,2025-05-01,23:45:00.0,Bv Artigas,San Martin,Ramon Marquez,-34.870833,-56.183974,44.0
+107,1,2025-05-01,23:45:00.0,Cerro Largo,Magallanes,Ejido,-34.900766,-56.186738,0.0
+206,1,2025-05-01,23:45:00.0,Paullier,E V Haedo,Colonia,-34.897433,-56.169554,40.0
+107,1,2025-05-01,23:45:00.0,Burgues,San Martin,Bv Artigas,-34.871627,-56.185855,41.0
+308,1,2025-05-01,23:45:00.0,Bolivia,Rivera,Av Italia,-34.884218,-56.082956,35.0
+206,1,2025-05-01,23:45:00.0,Rambla,Sarmiento,Errazquin,-34.929158,-56.160908,64.0
+106,1,2025-05-01,23:45:00.0,Rivera,Rosell y Rius,14 de Julio,-34.902720,-56.147240,87.0
+206,1,2025-05-01,23:45:00.0,Comercio,8 de Octubre,Av Italia,-34.886170,-56.130966,0.0
+107,1,2025-05-01,23:45:00.0,Rambla,Gral Paz,Gallinal,-34.895172,-56.089158,63.0
+107,1,2025-05-01,23:45:00.0,Av Italia,Cooper,Bolonia,-34.880827,-56.077112,63.0
+206,1,2025-05-01,23:45:00.0,Bv Espana,Ellauri,Benito Blanco,-34.914897,-56.150400,45.0
+206,1,2025-05-01,23:45:00.0,Bv Artigas,Hocquart,Miguelete,-34.890943,-56.165560,46.0
+107,1,2025-05-01,23:45:00.0,Sarmiento,Requena,Rambla,-34.915369,-56.168358,38.0
+306,1,2025-05-01,23:45:00.0,Avelino Miranda,8 de Octubre,Bv Artigas,-34.893083,-56.164427,35.0
+106,1,2025-05-01,23:45:00.0,8 de Octubre,Avelino Miranda,Presidente Berro,-34.892460,-56.162690,36.0
+109,1,2025-05-01,23:45:00.0,Gral Flores,Quesada,L A de Herrera,-34.866070,-56.171180,0.0
+206,1,2025-05-01,23:45:00.0,Av Brasil,Brito del Pino,Bv Artigas,-34.906097,-56.162718,46.0
+107,1,2025-05-01,23:45:00.0,Garibaldi,Urquiza,8 de Octubre,-34.888870,-56.160850,27.0
+408,1,2025-05-01,23:45:00.0,L A de Herrera,Placido Ellauri,26 de Marzo,-34.905423,-56.137037,56.0
+107,1,2025-05-01,23:45:00.0,San Martin,Martin Garcia,Agraciada,-34.887872,-56.188664,42.0
+107,1,2025-05-01,23:45:00.0,Suarez,Grito de Asencio,Bv Artigas,-34.872536,-56.196429,33.0
+112,1,2025-05-01,23:45:00.0,Gral Flores,Aramburu,Blandengues,-34.883180,-56.182980,68.0
+107,1,2025-05-01,23:45:00.0,Rambla,L A de Herrera,26 de Marzo,-34.906333,-56.133078,64.0
+206,1,2025-05-01,23:45:00.0,Rivera,Ponce,Bv Artigas,-34.902620,-56.163050,41.0
+107,1,2025-05-01,23:45:00.0,8 de Octubre,Gral Villagran,Raissignier,-34.869880,-56.134890,67.0
+306,1,2025-05-01,23:45:00.0,Rodo,Requena,Bv Artigas,-34.902829,-56.164944,43.0
+410,1,2025-05-01,23:45:00.0,Rivera,Bv Artigas,Acevedo Diaz,-34.902088,-56.164534,22.0
+206,1,2025-05-01,23:45:00.0,Paraguay,18 de Julio,Colonia,-34.905501,-56.192532,30.0
+107,1,2025-05-01,23:45:00.0,Joanico,Bv Batlle y Ordonez,Larranaga,-34.880150,-56.151490,42.0
+107,1,2025-05-01,23:45:00.0,Bv Artigas,Hocquart,Nueva Palmira,-34.889533,-56.165523,32.0
+206,1,2025-05-01,23:45:00.0,Uruguayana,Capurro,Bv Artigas,-34.872699,-56.205994,30.0
+206,1,2025-05-01,23:45:00.0,Soriano,Santiago de Chile,Ejido,-34.907420,-56.185940,33.0
+306,1,2025-05-01,23:45:00.0,Bv Artigas,Accesos,Uruguayana,-34.873224,-56.205881,38.0
+407,1,2025-05-01,23:45:00.0,Fernandez Crespo,18 de Julio,Colonia,-34.901342,-56.175176,40.0
+206,1,2025-05-01,23:45:00.0,Paraguay,Canelones,Soriano,-34.908372,-56.192213,32.0
+107,1,2025-05-01,23:45:00.0,Libertador,Uruguay,Mercedes,-34.903623,-56.193266,0.0
+107,1,2025-05-01,23:45:00.0,Uruguay,Vazquez,Ejido,-34.902768,-56.186559,40.0
+206,1,2025-05-01,23:45:00.0,La Paz,Yaguaron,Libertador,-34.899267,-56.190369,29.0
+107,1,2025-05-01,23:45:00.0,San Jose,Andes,Convencion,-34.907371,-56.197516,30.0
+107,1,2025-05-01,23:45:00.0,Soca,Gestido,Rivera,-34.903760,-56.155750,33.0
+205,1,2025-05-01,23:45:00.0,Gral Flores,Blandengues,Aramburu,-34.882920,-56.182840,48.0
+107,1,2025-05-01,23:45:00.0,Cerro Largo,Yaguaron,Rondeau,-34.901163,-56.190841,33.0
+306,1,2025-05-01,23:45:00.0,Larranaga,Monte Caseros,Joanico,-34.879760,-56.152480,0.0
+306,1,2025-05-01,23:45:00.0,Hocquart,Justicia,Bv Artigas,-34.888996,-56.166795,73.0
+107,1,2025-05-01,23:45:00.0,Soriano,Convencion,Andes,-34.908243,-56.197326,29.0
+206,1,2025-05-01,23:45:00.0,Raissignier,Cno Carrasco,8 de Octubre,-34.871110,-56.134320,34.0
+107,1,2025-05-01,23:45:00.0,Comercio,Joanico,8 de Octubre,-34.875750,-56.143440,0.0
+305,1,2025-05-01,23:45:00.0,Aramburu,Terra,Gral Flores,-34.882790,-56.181890,0.0
+114,1,2025-05-01,23:45:00.0,Acevedo Diaz,Garibaldi,Ferrer Serra,-34.894152,-56.167498,0.0
+107,1,2025-05-01,23:45:00.0,Bv Artigas,Palmar,Rivera,-34.900440,-56.164380,39.0
+206,1,2025-05-01,23:45:00.0,Suarez,Lucas Obes,Bv Artigas,-34.871423,-56.196600,27.0
+107,1,2025-05-01,23:45:00.0,8 de Octubre,Bv Batlle y Ordonez,Sanguinetti,-34.878660,-56.146580,78.0
+205,1,2025-05-01,23:45:00.0,Soca,Brito del Pino,Rivera,-34.902187,-56.156460,29.0
+106,1,2025-05-01,23:45:00.0,Lezica,Calderon de la Barca,Eduardo Raiz,-34.804487,-56.224491,0.0
+107,1,2025-05-01,23:45:00.0,Hipolito Yrigoyen,Igua,Av Italia,-34.885966,-56.110576,44.0
+406,1,2025-05-01,23:45:00.0,Ricaldoni,Canning,Av Italia,-34.892799,-56.158819,42.0
+107,1,2025-05-01,23:45:00.0,Benito Blanco,21 de Setiembre,Bv Espana,-34.915828,-56.149900,37.0
+107,1,2025-05-01,23:45:00.0,Bv Artigas,Gral Flores,Penco,-34.870392,-56.177658,0.0
+206,1,2025-05-01,23:45:00.0,Albo,8 de Octubre,Av Italia,-34.891367,-56.158957,42.0
+107,1,2025-05-01,23:45:00.0,Av Italia,Solano Lopez,Mataojo,-34.887117,-56.122775,53.0
+306,1,2025-05-01,23:45:00.0,Bv Espana,Libertad,Bv Artigas,-34.911249,-56.162091,59.0
+107,1,2025-05-01,23:45:00.0,Rivera,Colombes,Asturias,-34.894310,-56.118470,83.0
+107,1,2025-05-01,23:45:00.0,Rivera,Acceso Cementerio,Bv Batlle y Ordonez,-34.897900,-56.125370,19.0
