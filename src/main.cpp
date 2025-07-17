@@ -1,10 +1,10 @@
 #include <vector>
-
 #include <mpi.h>
 
 #include "csv_reader.hpp"
 #include "log.hpp"
 #include "mpi_datatypes.hpp"
+#include "shapefile_loader.hpp"
 
 constexpr int MASTER_RANK = 0;
 
@@ -29,6 +29,10 @@ int main(int argc, char *argv[])
         int next_slave_rank_to_work = 0;
 
         info("world_size: {}", world_size);
+
+        // ←---- Cargar shapefile
+        MunicipioLoader municipio_loader("../shapefiles/sig_municipios.shp");
+
         CsvReader csv_reader("../only1000.csv");
         std::vector<Register> registers;
         registers.reserve(1000);
@@ -64,6 +68,11 @@ int main(int argc, char *argv[])
                     info("ENDED");
                     break;
                 }
+
+                // ←---- Asignar municipio basado en coordenadas
+                r.municipio_id = municipio_loader.get_municipio(r.longitud, r.latitud);
+                info("Municipio ID: {}, Nombre: {}", r.municipio_id, municipio_loader.decode_municipio(r.municipio_id));
+                
                 registers.emplace_back(r);
             }
 

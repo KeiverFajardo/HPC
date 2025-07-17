@@ -22,6 +22,7 @@ struct Register {
     Hour hora;  // HHMMSS
     float latitud, longitud;
     float velocidad;
+    uint8_t municipio_id; // id municipio
 };
 
 class CsvReader {

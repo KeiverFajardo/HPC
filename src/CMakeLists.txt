@@ -10,3 +10,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX)
 find_package(MPI REQUIRED)
 message(STATUS "Run: ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS} EXECUTABLE ${MPIEXEC_POSTFLAGS} ARGS")
 target_link_libraries(${PROJECT_NAME} PUBLIC MPI::MPI_CXX)
+
+find_package(GDAL REQUIRED)
+target_include_directories(${PROJECT_NAME} PUBLIC ${GDAL_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GDAL_LIBRARY})
