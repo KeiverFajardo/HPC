@@ -57,12 +57,43 @@ std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<Register> &b
     return resultados;
 }
 
+void imprimir_umbrales(int world_rank, const UmbralMap &umbrales)
+{
+    info(">>> UMBRALES ACTUALIZADOS en esclavo {}", world_rank);
+    for (const auto &[clave, valor] : umbrales)
+    {
+        info("  Municipio {} - Franja {} => Umbral = {:.2f}", clave.municipio_id, clave.franja_horaria, valor);
+    }
+}
+
 void procesar_b() {
+    int world_rank; //world_rank almacena el ID de este proceso dentro del mundo MPI.
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
     std::vector<Register> buffer;
     UmbralMap umbrales_actuales;
 
     while (true)
     {
+        //  Esperar broadcast de umbrales (conteo primero)
+        int umbral_count = 0;
+        MPI_Bcast(&umbral_count, 1, MPI_INT, MASTER_RANK, MPI_COMM_WORLD); //Todos los procesos B lo reciben al mismo tiempo
+
+        if (umbral_count > 0) { //Si hay umbrales para recibir, se crea un vector recibidos para almacenarlos.
+            std::vector<UmbralPorPar> recibidos(umbral_count);
+            MPI_Bcast(recibidos.data(), umbral_count, MPI_UmbralPorPar, MASTER_RANK, MPI_COMM_WORLD);
+
+            umbrales_actuales.clear();
+            for (const auto &u : recibidos) {
+                ClaveAgrupacion clave = {u.municipio_id, u.franja_horaria};
+                umbrales_actuales[clave] = u.umbral;
+            }
+            imprimir_umbrales(world_rank, umbrales_actuales);
+        }
+        //Hace que todos los procesos esperen hasta que todos hayan terminado de recibir y actualizar sus umbrales.
+        MPI_Barrier(MPI_COMM_WORLD); // sincronización
+
+
         MPI_Status status;
         /* MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status); */
         MPI_Probe(MASTER_RANK, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
@@ -70,22 +101,6 @@ void procesar_b() {
         if (status.MPI_TAG == EXIT_MESSAGE_TAG)
             break;
 
-        if (status.MPI_TAG == TAG_UMBRAL)
-        {
-            int count;
-            MPI_Get_count(&status, MPI_UmbralPorPar, &count);
-
-            std::vector<UmbralPorPar> umbrales_recv(count);
-            MPI_Recv(umbrales_recv.data(), count, MPI_UmbralPorPar, MASTER_RANK, TAG_UMBRAL, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-            for (const auto &u : umbrales_recv)
-            {
-                ClaveAgrupacion clave = {u.municipio_id, u.franja_horaria};
-                umbrales_actuales[clave] = u.umbral;
-            }
-            continue;
-        }    
-        
         if (status.MPI_TAG == TAG_DATA) {
             // Recibir bloque de registros
             int count;
@@ -94,6 +109,8 @@ void procesar_b() {
             
             //MPI_Recv(buffer.data(), count, MPI_Register, MASTER_RANK, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             MPI_Recv(buffer.data(), count, MPI_Register, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            
+            info("Esclavo {} recibió {} registros", world_rank, buffer.size());
             
             info("BUFFER INICIO");
             for (auto reg : buffer)

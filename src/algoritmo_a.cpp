@@ -7,6 +7,9 @@
 #include "mpi_datatypes.hpp"
 #include "common_constants.hpp"
 
+#include <unordered_map>
+#include <boost/functional/hash.hpp>
+
 constexpr int BLOCK_SIZE = 8;
 
 AlgoritmoA::AlgoritmoA(const char *csv_path, const std::string &shapefile_path)
@@ -48,17 +51,26 @@ void AlgoritmoA::procesar()
     int next_slave = 1;
     int blocks_sent = 0;
 
-    // Inicializar umbrales con valores por defecto y enviar a cada esclavo
-    std::unordered_map<std::pair<uint8_t, uint8_t>, float, boost::hash<std::pair<uint8_t, uint8_t>>> umbrales;
+    using Clave = std::pair<uint8_t, uint8_t>;
+    using UmbralData = std::pair<float, std::size_t>;  // <umbral, cantidad acumulada>
+
+    std::unordered_map<Clave, UmbralData, boost::hash<Clave>> umbrales_map;
+
     for (uint8_t m = 0; m < 10; ++m) {
         for (uint8_t f = 0; f < 4; ++f) {
-            umbrales[{m, f}] = 15.0f; // valor por defecto
+             umbrales_map[{m, f}] = {15.0f, 1}; // umbral inicial, cantidad mínima 1 para evitar división por 0
         }
     }
 
-    for (int i = 1; i < world_size; ++i) {
-        MPI_Send(umbrales.data(), umbrales.size() * sizeof(std::pair<std::pair<uint8_t, uint8_t>, float>), MPI_BYTE, i, TAG_UMBRAL, MPI_COMM_WORLD);
-    }
+    // Enviar umbrales iniciales
+    std::vector<UmbralPorPar> umbral_vector;
+    for (const auto &[clave, val] : umbrales_map)
+        umbral_vector.push_back({clave.first, clave.second, val.first});
+
+    int umbral_count = umbral_vector.size();
+    MPI_Bcast(&umbral_count, 1, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
+    MPI_Bcast(umbral_vector.data(), umbral_count, MPI_UmbralPorPar, MASTER_RANK, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD); // Todos sincronizados antes de procesar
 
     std::vector<ResultadoEstadistico> resultados;
     int flag = 0;
@@ -66,30 +78,20 @@ void AlgoritmoA::procesar()
     // ---- Envío de bloques a esclavos
     while (!exit || blocks_sent > 0)
     {
-        buffer.clear();
-
-        cargar_bloque(buffer, BLOCK_SIZE);
-
-        for (int i = 0; i < BLOCK_SIZE; ++i)
+        if (!exit)
         {
-            if (!lector_csv.get(r))
+            buffer.clear();
+            if (cargar_bloque(buffer, BLOCK_SIZE))
+            {
+                MPI_Send(buffer.data(), buffer.size(), MPI_Register, next_slave, TAG_DATA, MPI_COMM_WORLD);
+                blocks_sent++;
+                next_slave++;
+                if (next_slave >= world_size) next_slave = 1;
+            }
+            else
             {
                 exit = true;
-                break;
             }
-
-            r.municipio_id = mapper.codificar(Punto { r.latitud, r.longitud });
-            r.franja_horaria = std::to_underlying(get_franja_horaria(r.hora)); // TODO: dividir por franja horaria
-
-            buffer.push_back(r);
-        }
-
-        if (!buffer.empty())
-        {
-            MPI_Send(buffer.data(), buffer.size(), MPI_Register, next_slave, 0, MPI_COMM_WORLD);
-            blocks_sent++;
-            next_slave++;
-            if (next_slave >= world_size) next_slave = 1;
         }
 
         MPI_Status status;
@@ -105,37 +107,38 @@ void AlgoritmoA::procesar()
 
             //Actualizar umbrales y enviarlos a los hijos Bs y ademas pintar la grafica
 
-            // Actualizar umbrales por promedio ponderado y reenviarlos
-            /* for (const auto &res : resultados) {
-                Clave clave = {res.municipio_id, res.franja_horaria};
-                auto &[umbral_actual, n_acum] = umbrales_map[clave];
+            // Actualizar umbrales con promedio ponderado
+            for (const auto &r : resultados)
+            {
+                Clave clave = {r.municipio_id, r.franja_horaria};
+                auto &[umbral, n_acum] = umbrales_map[clave];
+                float nuevo = r.promedio;
+                std::size_t cantidad = r.cantidad;
 
-                float nuevo = res.promedio;
-                std::size_t cantidad = res.cantidad;
-
-                // promedio ponderado
-                float actualizado = (umbral_actual * n_acum + nuevo * cantidad) / (n_acum + cantidad);
+                float actualizado = (umbral * n_acum + nuevo * cantidad) / (n_acum + cantidad);
                 n_acum += cantidad;
-                umbral_actual = actualizado;
-            }
-            // Reenviar nuevos umbrales actualizados
-            umbrales.clear();
-            for (const auto &[clave, val] : umbrales_map) {
-                umbrales.push_back({clave.first, clave.second, val.first});
+                umbral = actualizado;
             }
 
-            for (int i = 1; i < world_size; ++i) {
-                MPI_Send(umbrales.data(), umbrales.size(), MPI_UmbralPorPar, i, TAG_UMBRAL, MPI_COMM_WORLD);
-            } */
+            // Volver a enviar umbrales actualizados
+            umbral_vector.clear();
+            for (const auto &[clave, val] : umbrales_map)
+                umbral_vector.push_back({clave.first, clave.second, val.first});
 
+            int umbral_count = umbral_vector.size();
+            MPI_Bcast(&umbral_count, 1, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
+            MPI_Bcast(umbral_vector.data(), umbral_count, MPI_UmbralPorPar, MASTER_RANK, MPI_COMM_WORLD);
+            MPI_Barrier(MPI_COMM_WORLD);
 
+            blocks_sent--;
+
+            //Mostrar resultados
             for (const auto& r : resultados)
             {
                 std::string nombre_municipio = mapper.decodificar(r.municipio_id);
                 info("Municipio {}, Franja {} => Prom: {:.2f}, Desv: {:.2f}, N: {}, Rank origen: {}",
                     nombre_municipio, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad, status.MPI_SOURCE);
             }
-            blocks_sent--;
         }
     }
 
