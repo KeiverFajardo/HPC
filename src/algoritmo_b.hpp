@@ -1,7 +1,6 @@
 #pragma once
 
-#include "registro_extendido.hpp"
-#include <map>
+#include "csv_reader.hpp"
 #include <vector>
 #include <cstdint>
 
@@ -15,4 +14,4 @@ struct ResultadoEstadistico {
 
 // Esta función procesa un bloque de registros extendidos
 // y devuelve los resultados estadísticos agrupados por (municipio_id, franja_horaria)
-std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<RegisterExt> &bloque);
+std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<Register> &bloque);

@@ -2,6 +2,11 @@ add_executable(${PROJECT_NAME}
     main.cpp
     csv_reader.cpp
     mpi_datatypes.cpp
+    algoritmo_b.cpp
+    estadistica.cpp
+    franja_horaria.cpp
+    shapefile_loader.cpp
+    municipio_mapper.cpp
 )
 
 find_package(OpenMP REQUIRED)

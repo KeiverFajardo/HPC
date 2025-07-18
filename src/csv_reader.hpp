@@ -23,6 +23,7 @@ struct Register {
     float latitud, longitud;
     float velocidad;
     uint8_t municipio_id; // id municipio
+    uint8_t franja_horaria; // 0 = madrugada, 1 = jornada, 2 = noche
 };
 
 class CsvReader {

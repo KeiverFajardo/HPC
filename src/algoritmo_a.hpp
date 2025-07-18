@@ -1,6 +1,5 @@
 #pragma once
 
-#include "registro_extendido.hpp"
 #include "csv_reader.hpp"
 #include "franja_horaria.hpp"
 #include "shapefile_loader.hpp"
@@ -16,7 +15,7 @@ public:
     AlgoritmoA(const std::string &csv_path, const std::string &shapefile_path);
 
     // Cargar un bloque de tamaño `block_size` con registros extendidos
-    bool cargar_bloque(std::vector<RegisterExt> &bloque, std::size_t block_size);
+    bool cargar_bloque(std::vector<Register> &bloque, std::size_t block_size);
 
     // Retornar cantidad total de registros procesados (opcional para estadísticas)
     std::size_t total_procesados() const { return registros_procesados; }

@@ -4,9 +4,21 @@
 #include <unordered_map>
 #include <tuple>
 
-using ClaveAgrupacion = std::pair<uint8_t, uint8_t>;
+struct ClaveAgrupacion {
+    uint8_t municipio_id;
+    uint8_t franja_horaria;
 
-std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<RegisterExt> &bloque)
+    bool operator==(const ClaveAgrupacion &other) const = default;
+};
+
+template <>
+struct std::hash<ClaveAgrupacion> {
+    std::size_t operator()(const ClaveAgrupacion &clave) const noexcept {
+        return std::hash<uint16_t>()(clave.franja_horaria | (clave.municipio_id << 8));
+    }
+};
+
+std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<Register> &bloque)
 {
     std::unordered_map<ClaveAgrupacion, std::vector<float>> grupos;
 
@@ -23,8 +35,8 @@ std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<RegisterExt>
     for (const auto &[clave, velocidades] : grupos)
     {
         ResultadoEstadistico resultado;
-        resultado.municipio_id = clave.first;
-        resultado.franja_horaria = clave.second;
+        resultado.municipio_id = clave.municipio_id;
+        resultado.franja_horaria = clave.franja_horaria;
         resultado.promedio = calcular_media(velocidades);
         resultado.desvio = calcular_desvio(velocidades, resultado.promedio);
         resultado.cantidad = velocidades.size();

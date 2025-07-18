@@ -3,8 +3,8 @@
 #include <cstdint>
 #include <vector>
 #include <string>
-#include <memory>
 #include <unordered_map>
+#include <ogrsf_frmts.h>
 
 struct Punto {
     float lat;

@@ -2,7 +2,6 @@
 
 #include <ogrsf_frmts.h>
 #include <stdexcept>
-#include <iostream>
 
 ShapefileLoader::ShapefileLoader(const std::string& shapefile_path) {
     GDALAllRegister();

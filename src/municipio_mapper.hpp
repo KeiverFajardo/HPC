@@ -1,9 +1,7 @@
 #pragma once
 
 #include "shapefile_loader.hpp"
-#include <unordered_map>
 #include <string>
-#include <vector>
 #include <cstdint>
 
 class MunicipioMapper {

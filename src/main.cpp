@@ -1,13 +1,11 @@
 #include <mpi.h>
+#include <utility>
 #include <vector>
-#include <unordered_map>
 
 #include "csv_reader.hpp"
-#include "registro_extendido.hpp"
 #include "shapefile_loader.hpp"
 #include "municipio_mapper.hpp"
 #include "franja_horaria.hpp"
-#include "algoritmo_a.hpp"
 #include "algoritmo_b.hpp"
 #include "log.hpp"
 #include "mpi_datatypes.hpp"
@@ -28,7 +26,7 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
-     if (world_rank == MASTER_RANK)
+    if (world_rank == MASTER_RANK)
     {
         /* bool exit = false;
         float total_speed_sum = 0.0f;
@@ -38,17 +36,13 @@ int main(int argc, char *argv[])
         // --- Proceso A: Maestro ---
         info("world_size: {}", world_size);
 
-        // ←---- Cargar shapefile
-        ShapefileLoader loader;
-        loader.cargar("../shapefiles/sig_municipios.shp");
-
         // ←---- Mapper: long/lat -> municipio_id
-        MunicipioMapper mapper(loader);
+        MunicipioMapper mapper("../shapefiles/sig_municipios.shp");
 
         CsvReader csv_reader("../only1000.csv");
         Register r;
 
-        std::vector<RegisterExt> buffer;
+        std::vector<Register> buffer;
         buffer.reserve(BLOCK_SIZE);
 
         bool exit = false;
@@ -89,18 +83,10 @@ int main(int argc, char *argv[])
                     break;
                 }
 
-                RegisterExt ext;
-                ext.cod_detector = r.cod_detector;
-                ext.id_carril = r.id_carril;
-                ext.fecha = r.fecha;
-                ext.hora = r.hora;
-                ext.latitud = r.latitud;
-                ext.longitud = r.longitud;
-                ext.velocidad = r.velocidad;
-                ext.municipio_id = mapper.obtener_municipio(r.latitud, r.longitud);
-                ext.franja_horaria = determinar_franja(r.hora);
+                r.municipio_id = mapper.codificar(Punto { r.latitud, r.longitud });
+                r.franja_horaria = std::to_underlying(get_franja_horaria(r.hora)); // TODO: dividir por franja horaria
 
-                buffer.push_back(ext);
+                buffer.push_back(r);
             }
 
             if (!buffer.empty())
@@ -117,7 +103,7 @@ int main(int argc, char *argv[])
                 blocks_pending++;
                 next_slave_rank_to_work = (next_slave_rank_to_work + 1) % (world_size - 1);
                 */
-                MPI_Send(buffer.data(), buffer.size(), MPI_RegisterExt, next_slave, 0, MPI_COMM_WORLD);
+                MPI_Send(buffer.data(), buffer.size(), MPI_Register, next_slave, 0, MPI_COMM_WORLD);
                 blocks_sent++;
                 next_slave++;
                 if (next_slave >= world_size) next_slave = 1;
@@ -129,7 +115,7 @@ int main(int argc, char *argv[])
         // ←---- Señales de terminación
         for (int i = 1; i < world_size; ++i)
         {
-            MPI_Send(nullptr, 0, MPI_RegisterExt, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
+            MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
         }
 
 
@@ -140,10 +126,10 @@ int main(int argc, char *argv[])
             int count;
 
             MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-            MPI_Get_count(&status, MPI_Estadistico, &count);
+            MPI_Get_count(&status, MPI_ResultadoEstadistico, &count);
 
             std::vector<ResultadoEstadistico> resultados(count);
-            MPI_Recv(resultados.data(), count, MPI_Estadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(resultados.data(), count, MPI_ResultadoEstadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
             for (const auto& r : resultados)
             {
@@ -155,7 +141,7 @@ int main(int argc, char *argv[])
     else
     {
         // --- Procesos B: Esclavos ---
-        std::vector<RegisterExt> buffer(BLOCK_SIZE);
+        std::vector<Register> buffer(BLOCK_SIZE);
 
         while (true)
         {
@@ -167,17 +153,17 @@ int main(int argc, char *argv[])
                 break;
 
             int count;
-            MPI_Get_count(&status, MPI_RegisterExt, &count);
+            MPI_Get_count(&status, MPI_Register, &count);
             buffer.resize(count);
 
-            MPI_Recv(buffer.data(), count, MPI_RegisterExt, MASTER_RANK, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(buffer.data(), count, MPI_Register, MASTER_RANK, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
             /* float sum = 0.0f;
             for (Register &reg : registers)
                 sum += reg.velocidad; */
 
             std::vector<ResultadoEstadistico> resultados = analizar_bloque(buffer);
-            MPI_Send(resultados.data(), resultados.size(), MPI_Estadistico, MASTER_RANK, 0, MPI_COMM_WORLD);
+            MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, 0, MPI_COMM_WORLD);
         }
     }
 
