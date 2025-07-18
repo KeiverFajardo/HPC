@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     if (world_rank == MASTER_RANK)
     {
-        AlgoritmoA algoritmo("../only64.csv", "../shapefiles/procesado.shp");
+        AlgoritmoA algoritmo("../shapefiles/procesado.shp");
         
         algoritmo.procesar();
 

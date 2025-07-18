@@ -13,5 +13,6 @@ std::string MunicipioMapper::decodificar(uint8_t id) const {
 }
 
 size_t MunicipioMapper::cantidad() const {
-    return static_cast<size_t>(255); // Por convención, dejamos 255 como "ninguno"
+    return loader_.cantidad();
+    //return static_cast<size_t>(255); // Por convención, dejamos 255 como "ninguno"
 }

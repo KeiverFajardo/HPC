@@ -21,6 +21,8 @@ public:
     // Devuelve el nombre textual del municipio, dado el ID
     std::string nombre_municipio(uint8_t id) const;
 
+    size_t cantidad() const { return municipios_.size(); }
+
 private:
     struct Municipio {
         std::string nombre;
