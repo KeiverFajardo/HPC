@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include <unordered_map>
+#include <vector>
 #include <utility>
 
 // Para hash de pair como clave en unordered_map

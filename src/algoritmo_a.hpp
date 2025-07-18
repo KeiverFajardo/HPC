@@ -12,16 +12,18 @@
 // Clase que encapsula la lógica del Proceso A (maestro)
 class AlgoritmoA {
 public:
-    AlgoritmoA(const std::string &csv_path, const std::string &shapefile_path);
+    AlgoritmoA(const char *csv_path, const std::string &shapefile_path);
 
-    // Cargar un bloque de tamaño `block_size` con registros extendidos
-    bool cargar_bloque(std::vector<Register> &bloque, std::size_t block_size);
+    void procesar();
 
     // Retornar cantidad total de registros procesados (opcional para estadísticas)
     std::size_t total_procesados() const { return registros_procesados; }
 
 private:
+    // Cargar un bloque de tamaño `block_size` con registros extendidos
+    bool cargar_bloque(std::vector<Register> &bloque, std::size_t block_size);
+
     CsvReader lector_csv;
-    ShapefileLoader loader;
+    MunicipioMapper mapper;
     std::size_t registros_procesados = 0;
 };

@@ -2,6 +2,7 @@
 
 #include "algoritmo_b.hpp"
 #include "csv_reader.hpp"
+#include "umbral.hpp"
 
 MPI_Datatype MPI_Date;
 MPI_Datatype MPI_Hour;

@@ -2,6 +2,7 @@ add_executable(${PROJECT_NAME}
     main.cpp
     csv_reader.cpp
     mpi_datatypes.cpp
+    algoritmo_a.cpp
     algoritmo_b.cpp
     estadistica.cpp
     franja_horaria.cpp
