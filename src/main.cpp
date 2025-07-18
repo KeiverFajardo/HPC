@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         // ←---- Mapper: long/lat -> municipio_id
         MunicipioMapper mapper("../shapefiles/sig_municipios.shp");
 
-        CsvReader csv_reader("../only1000.csv");
+        CsvReader csv_reader("../only64.csv");
         Register r;
 
         std::vector<Register> buffer;
@@ -137,8 +137,8 @@ int main(int argc, char *argv[])
 
             for (const auto& r : resultados)
             {
-                info("Municipio {}, Franja {} => Prom: {:.2f}, Desv: {:.2f}, N: {}",
-                     (int)r.municipio_id, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad);
+                info("Municipio {}, Franja {} => Prom: {:.2f}, Desv: {:.2f}, N: {}, Rank origen: {}",
+                     (int)r.municipio_id, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad, status.MPI_SOURCE);
             }
         }
     }
