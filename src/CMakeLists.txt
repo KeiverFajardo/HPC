@@ -19,3 +19,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC MPI::MPI_CXX)
 find_package(GDAL REQUIRED)
 target_include_directories(${PROJECT_NAME} PUBLIC ${GDAL_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GDAL_LIBRARY})
+
+find_package(Boost REQUIRED COMPONENTS iostreams)
+target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE Boost::iostreams)

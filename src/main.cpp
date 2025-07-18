@@ -10,12 +10,40 @@
 #include "log.hpp"
 #include "mpi_datatypes.hpp"
 
+#include "gnuplot-iostream.h"
+
 constexpr int TAG_DATA = 0;
 constexpr int TAG_FIN = 1;
 
 constexpr int MASTER_RANK = 0;
 constexpr int EXIT_MESSAGE_TAG = 1;
 constexpr int BLOCK_SIZE = 8;
+
+void plot(const std::vector<float> &barras)
+{
+    Gnuplot gp;
+	// Create a script which can be manually fed into gnuplot later:
+	//    Gnuplot gp(">script.gp");
+	// Create script and also feed to gnuplot:
+	//    Gnuplot gp("tee plot.gp | gnuplot -persist");
+	// Or choose any of those options at runtime by setting the GNUPLOT_IOSTREAM_CMD
+	// environment variable.
+    
+    //const_cast<std::vector<float>&>(barras)[1] = 3.0f;
+    
+    info("BARRAS BEGIN");
+    for (auto barra : barras)
+        info("{}", barra);
+    info("BARRAS END");
+
+	// Don't forget to put "\n" at the end of each line!
+    gp << "set terminal gif size 300,200 animate delay 2\n";
+    gp << "set output 'image.gif'\n";
+    gp << "set style fill solid\n";
+    gp << "set boxwidth 0.5\n";
+	gp << "plot '-' with boxes title 'pts_A'\n";
+	gp.send1d(barras);
+}
 
 int main(int argc, char *argv[])
 {
@@ -122,7 +150,7 @@ int main(int argc, char *argv[])
             MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
         }
 
-
+        std::vector<ResultadoEstadistico> resultados;
         // ←---- Recepción de resultados estadísticos
         for (int i = 0; i < blocks_sent; ++i)
         {
@@ -132,7 +160,8 @@ int main(int argc, char *argv[])
             MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
             MPI_Get_count(&status, MPI_ResultadoEstadistico, &count);
 
-            std::vector<ResultadoEstadistico> resultados(count);
+            resultados.clear();
+            resultados.resize(count);
             MPI_Recv(resultados.data(), count, MPI_ResultadoEstadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
             for (const auto& r : resultados)
@@ -142,6 +171,15 @@ int main(int argc, char *argv[])
                      nombre_municipio, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad, status.MPI_SOURCE);
             }
         }
+
+        std::vector<float> barras;
+        for (auto &res_estadistico : resultados)
+        {
+            if (barras.size() < res_estadistico.municipio_id)
+                barras.resize(res_estadistico.municipio_id);
+            barras[res_estadistico.municipio_id] = res_estadistico.promedio;
+        }
+        plot(barras);
     }
     else
     {
