@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         info("world_size: {}", world_size);
 
         // ←---- Mapper: long/lat -> municipio_id
-        MunicipioMapper mapper("../shapefiles/sig_municipios.shp");
+        MunicipioMapper mapper("../shapefiles/procesado.shp");
 
         CsvReader csv_reader("../only64.csv");
         Register r;
@@ -137,8 +137,9 @@ int main(int argc, char *argv[])
 
             for (const auto& r : resultados)
             {
+                std::string nombre_municipio = mapper.decodificar(r.municipio_id);
                 info("Municipio {}, Franja {} => Prom: {:.2f}, Desv: {:.2f}, N: {}, Rank origen: {}",
-                     (int)r.municipio_id, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad, status.MPI_SOURCE);
+                     nombre_municipio, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad, status.MPI_SOURCE);
             }
         }
     }

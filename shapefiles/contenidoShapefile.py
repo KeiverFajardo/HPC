@@ -1,18 +1,16 @@
 import geopandas as gpd
+import sys
 
-gdf = gpd.read_file("muni.shp")
+shp = gpd.read_file(sys.argv[1])
+shp = shp.to_crs(epsg=4326)
 
-for index, row in gdf.iterrows():
+shp.to_file('shapefiles/procesado.shp')
+
+for index, row in shp.iterrows():
     print(f"Municipio {row['MUNICIPIO']} con ID {row['GID']}")
-
-
-""" import geopandas as gpd
-
-# Cambia esta ruta por la de tu shapefile
-shp = gpd.read_file("sig_municipios.shp")
 
 # Muestra las columnas / campos del shapefile
 print(shp.columns)
 
 # Opcional: muestra las primeras filas con los datos
-print(shp.head()) """
+print(shp.head())
