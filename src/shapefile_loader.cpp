@@ -1,71 +1,65 @@
 #include "shapefile_loader.hpp"
 
-#include <gdal/ogrsf_frmts.h>
+#include <ogrsf_frmts.h>
 #include <stdexcept>
 #include <iostream>
 
-MunicipioLoader::MunicipioLoader(const std::string &shapefile_path)
-{
+ShapefileLoader::ShapefileLoader(const std::string& shapefile_path) {
     GDALAllRegister();
-    GDALDataset *dataset = static_cast<GDALDataset *>(GDALOpenEx(
-        shapefile_path.c_str(), GDAL_OF_VECTOR, nullptr, nullptr, nullptr));
 
-    if (!dataset)
-        throw std::runtime_error("Error al abrir el shapefile: " + shapefile_path);
+    std::unique_ptr<GDALDataset> dataset(
+        static_cast<GDALDataset*>(GDALOpenEx(shapefile_path.c_str(), GDAL_OF_VECTOR, nullptr, nullptr, nullptr))
+    );
 
-    OGRLayer *layer = dataset->GetLayer(0);
-    if (!layer)
-        throw std::runtime_error("No se pudo obtener la capa del shapefile");
+    if (!dataset) {
+        throw std::runtime_error("No se pudo abrir el shapefile: " + shapefile_path);
+    }
 
+    OGRLayer* layer = dataset->GetLayer(0);
+    if (!layer) {
+        throw std::runtime_error("No se pudo acceder a la capa del shapefile.");
+    }
+
+    OGRFeature* feature;
     layer->ResetReading();
 
-    OGRFeature *feature;
     uint8_t next_id = 0;
-
-    while ((feature = layer->GetNextFeature()) != nullptr)
-    {
-        OGRGeometry *geometry = feature->GetGeometryRef();
-        if (!geometry)
-        {
+    while ((feature = layer->GetNextFeature()) != nullptr) {
+        OGRGeometry* geometry = feature->GetGeometryRef();
+        if (!geometry) {
             OGRFeature::DestroyFeature(feature);
             continue;
         }
 
-        OGRGeometry *clone = geometry->clone();
-        geometries.push_back(clone);
-
-        std::string nombre = feature->GetFieldAsString("GID"); // <- campo nombre municipio si no es GID es MUNICIPIO
-
-        // Asignar código si no existe aún
-        if (name_to_id.find(nombre) == name_to_id.end())
-        {
-            name_to_id[nombre] = next_id;
-            id_to_name[next_id] = nombre;
-            next_id++;
+        std::string nombre = feature->GetFieldAsString("MUNICIPIO");
+        if (nombre.empty()) {
+            OGRFeature::DestroyFeature(feature);
+            continue;
         }
 
-        municipio_ids.push_back(name_to_id[nombre]);
+        auto geom_clone = geometry->clone();
+        municipios_.push_back({nombre, geom_clone});
+        nombre_to_id_[nombre] = next_id;
+        ++next_id;
 
         OGRFeature::DestroyFeature(feature);
     }
-
-    GDALClose(dataset);
 }
 
-uint8_t MunicipioLoader::get_municipio(double lon, double lat) const
-{
-    OGRPoint punto(lon, lat);
-    for (size_t i = 0; i < geometries.size(); ++i)
-    {
-        if (geometries[i]->Contains(&punto))
-            return municipio_ids[i];
+uint8_t ShapefileLoader::get_municipio(const Punto& punto) const {
+    OGRPoint ogr_point(punto.lon, punto.lat);  // lon primero, luego lat
+
+    for (uint8_t i = 0; i < municipios_.size(); ++i) {
+        const Municipio& m = municipios_[i];
+        if (static_cast<OGRGeometry*>(m.geometria)->Contains(&ogr_point)) {
+            return i;
+        }
     }
 
-    return 255; // código para "desconocido" o "fuera de Montevideo"
+    return 255;  // ID especial para "no encontrado"
 }
 
-std::string MunicipioLoader::decode_municipio(uint8_t id) const
-{
-    auto it = id_to_name.find(id);
-    return it != id_to_name.end() ? it->second : "Desconocido";
+std::string ShapefileLoader::nombre_municipio(uint8_t id) const {
+    if (id >= municipios_.size()) return "Desconocido";
+    return municipios_[id].nombre;
 }

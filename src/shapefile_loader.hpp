@@ -1,26 +1,32 @@
 #pragma once
 
-#include <string>
+#include <cstdint>
 #include <vector>
-#include <map>
-#include <gdal/ogrsf_frmts.h>
+#include <string>
+#include <memory>
+#include <unordered_map>
 
-class MunicipioLoader
-{
+struct Punto {
+    float lat;
+    float lon;
+};
+
+class ShapefileLoader {
 public:
-    // Constructor: carga los datos del shapefile
-    explicit MunicipioLoader(const std::string &shapefile_path);
+    ShapefileLoader(const std::string& shapefile_path);
 
-    // Devuelve el código de municipio (uint8_t) para una coordenada (lon, lat)
-    uint8_t get_municipio(double lon, double lat) const;
+    // Devuelve el ID de municipio asociado al punto (o 255 si no pertenece a ninguno)
+    uint8_t get_municipio(const Punto& punto) const;
 
-    // Devuelve el nombre del municipio a partir del ID
-    std::string decode_municipio(uint8_t id) const;
+    // Devuelve el nombre textual del municipio, dado el ID
+    std::string nombre_municipio(uint8_t id) const;
 
 private:
-    std::vector<OGRGeometry *> geometries;     // Geometrías de los municipios
-    std::vector<uint8_t> municipio_ids;        // ID codificado para cada geometría
+    struct Municipio {
+        std::string nombre;
+        void* geometria;  // OGRGeometry*
+    };
 
-    std::map<std::string, uint8_t> name_to_id; // Mapeo nombre → ID
-    std::map<uint8_t, std::string> id_to_name; // Mapeo ID → nombre
+    std::vector<Municipio> municipios_;
+    std::unordered_map<std::string, uint8_t> nombre_to_id_;
 };
