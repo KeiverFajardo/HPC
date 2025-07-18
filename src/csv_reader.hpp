@@ -81,7 +81,9 @@ struct std::formatter<Register> {
                 "\thora: {}:{}:{},\n"
                 "\tlatitud: {},\n"
                 "\tlongitud: {},\n"
-                "\tvelocidad: {}\n"
+                "\tvelocidad: {},\n"
+                "\tmunicipio_id: {},\n"
+                "\tfranja_horaria: {}\n"
                 ")",
                 reg.cod_detector,
                 reg.id_carril,
@@ -89,21 +91,25 @@ struct std::formatter<Register> {
                 reg.hora.hour, reg.hora.minute, reg.hora.second,
                 reg.latitud,
                 reg.longitud,
-                reg.velocidad
+                reg.velocidad,
+                reg.municipio_id,
+                reg.franja_horaria
             );
         }
         else
         {
             return std::format_to(
                 ctx.out(),
-                "(cod_detector: {}, id_carril: {}, fecha: {}-{}-{}, hora: {}:{}:{}, latitud: {}, longitud: {}, velocidad: {})",
+                "(cod_detector: {}, id_carril: {}, fecha: {}-{}-{}, hora: {}:{}:{}, latitud: {}, longitud: {}, velocidad: {}, municipio_id: {}, franja_horaria: {})",
                 reg.cod_detector,
                 reg.id_carril,
                 reg.fecha.year, reg.fecha.month, reg.fecha.day,
                 reg.hora.hour, reg.hora.minute, reg.hora.second,
                 reg.latitud,
                 reg.longitud,
-                reg.velocidad
+                reg.velocidad,
+                reg.municipio_id,
+                reg.franja_horaria
             );
         }
     }

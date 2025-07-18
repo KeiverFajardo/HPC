@@ -15,7 +15,7 @@ constexpr int TAG_FIN = 1;
 
 constexpr int MASTER_RANK = 0;
 constexpr int EXIT_MESSAGE_TAG = 1;
-constexpr int BLOCK_SIZE = 100;
+constexpr int BLOCK_SIZE = 8;
 
 int main(int argc, char *argv[])
 {
@@ -103,6 +103,10 @@ int main(int argc, char *argv[])
                 blocks_pending++;
                 next_slave_rank_to_work = (next_slave_rank_to_work + 1) % (world_size - 1);
                 */
+                // info("BUFFER INICIO");
+                // for (auto reg : buffer)
+                //     info("{}", reg);
+                // info("BUFFER FIN");
                 MPI_Send(buffer.data(), buffer.size(), MPI_Register, next_slave, 0, MPI_COMM_WORLD);
                 blocks_sent++;
                 next_slave++;
@@ -155,8 +159,13 @@ int main(int argc, char *argv[])
             int count;
             MPI_Get_count(&status, MPI_Register, &count);
             buffer.resize(count);
-
+            
             MPI_Recv(buffer.data(), count, MPI_Register, MASTER_RANK, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            info("BUFFER INICIO");
+            for (auto reg : buffer)
+                info("{}", reg);
+            info("BUFFER FIN");
 
             /* float sum = 0.0f;
             for (Register &reg : registers)
