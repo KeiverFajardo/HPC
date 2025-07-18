@@ -4,6 +4,7 @@
 
 #include "algoritmo_b.hpp"
 #include "log.hpp"
+#include "umbral.hpp"
 #include "mpi_datatypes.hpp"
 #include "common_constants.hpp"
 
@@ -69,7 +70,7 @@ void AlgoritmoA::procesar()
 
     int umbral_count = umbral_vector.size();
     MPI_Bcast(&umbral_count, 1, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
-    MPI_Bcast(umbral_vector.data(), umbral_count, MPI_UmbralPorPar, MASTER_RANK, MPI_COMM_WORLD);
+    MPI_Bcast(umbral_vector.data(), umbral_count, MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD); // Todos sincronizados antes de procesar
 
     std::vector<ResultadoEstadistico> resultados;
@@ -127,7 +128,7 @@ void AlgoritmoA::procesar()
 
             int umbral_count = umbral_vector.size();
             MPI_Bcast(&umbral_count, 1, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
-            MPI_Bcast(umbral_vector.data(), umbral_count, MPI_UmbralPorPar, MASTER_RANK, MPI_COMM_WORLD);
+            MPI_Bcast(umbral_vector.data(), umbral_count, MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
             MPI_Barrier(MPI_COMM_WORLD);
 
             blocks_sent--;

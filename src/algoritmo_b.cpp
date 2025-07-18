@@ -4,7 +4,8 @@
 
 #include "csv_reader.hpp"
 #include "log.hpp"
-#include "mpi_datatypes.hpp"
+#include "umbral.hpp"
+#include "mpi_datatypes.hpp"    
 
 #include <mpi.h>
 #include <vector>
@@ -81,7 +82,7 @@ void procesar_b() {
 
         if (umbral_count > 0) { //Si hay umbrales para recibir, se crea un vector recibidos para almacenarlos.
             std::vector<UmbralPorPar> recibidos(umbral_count);
-            MPI_Bcast(recibidos.data(), umbral_count, MPI_UmbralPorPar, MASTER_RANK, MPI_COMM_WORLD);
+            MPI_Bcast(recibidos.data(), umbral_count, MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
 
             umbrales_actuales.clear();
             for (const auto &u : recibidos) {
