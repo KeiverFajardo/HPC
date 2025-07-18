@@ -48,30 +48,24 @@ void AlgoritmoA::procesar()
     int next_slave = 1;
     int blocks_sent = 0;
 
-    // ←---- Envío de bloques a esclavos
-    /* int flag;
-    MPI_Status status;
-    while (!exit || blocks_pending > 0) */
-    while (!exit)
+    // Inicializar umbrales con valores por defecto y enviar a cada esclavo
+    std::unordered_map<std::pair<uint8_t, uint8_t>, float, boost::hash<std::pair<uint8_t, uint8_t>>> umbrales;
+    for (uint8_t m = 0; m < 10; ++m) {
+        for (uint8_t f = 0; f < 4; ++f) {
+            umbrales[{m, f}] = 15.0f; // valor por defecto
+        }
+    }
+
+    for (int i = 1; i < world_size; ++i) {
+        MPI_Send(umbrales.data(), umbrales.size() * sizeof(std::pair<std::pair<uint8_t, uint8_t>, float>), MPI_BYTE, i, TAG_UMBRAL, MPI_COMM_WORLD);
+    }
+
+    std::vector<ResultadoEstadistico> resultados;
+    int flag = 0;
+
+    // ---- Envío de bloques a esclavos
+    while (!exit || blocks_sent > 0)
     {
-        /* MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &flag, &status);
-        if (flag)
-        {
-            float sum;
-            MPI_Recv(
-                &sum,
-                1,
-                MPI_FLOAT,
-                status.MPI_SOURCE,
-                status.MPI_TAG,
-                MPI_COMM_WORLD,
-                &status
-            );
-
-            total_speed_sum += sum;
-            blocks_pending--;
-        } */
-
         buffer.clear();
 
         cargar_bloque(buffer, BLOCK_SIZE);
@@ -92,56 +86,61 @@ void AlgoritmoA::procesar()
 
         if (!buffer.empty())
         {
-            /* MPI_Send(
-                registers.data(),
-                registers.size(),
-                MPI_Register,
-                next_slave_rank_to_work + 1,
-                0,
-                MPI_COMM_WORLD
-            ); 
-            registers.clear();
-            blocks_pending++;
-            next_slave_rank_to_work = (next_slave_rank_to_work + 1) % (world_size - 1);
-            */
-            // info("BUFFER INICIO");
-            // for (auto reg : buffer)
-            //     info("{}", reg);
-            // info("BUFFER FIN");
             MPI_Send(buffer.data(), buffer.size(), MPI_Register, next_slave, 0, MPI_COMM_WORLD);
             blocks_sent++;
             next_slave++;
             if (next_slave >= world_size) next_slave = 1;
         }
+
+        MPI_Status status;
+        MPI_Iprobe(MPI_ANY_SOURCE, TAG_DATA, MPI_COMM_WORLD, &flag, &status);
+        
+        if (flag) {
+            // ---- Recepción de resultados estadísticos
+            int count;
+            MPI_Get_count(&status, MPI_ResultadoEstadistico, &count);
+            resultados.clear();
+            resultados.resize(count);
+            MPI_Recv(resultados.data(), count, MPI_ResultadoEstadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            //Actualizar umbrales y enviarlos a los hijos Bs y ademas pintar la grafica
+
+            // Actualizar umbrales por promedio ponderado y reenviarlos
+            /* for (const auto &res : resultados) {
+                Clave clave = {res.municipio_id, res.franja_horaria};
+                auto &[umbral_actual, n_acum] = umbrales_map[clave];
+
+                float nuevo = res.promedio;
+                std::size_t cantidad = res.cantidad;
+
+                // promedio ponderado
+                float actualizado = (umbral_actual * n_acum + nuevo * cantidad) / (n_acum + cantidad);
+                n_acum += cantidad;
+                umbral_actual = actualizado;
+            }
+            // Reenviar nuevos umbrales actualizados
+            umbrales.clear();
+            for (const auto &[clave, val] : umbrales_map) {
+                umbrales.push_back({clave.first, clave.second, val.first});
+            }
+
+            for (int i = 1; i < world_size; ++i) {
+                MPI_Send(umbrales.data(), umbrales.size(), MPI_UmbralPorPar, i, TAG_UMBRAL, MPI_COMM_WORLD);
+            } */
+
+
+            for (const auto& r : resultados)
+            {
+                std::string nombre_municipio = mapper.decodificar(r.municipio_id);
+                info("Municipio {}, Franja {} => Prom: {:.2f}, Desv: {:.2f}, N: {}, Rank origen: {}",
+                    nombre_municipio, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad, status.MPI_SOURCE);
+            }
+            blocks_sent--;
+        }
     }
 
-    /* for (int slave_rank = 1; slave_rank < world_size; slave_rank++)
-        MPI_Send(nullptr, 0, MPI_INT, slave_rank, EXIT_MESSAGE_TAG, MPI_COMM_WORLD); */
-    // ←---- Señales de terminación
     for (int i = 1; i < world_size; ++i)
     {
         MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
-    }
-
-    std::vector<ResultadoEstadistico> resultados;
-    // ←---- Recepción de resultados estadísticos
-    for (int i = 0; i < blocks_sent; ++i)
-    {
-        MPI_Status status;
-        int count;
-
-        MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-        MPI_Get_count(&status, MPI_ResultadoEstadistico, &count);
-
-        resultados.clear();
-        resultados.resize(count);
-        MPI_Recv(resultados.data(), count, MPI_ResultadoEstadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-        for (const auto& r : resultados)
-        {
-            std::string nombre_municipio = mapper.decodificar(r.municipio_id);
-            info("Municipio {}, Franja {} => Prom: {:.2f}, Desv: {:.2f}, N: {}, Rank origen: {}",
-                 nombre_municipio, (int)r.franja_horaria, r.promedio, r.desvio, r.cantidad, status.MPI_SOURCE);
-        }
     }
 }

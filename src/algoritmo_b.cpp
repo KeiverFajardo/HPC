@@ -25,7 +25,9 @@ struct std::hash<ClaveAgrupacion> {
     }
 };
 
-std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<Register> &bloque)
+using UmbralMap = std::unordered_map<ClaveAgrupacion, float>;
+
+std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<Register> &bloque, const UmbralMap &umbrales)
 {
     std::unordered_map<ClaveAgrupacion, std::vector<float>> grupos;
 
@@ -47,7 +49,8 @@ std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<Register> &b
         resultado.promedio = calcular_media(velocidades);
         resultado.desvio = calcular_desvio(velocidades, resultado.promedio);
         resultado.cantidad = velocidades.size();
-        resultado.es_anomalia = false;
+        auto it = umbrales.find(clave);
+        resultado.es_anomalia = (it != umbrales.end()) ? (resultado.promedio < it->second) : false;  //false;
         resultados.push_back(resultado);
     }
 
@@ -56,6 +59,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(const std::vector<Register> &b
 
 void procesar_b() {
     std::vector<Register> buffer;
+    UmbralMap umbrales_actuales;
 
     while (true)
     {
@@ -66,22 +70,44 @@ void procesar_b() {
         if (status.MPI_TAG == EXIT_MESSAGE_TAG)
             break;
 
-        int count;
-        MPI_Get_count(&status, MPI_Register, &count);
-        buffer.resize(count);
+        if (status.MPI_TAG == TAG_UMBRAL)
+        {
+            int count;
+            MPI_Get_count(&status, MPI_UmbralPorPar, &count);
+
+            std::vector<UmbralPorPar> umbrales_recv(count);
+            MPI_Recv(umbrales_recv.data(), count, MPI_UmbralPorPar, MASTER_RANK, TAG_UMBRAL, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            for (const auto &u : umbrales_recv)
+            {
+                ClaveAgrupacion clave = {u.municipio_id, u.franja_horaria};
+                umbrales_actuales[clave] = u.umbral;
+            }
+            continue;
+        }    
         
-        MPI_Recv(buffer.data(), count, MPI_Register, MASTER_RANK, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        if (status.MPI_TAG == TAG_DATA) {
+            // Recibir bloque de registros
+            int count;
+            MPI_Get_count(&status, MPI_Register, &count);
+            buffer.resize(count);
+            
+            //MPI_Recv(buffer.data(), count, MPI_Register, MASTER_RANK, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Recv(buffer.data(), count, MPI_Register, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            
+            info("BUFFER INICIO");
+            for (auto reg : buffer)
+                info("{}", reg);
+            info("BUFFER FIN");
 
-        info("BUFFER INICIO");
-        for (auto reg : buffer)
-            info("{}", reg);
-        info("BUFFER FIN");
+            /* float sum = 0.0f;
+            for (Register &reg : registers)
+                sum += reg.velocidad; */
 
-        /* float sum = 0.0f;
-        for (Register &reg : registers)
-            sum += reg.velocidad; */
-
-        std::vector<ResultadoEstadistico> resultados = analizar_bloque(buffer);
-        MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, 0, MPI_COMM_WORLD);
+            std::vector<ResultadoEstadistico> resultados = analizar_bloque(buffer, umbrales_actuales);
+            //MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, 0, MPI_COMM_WORLD);
+            MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD);
+        }
+        
     }
 }
