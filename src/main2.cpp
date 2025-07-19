@@ -22,6 +22,8 @@
 
 constexpr int BLOCK_SIZE = 10000000;
 
+using Clave = std::pair<uint8_t, uint8_t>;
+
 std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
 
 struct DatosEstadisticos {
@@ -34,6 +36,7 @@ std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadis
 
 std::unordered_map<Clave, float, boost::hash<Clave>> umbrales;
 std::unordered_map<Clave, std::tuple<float, size_t, size_t>, boost::hash<Clave>> estadisticas;
+
 
 
 void plot(const std::vector<float> &barras)
@@ -57,7 +60,7 @@ void plot(const std::vector<float> &barras)
 	gp.send1d(barras);
 }
 
-std::vector<ResultadoEstadistico> analizar_bloque(
+std::vector<ResultadoEstadistico> analizar_bloque2(
     const std::vector<Register> &bloque,
     const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
 ) {
@@ -86,7 +89,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     return resultados;
 }
 
-bool cargar_bloque(CsvReader &csv_reader, MunicipioMapper &mapper, std::vector<Register> &bloque)
+bool cargar_bloque2(CsvReader &csv_reader, MunicipioMapper &mapper, std::vector<Register> &bloque)
 {
     bloque.clear();
     Register reg;
@@ -105,15 +108,15 @@ bool cargar_bloque(CsvReader &csv_reader, MunicipioMapper &mapper, std::vector<R
     return !bloque.empty();
 }
 
-void imprimir_umbrales(const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales)
+/*void imprimir_umbrales(const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales)
 {
     for (const auto &[clave, valor] : umbrales)
     {
         info("  Municipio {} - Franja {} => Umbral = {:.2f}", clave.first, clave.second, valor);
     }
-}
+}*/
 
-void recalcular_umbrales()
+void recalcular_umbrales2()
 {
     for (auto &[clave, datos] : m_datos_estadisticos)
     {
@@ -129,7 +132,7 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
      MunicipioMapper mapper(shapefile_path);
 
     
-    info("MUNICIPIOS {}", m_mapper.cantidad());
+    info("MUNICIPIOS {}", mapper.cantidad());
     for (uint8_t municipio = 0; municipio < 8; ++municipio) {
         for (uint8_t franja_horaria = 0; franja_horaria < 3; ++franja_horaria) {
             m_umbrales[{municipio, franja_horaria}] = 15.0f;
@@ -146,6 +149,8 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
     gp << "set ylabel 'Velocidad media'\n";
 
     std::vector<ResultadoEstadistico> resultados;
+    std::vector<Register> buffer;
+
 
     for (size_t i = 0; i < files.size(); i++)
     {
@@ -184,10 +189,10 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
                 info("BLOQUE {} ({}:{})", ++bloque, range[0], range[1]);
 
                 //Proceso B
-                CsvReader csv_reader(file.c_str(), range[0], range[1]);
+                CsvReader csv_reader(filename.c_str(), range[0], range[1]);
                 
-                cargar_bloque(csv_reader, mapper, buffer);
-                std::vector<ResultadoEstadistico> resultados = analizar_bloque(buffer, umbrales);
+                cargar_bloque2(csv_reader, mapper, buffer);
+                std::vector<ResultadoEstadistico> resultados = analizar_bloque2(buffer, umbrales);
 
                 //A de vuelta
                 for (const auto &r : resultados)
@@ -203,7 +208,7 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
                 std::vector<std::pair<std::string, int>> barras(8);
                 for (int i = 0; i < 8; i++)
                 {
-                    barras[i] = std::make_pair('"' + m_mapper.decodificar(i) + '"', 0);
+                    barras[i] = std::make_pair('"' + mapper.decodificar(i) + '"', 0);
                 }
 
                 for (auto &[clave, datos] : m_datos_estadisticos)
@@ -213,7 +218,7 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
                 gp << "plot '-' using 2:xtic(1) with boxes notitle\n";
                 gp.send1d(barras);
 
-                recalcular_umbrales();
+                recalcular_umbrales2();
             }
             else
             {
@@ -224,12 +229,18 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
 }
 
 int main(int argc, char *argv[])
-{
+{   
+    MPI_Init(&argc, &argv); 
+
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
     std::vector<std::string> files = {
         "../autoscope_04_2025_velocidad.csv",
         "../autoscope_05_2025_velocidad.csv",
     };
 
     procesar_main("../shapefiles/procesado.shp", std::move(files));
+    MPI_Finalize(); 
     return 0;
 }
