@@ -39,6 +39,10 @@ Hour CsvReader::parse_hour(const std::string &hour_string)
 
 bool CsvReader::get(Register &reg)
 {
+    if (m_file.tellg() >= m_end) {
+        m_file.close();
+        return false;
+    }
     m_line.clear();
     while (m_file.good() && m_line.empty()) std::getline(m_file, m_line);
     if (m_file.eof()) return false;

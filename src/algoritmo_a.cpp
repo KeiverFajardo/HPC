@@ -5,7 +5,6 @@
 #include <utility>
 
 #include "algoritmo_b.hpp"
-#include "franja_horaria.hpp"
 #include "log.hpp"
 #include "mpi_datatypes.hpp"
 #include "common_constants.hpp"
@@ -16,7 +15,7 @@
 #include <unordered_map>
 #include <boost/functional/hash.hpp>
 
-constexpr int BLOCK_SIZE = 1000;
+constexpr int BLOCK_SIZE = 1000000;
 
 AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     : m_mapper(shapefile_path)
@@ -25,28 +24,9 @@ AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     for (uint8_t municipio = 0; municipio < 8; ++municipio) {
         for (uint8_t franja_horaria = 0; franja_horaria < 3; ++franja_horaria) {
              m_umbrales[{municipio, franja_horaria}] = 15.0f;
-             m_suma_velocidades[{municipio, franja_horaria}] = std::make_pair(0.0f, 0);
+             m_datos_estadisticos[{municipio, franja_horaria}] = { 0.0f, 0, 0 };
         }
     }
-}
-
-bool AlgoritmoA::cargar_bloque(CsvReader &csv_reader, std::vector<Register> &bloque, std::size_t block_size)
-{
-    bloque.clear();
-    Register reg;
-
-    while (bloque.size() < block_size && csv_reader.get(reg))
-    {
-        // Asignar municipio
-        reg.municipio_id = m_mapper.codificar(Punto { reg.latitud, reg.longitud });
-
-        // Asignar franja horaria
-        reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
-
-        bloque.push_back(reg);
-    }
-
-    return !bloque.empty();
 }
 
 void AlgoritmoA::enviar_umbrales()
@@ -65,15 +45,16 @@ void AlgoritmoA::enviar_umbrales()
 
 void AlgoritmoA::recalcular_umbrales()
 {
-    for (auto &[clave, suma_y_cantidad] : m_suma_velocidades)
+    for (auto &[clave, datos] : m_datos_estadisticos)
     {
-        m_umbrales[clave] = suma_y_cantidad.first / suma_y_cantidad.second * 0.5;
-        suma_y_cantidad.first = 0.0f;
-        suma_y_cantidad.second = 0;
+        if (datos.cantidad_registros != 0)
+            m_umbrales[clave] = (datos.suma_velocidades / datos.cantidad_registros) * 0.5;
+        datos.suma_velocidades = 0.0f;
+        datos.cantidad_registros = 0;
     }
 }
 
-void AlgoritmoA::procesar()
+void AlgoritmoA::procesar(std::vector<std::string> files)
 {
     Gnuplot gp;
     gp << "set terminal gif size 640,480 animate delay 16.6\n";
@@ -92,38 +73,37 @@ void AlgoritmoA::procesar()
     for (int i = 1; i < world_size; i++)
         free_slaves.emplace(i);
 
-    std::vector<Register> buffer;
-    buffer.reserve(BLOCK_SIZE);
-
-    std::vector<Register> anomalias;
-
     std::vector<ResultadoEstadistico> resultados;
-    int flag = 0;
 
-    std::vector<std::string> files = {
-        "../04_2025.csv",
-        "../05_2025.csv",
-    };
-
-    for (int i = 0; i < files.size(); i++)
+    for (size_t i = 0; i < files.size(); i++)
     {
         int bloque = 0;
-        const auto &filename = files[i];
+        auto &filename = files[i];
+        filename.reserve(128);
 
-        info("Comienzo archivo {}", filename);
-        CsvReader csv_reader(filename.c_str());
+        std::ifstream ifs(filename.c_str());
+        ifs.seekg(0, std::ios::end);
+        size_t filesize = ifs.tellg();
+        ifs.close();
+        size_t cursor = 0;
+        info("Comienzo archivo {} ({} bytes)", filename, filesize);
+
         enviar_umbrales();
         // ---- Envío de bloques a esclavos
         bool file_ended = false;
-        while (!file_ended || free_slaves.size() < world_size - 1)
+        while (!file_ended || free_slaves.size() < static_cast<size_t>(world_size - 1))
         {
             if (!file_ended && !free_slaves.empty())
             {
-                if (cargar_bloque(csv_reader, buffer, BLOCK_SIZE))
+                if (cursor < filesize)
                 {
                     int slave = free_slaves.extract(free_slaves.begin()).value();
-                    info("BLOQUE {} for {}", ++bloque, slave);
-                    MPI_Send(buffer.data(), buffer.size(), MPI_Register, slave, TAG_DATA, MPI_COMM_WORLD);
+                    uint64_t range[2];
+                    range[0] = cursor;
+                    cursor += BLOCK_SIZE;
+                    range[1] = cursor;
+                    info("BLOQUE {} ({}:{}) for {}", ++bloque, range[0], range[1], slave);
+                    MPI_Send(range, 2, MPI_UINT64_T, slave, TAG_DATA, MPI_COMM_WORLD);
                 }
                 else
                 {
@@ -131,12 +111,10 @@ void AlgoritmoA::procesar()
                 }
             }
 
+            int flag = 0;
             MPI_Status status;
-            MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &status);
-
-            if (!flag) continue;
-            
-            if (status.MPI_TAG == TAG_DATA) {
+            MPI_Iprobe(MPI_ANY_SOURCE, TAG_DATA, MPI_COMM_WORLD, &flag, &status);
+            while (flag) { 
                 // ---- Recepción de resultados estadísticos
                 int count;
                 MPI_Get_count(&status, MPI_ResultadoEstadistico, &count);
@@ -150,10 +128,11 @@ void AlgoritmoA::procesar()
                 for (const auto &r : resultados)
                 {
                     Clave clave = {r.municipio_id, r.franja_horaria};
-                    auto &[suma, cantidad] = m_suma_velocidades[clave];
+                    DatosEstadisticos &datos = m_datos_estadisticos[clave];
 
-                    suma += r.suma_velocidades;
-                    cantidad += r.cantidad;
+                    datos.suma_velocidades += r.suma_velocidades;
+                    datos.cantidad_registros += r.cantidad_registros;
+                    datos.cantidad_anomalias += r.cantidad_anomalias;
                 }
 
                 free_slaves.emplace(status.MPI_SOURCE);
@@ -165,20 +144,12 @@ void AlgoritmoA::procesar()
                 //     info("Municipio {}, Franja {} => Suma: {:.2f}, N: {}, Rank origen: {}",
                 //         nombre_municipio, (int)r.franja_horaria, r.suma_velocidades, r.cantidad, status.MPI_SOURCE);
                 // }
-            }
 
-            if (status.MPI_TAG == ANOMALIAS_TAG)
-            {
-                int count;
-                MPI_Get_count(&status, MPI_Register, &count);
-                std::vector<Register> anomalias_buf(count);
-                MPI_Recv(anomalias_buf.data(), anomalias_buf.size(), MPI_Register, status.MPI_SOURCE, ANOMALIAS_TAG, MPI_COMM_WORLD, &status);
-                for (Register &reg : anomalias_buf)
-                    anomalias.emplace_back(reg);
+                MPI_Iprobe(MPI_ANY_SOURCE, TAG_DATA, MPI_COMM_WORLD, &flag, &status);
             }
         }
 
-        if (i != files.size() - 1)
+        if (static_cast<size_t>(i) != files.size() - 1)
         {
             for (int i = 1; i < world_size; ++i)
             {
@@ -191,21 +162,15 @@ void AlgoritmoA::procesar()
         }
 
         {
-            std::unordered_map<uint8_t, int> cantidad_anomalias_por_municipio;
-            for (Register &reg : anomalias)
-            {
-                cantidad_anomalias_por_municipio[reg.municipio_id] += 1;
-            }
-
             std::vector<std::pair<std::string, int>> barras(8);
             for (int i = 0; i < 8; i++)
             {
                 barras[i] = std::make_pair('"' + m_mapper.decodificar(i) + '"', 0);
             }
 
-            for (auto &[municipio_id, cantidad] : cantidad_anomalias_por_municipio)
+            for (auto &[clave, datos] : m_datos_estadisticos)
             {
-                barras.at(municipio_id).second = cantidad;
+                barras.at(clave.first).second = datos.cantidad_anomalias;
             }
             gp << "plot '-' using 2:xtic(1) with boxes notitle\n";
             gp.send1d(barras);

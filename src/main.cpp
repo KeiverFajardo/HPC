@@ -47,12 +47,17 @@ int main(int argc, char *argv[])
     int world_rank, world_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+    
+    std::vector<std::string> files = {
+        "../04_2025.csv",
+        "../05_2025.csv",
+    };
 
     if (world_rank == MASTER_RANK)
     {
         AlgoritmoA algoritmo("../shapefiles/procesado.shp");
         
-        algoritmo.procesar();
+        algoritmo.procesar(std::move(files));
 
         // std::vector<float> barras;
         // for (auto &res_estadistico : resultados)
@@ -66,7 +71,7 @@ int main(int argc, char *argv[])
     else
     {
         // --- Procesos B: Esclavos ---
-        procesar_b();
+        procesar_b("../shapefiles/procesado.shp", std::move(files));
     }
 
     free_mpi_datatypes();

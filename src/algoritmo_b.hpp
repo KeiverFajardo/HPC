@@ -1,12 +1,16 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
+#include <string>
+#include <vector>
 
 struct ResultadoEstadistico {
     uint8_t municipio_id;
     uint8_t franja_horaria;
     float suma_velocidades;
-    std::size_t cantidad;
+    size_t cantidad_registros;
+    size_t cantidad_anomalias;
 };
 
-void procesar_b();
+void procesar_b(const std::string &shapefile_path, std::vector<std::string> files);

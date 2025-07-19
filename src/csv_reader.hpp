@@ -28,9 +28,10 @@ struct Register {
 
 class CsvReader {
 public:
-    CsvReader(const char *filename)
-        : m_file(filename)
+    CsvReader(const char *filename, size_t begin, size_t end)
+        : m_end(end), m_file(filename)
     {
+        m_file.seekg(begin);
         m_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
@@ -40,6 +41,7 @@ private:
     Date parse_date(const std::string &date_string);
     Hour parse_hour(const std::string &date_string);
 
+    size_t m_end;
     std::string m_line, m_value, m_aux_buf;
     std::ifstream m_file;
 };

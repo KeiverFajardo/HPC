@@ -1,9 +1,8 @@
 #pragma once
 
-#include "csv_reader.hpp"
 #include "municipio_mapper.hpp"
-
 #include <boost/container_hash/hash.hpp>
+#include <unordered_map>
 #include <vector>
 #include <cstddef>
 
@@ -12,17 +11,23 @@ class AlgoritmoA {
 public:
     AlgoritmoA(const std::string &shapefile_path);
 
-    void procesar();
+    void procesar(std::vector<std::string> files);
     
     using Clave = std::pair<uint8_t, uint8_t>;
 
 private:
     // Cargar un bloque de tamaño `block_size` con registros extendidos
-    bool cargar_bloque(CsvReader &csv_reader, std::vector<Register> &bloque, std::size_t block_size);
     void enviar_umbrales();
     void recalcular_umbrales();
 
     std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
-    std::unordered_map<Clave, std::pair<float, size_t>, boost::hash<Clave>> m_suma_velocidades;
+
+    struct DatosEstadisticos {
+        float suma_velocidades;
+        size_t cantidad_registros;
+        size_t cantidad_anomalias;
+    };
+
+    std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos;
     MunicipioMapper m_mapper;
 };
