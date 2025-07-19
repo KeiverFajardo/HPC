@@ -8,6 +8,7 @@
 struct ResultadoEstadistico {
     uint8_t municipio_id;
     uint8_t franja_horaria;
+    uint8_t dia;
     float suma_velocidades;
     size_t cantidad_registros;
     size_t cantidad_anomalias;

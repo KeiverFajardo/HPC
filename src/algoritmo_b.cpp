@@ -21,40 +21,54 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     // Calcular estadística por grupo
     std::vector<ResultadoEstadistico> resultados;
 
-    std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8> aux;
-    for (int municipio_id = 0; municipio_id < 8; municipio_id++)
-    {
-        for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
-        {
-            auto &[suma, cantidad_registros, cantidad_anomalias] = aux[municipio_id][franja_horaria];
-            suma = 0.0f;
-            cantidad_registros = 0;
-            cantidad_anomalias = 0;
-        }
-    }
+    std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
 
     for (const auto &reg : bloque)
     {
+        auto it = aux.find(reg.fecha.day);
+        if (it == aux.end())
+        {
+            std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8> new_elem;
+            for (int municipio_id = 0; municipio_id < 8; municipio_id++)
+            {
+                for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
+                {
+                    auto &[suma, cantidad_registros, cantidad_anomalias]
+                        = new_elem[municipio_id][franja_horaria];
+                    suma = 0.0f;
+                    cantidad_registros = 0;
+                    cantidad_anomalias = 0;
+                }
+            }
+
+            aux.insert({reg.fecha.day, new_elem});
+            it = aux.find(reg.fecha.day);
+        }
+
         auto &[suma, cantidad_registros, cantidad_anomalias]
-            = aux[reg.municipio_id][reg.franja_horaria];
+            = it->second[reg.municipio_id][reg.franja_horaria];
         suma += reg.velocidad;
         cantidad_registros++;
         if (reg.velocidad < umbrales.at({reg.municipio_id, reg.franja_horaria}))
             cantidad_anomalias++;
     }
 
-    for (int municipio_id = 0; municipio_id < 8; municipio_id++)
+    for (const auto &[day, aux2] : aux)
     {
-        for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
+        for (int municipio_id = 0; municipio_id < 8; municipio_id++)
         {
-            auto &[suma, cantidad_registros, cantidad_anomalias] = aux[municipio_id][franja_horaria];
-            ResultadoEstadistico res;
-            res.municipio_id = municipio_id;
-            res.franja_horaria = franja_horaria;
-            res.suma_velocidades = suma;
-            res.cantidad_registros = cantidad_registros;
-            res.cantidad_anomalias = cantidad_anomalias;
-            resultados.push_back(res);
+            for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
+            {
+                auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[municipio_id][franja_horaria];
+                ResultadoEstadistico res;
+                res.dia = day;
+                res.municipio_id = municipio_id;
+                res.franja_horaria = franja_horaria;
+                res.suma_velocidades = suma;
+                res.cantidad_registros = cantidad_registros;
+                res.cantidad_anomalias = cantidad_anomalias;
+                resultados.push_back(res);
+            }
         }
     }
 

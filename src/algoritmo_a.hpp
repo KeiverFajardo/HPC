@@ -23,11 +23,11 @@ private:
     std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
 
     struct DatosEstadisticos {
-        float suma_velocidades;
-        size_t cantidad_registros;
-        size_t cantidad_anomalias;
+        float suma_velocidades = 0.0f;
+        size_t cantidad_registros = 0;
+        size_t cantidad_anomalias = 0;
     };
 
-    std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos;
+    std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos_mes;
     MunicipioMapper m_mapper;
 };

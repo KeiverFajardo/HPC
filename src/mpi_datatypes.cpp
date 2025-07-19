@@ -70,11 +70,12 @@ void init_mpi_register()
 
 void init_mpi_resultado_estadistico()
 {
-    int blocklengths[5] = {1, 1, 1, 1, 1};
-    MPI_Aint displacements[5];
-    MPI_Datatype types[5] = {
+    int blocklengths[6] = {1, 1, 1, 1, 1, 1};
+    MPI_Aint displacements[6];
+    MPI_Datatype types[6] = {
         MPI_UINT8_T,  // uint8_t municipio_id;
         MPI_UINT8_T,  // uint8_t franja_horaria;
+        MPI_UINT8_T,  // uint8_t dia;
         MPI_FLOAT,    // float suma_velocidades
         MPI_UINT64_T, // std::size_t cantidad_registros;
         MPI_UINT64_T, // std::size_t cantidad_anomalias;
@@ -82,11 +83,12 @@ void init_mpi_resultado_estadistico()
 
     displacements[0] = offsetof(ResultadoEstadistico, municipio_id);
     displacements[1] = offsetof(ResultadoEstadistico, franja_horaria);
-    displacements[2] = offsetof(ResultadoEstadistico, suma_velocidades);
-    displacements[3] = offsetof(ResultadoEstadistico, cantidad_registros);
-    displacements[4] = offsetof(ResultadoEstadistico, cantidad_anomalias);
+    displacements[2] = offsetof(ResultadoEstadistico, dia);
+    displacements[3] = offsetof(ResultadoEstadistico, suma_velocidades);
+    displacements[4] = offsetof(ResultadoEstadistico, cantidad_registros);
+    displacements[5] = offsetof(ResultadoEstadistico, cantidad_anomalias);
 
-    MPI_Type_create_struct(5, blocklengths, displacements, types, &MPI_ResultadoEstadistico);
+    MPI_Type_create_struct(6, blocklengths, displacements, types, &MPI_ResultadoEstadistico);
     MPI_Type_commit(&MPI_ResultadoEstadistico);
 }
 

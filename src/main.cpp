@@ -3,41 +3,11 @@
 
 #include "algoritmo_a.hpp"
 #include "algoritmo_b.hpp"
-#include "log.hpp"
 #include "mpi_datatypes.hpp"
 
 #include "gnuplot-iostream.h"
 
 #include "common_constants.hpp"
-
-void plot(const std::vector<float> &barras)
-{
-    Gnuplot gp;
-	// Create a script which can be manually fed into gnuplot later:
-	//    Gnuplot gp(">script.gp");
-	// Create script and also feed to gnuplot:
-	//    Gnuplot gp("tee plot.gp | gnuplot -persist");
-	// Or choose any of those options at runtime by setting the GNUPLOT_IOSTREAM_CMD
-	// environment variable.
-    
-    //const_cast<std::vector<float>&>(barras)[1] = 3.0f;
-    
-    info("BARRAS BEGIN");
-    for (auto barra : barras)
-        info("{}", barra);
-    info("BARRAS END");
-
-	// Don't forget to put "\n" at the end of each line!
-    gp << "set terminal gif size 300,200 animate delay 2\n";
-    gp << "set output 'image.gif'\n";
-    gp << "set style fill solid\n";
-    gp << "set boxwidth 0.5\n";
-	gp << "plot '-' with boxes title 'pts_A'\n";
-	gp.send1d(barras);
-    const_cast<std::vector<float>&>(barras)[1] = 3.0f;
-	gp << "plot '-' with boxes title 'pts_A'\n";
-	gp.send1d(barras);
-}
 
 int main(int argc, char *argv[])
 {
@@ -50,7 +20,8 @@ int main(int argc, char *argv[])
     
     std::vector<std::string> files = {
         "../autoscope_04_2025_velocidad.csv",
-        "../autoscope_05_2025_velocidad.csv",
+        // "../autoscope_05_2025_velocidad.csv",
+        // "../04_2025_short.csv",
     };
 
     if (world_rank == MASTER_RANK)
@@ -58,15 +29,6 @@ int main(int argc, char *argv[])
         AlgoritmoA algoritmo("../shapefiles/procesado.shp");
         
         algoritmo.procesar(std::move(files));
-
-        // std::vector<float> barras;
-        // for (auto &res_estadistico : resultados)
-        // {
-        //     if (barras.size() < res_estadistico.municipio_id)
-        //         barras.resize(res_estadistico.municipio_id);
-        //     barras[res_estadistico.municipio_id] = res_estadistico.promedio;
-        // }
-        // plot(barras);
     }
     else
     {
