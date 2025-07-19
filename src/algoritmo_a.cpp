@@ -62,7 +62,7 @@ const auto franjas_horarias_names = std::to_array({
     "Tarde"
 });
 
-void AlgoritmoA::procesar(std::vector<std::string> files)
+void AlgoritmoA::procesar(std::vector<const char*> files)
 {
     std::array<Gnuplot, 3> gps;
     // {
@@ -78,7 +78,7 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
         gp << "set boxwidth 0.5\n";
         gp << "set yrange [0:500]\n";
         gp << "set xlabel 'Municipios'\n";
-        gp << "set ylabel 'Velocidad media'\n";
+        gp << "set ylabel 'Cantidad de anomalias'\n";
     }
 
     int world_rank, world_size;
@@ -96,7 +96,7 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
         int bloque = 0;
         auto &filename = files[file_index];
 
-        std::ifstream ifs(filename.c_str());
+        std::ifstream ifs(filename);
         ifs.seekg(0, std::ios::end);
         const size_t filesize = ifs.tellg();
         ifs.close();
@@ -107,7 +107,7 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
 
         Date first_day_date;
         {
-            CsvReader csv_reader(filename.c_str(), 0, filesize);
+            CsvReader csv_reader(filename, 0, filesize);
             Register r;
             if (csv_reader.get(r))
                 first_day_date = r.fecha;
@@ -202,7 +202,7 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
                             barras[franja_horaria][municipio].first = '"' + m_mapper.decodificar(municipio) + '"';
                         }
                         gp << "set title 'Anomalias en " << franjas_horarias_names[franja_horaria]
-                           << " - " << day << "/" << first_day_date.month << "/" << first_day_date.year << "'\n";
+                           << " - " << day << "/" << (int)first_day_date.month << "/" << first_day_date.year << "'\n";
                         gp << "plot '-' using 2:xtic(1) with boxes\n";
                         gp.send1d(barras.at(franja_horaria));
                     }
@@ -281,10 +281,6 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
             {
                 MPI_Send(nullptr, 0, MPI_Register, i, END_OF_FILE_TAG, MPI_COMM_WORLD);
             }
-        }
-        else
-        {
-            info("ACAAAAA");
         }
 
         recalcular_umbrales();

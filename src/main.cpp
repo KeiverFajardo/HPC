@@ -17,12 +17,11 @@ int main(int argc, char *argv[])
     int world_rank, world_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-    
-    std::vector<std::string> files = {
-        "../autoscope_04_2025_velocidad.csv",
-        // "../autoscope_05_2025_velocidad.csv",
-        // "../04_2025_short.csv",
-    };
+ 
+    std::vector<const char *> files;
+
+    for (int i = 1; i < argc; i++)
+        files.emplace_back(argv[i]);
 
     if (world_rank == MASTER_RANK)
     {

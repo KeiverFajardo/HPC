@@ -14,4 +14,4 @@ struct ResultadoEstadistico {
     size_t cantidad_anomalias;
 };
 
-void procesar_b(const std::string &shapefile_path, std::vector<std::string> files);
+void procesar_b(const std::string &shapefile_path, std::vector<const char*> files);

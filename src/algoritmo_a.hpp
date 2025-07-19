@@ -11,7 +11,7 @@ class AlgoritmoA {
 public:
     AlgoritmoA(const std::string &shapefile_path);
 
-    void procesar(std::vector<std::string> files);
+    void procesar(std::vector<const char*> files);
     
     using Clave = std::pair<uint8_t, uint8_t>;
 
