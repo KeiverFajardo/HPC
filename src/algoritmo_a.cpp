@@ -17,7 +17,7 @@
 #include <unordered_map>
 #include <boost/functional/hash.hpp>
 
-constexpr int BLOCK_SIZE = 100000;
+constexpr int BLOCK_SIZE = 1000000;
 
 AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     : m_mapper(shapefile_path)
