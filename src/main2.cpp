@@ -22,6 +22,20 @@
 
 constexpr int BLOCK_SIZE = 10000000;
 
+std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
+
+struct DatosEstadisticos {
+    float suma_velocidades;
+    size_t cantidad_registros;
+    size_t cantidad_anomalias;
+};
+
+std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos;
+
+std::unordered_map<Clave, float, boost::hash<Clave>> umbrales;
+std::unordered_map<Clave, std::tuple<float, size_t, size_t>, boost::hash<Clave>> estadisticas;
+
+
 void plot(const std::vector<float> &barras)
 {
     Gnuplot gp;
@@ -114,19 +128,7 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
 {
      MunicipioMapper mapper(shapefile_path);
 
-      std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
-
-    struct DatosEstadisticos {
-        float suma_velocidades;
-        size_t cantidad_registros;
-        size_t cantidad_anomalias;
-    };
-
-    std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos;
-  
-    std::unordered_map<Clave, float, boost::hash<Clave>> umbrales;
-    std::unordered_map<Clave, std::tuple<float, size_t, size_t>, boost::hash<Clave>> estadisticas;
-
+    
     info("MUNICIPIOS {}", m_mapper.cantidad());
     for (uint8_t municipio = 0; municipio < 8; ++municipio) {
         for (uint8_t franja_horaria = 0; franja_horaria < 3; ++franja_horaria) {
@@ -217,8 +219,8 @@ void procesar_main(const std::string &shapefile_path, std::vector<std::string> f
             {
                 file_ended = true;
             }
+        }
     }
-
 }
 
 int main(int argc, char *argv[])
