@@ -72,11 +72,11 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     // };
     for (const auto &[i, gp] : std::views::enumerate(gps))
     {
-        gp << "set terminal gif size 640,480 animate delay 16.6\n";
+        gp << "set terminal gif size 1280,960 animate delay 66.66\n";
         gp << "set output 'image" << i << ".gif'\n";
         gp << "set style fill solid\n";
         gp << "set boxwidth 0.5\n";
-        gp << "set yrange [0:500]\n";
+        // gp << "set yrange [0:500]\n";
         gp << "set xlabel 'Municipios'\n";
         gp << "set ylabel 'Cantidad de anomalias'\n";
     }
@@ -199,7 +199,9 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     {
                         for (int municipio = 0; municipio < 8; municipio++)
                         {
-                            barras[franja_horaria][municipio].first = '"' + m_mapper.decodificar(municipio) + '"';
+                            barras[franja_horaria][municipio].first
+                                = '"' + m_mapper.decodificar(municipio) + "\\n"
+                                  "(" + std::to_string(m_umbrales[{municipio, franja_horaria}]) + ")\"";
                         }
                         gp << "set title 'Anomalias en " << franjas_horarias_names[franja_horaria]
                            << " - " << day << "/" << (int)first_day_date.month << "/" << first_day_date.year << "'\n";
