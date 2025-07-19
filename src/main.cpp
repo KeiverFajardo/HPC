@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     
     std::vector<std::string> files = {
-        "../04_2025.csv",
-        "../05_2025.csv",
+        "../autoscope_04_2025_velocidad.csv",
+        "../autoscope_05_2025_velocidad.csv",
     };
 
     if (world_rank == MASTER_RANK)

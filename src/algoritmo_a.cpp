@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <boost/functional/hash.hpp>
 
-constexpr int BLOCK_SIZE = 1000000;
+constexpr int BLOCK_SIZE = 10000000;
 
 AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     : m_mapper(shapefile_path)
@@ -61,7 +61,7 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
     gp << "set output 'image.gif'\n";
     gp << "set style fill solid\n";
     gp << "set boxwidth 0.5\n";
-    gp << "set yrange [0:1000]\n";
+    // gp << "set yrange [0:1000]\n";
     gp << "set xlabel 'Municipios'\n";
     gp << "set ylabel 'Velocidad media'\n";
 

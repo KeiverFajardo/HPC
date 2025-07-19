@@ -18,26 +18,44 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     const std::vector<Register> &bloque,
     const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
 ) {
-    std::unordered_map<Clave, std::vector<float>> grupos;
-
     // Calcular estadística por grupo
     std::vector<ResultadoEstadistico> resultados;
 
-    for (const auto &[clave, velocidades] : grupos)
+    std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8> aux;
+    for (int municipio_id = 0; municipio_id < 8; municipio_id++)
     {
-        float suma = 0.0f;
-        size_t cantidad_anomalias = 0;
-        for (auto &vel : velocidades) {
-            suma += vel;
-            if (vel < umbrales.at(clave)) cantidad_anomalias++;
+        for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
+        {
+            auto &[suma, cantidad_registros, cantidad_anomalias] = aux[municipio_id][franja_horaria];
+            suma = 0.0f;
+            cantidad_registros = 0;
+            cantidad_anomalias = 0;
         }
-        ResultadoEstadistico resultado;
-        resultado.municipio_id = clave.first;
-        resultado.franja_horaria = clave.second;
-        resultado.suma_velocidades = suma;
-        resultado.cantidad_registros = velocidades.size();
-        resultado.cantidad_anomalias = cantidad_anomalias;
-        resultados.push_back(resultado);
+    }
+
+    for (const auto &reg : bloque)
+    {
+        auto &[suma, cantidad_registros, cantidad_anomalias]
+            = aux[reg.municipio_id][reg.franja_horaria];
+        suma += reg.velocidad;
+        cantidad_registros++;
+        if (reg.velocidad < umbrales.at({reg.municipio_id, reg.franja_horaria}))
+            cantidad_anomalias++;
+    }
+
+    for (int municipio_id = 0; municipio_id < 8; municipio_id++)
+    {
+        for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
+        {
+            auto &[suma, cantidad_registros, cantidad_anomalias] = aux[municipio_id][franja_horaria];
+            ResultadoEstadistico res;
+            res.municipio_id = municipio_id;
+            res.franja_horaria = franja_horaria;
+            res.suma_velocidades = suma;
+            res.cantidad_registros = cantidad_registros;
+            res.cantidad_anomalias = cantidad_anomalias;
+            resultados.push_back(res);
+        }
     }
 
     return resultados;
