@@ -11,7 +11,6 @@
 #include <mpi.h>
 #include <vector>
 #include <unordered_map>
-#include <omp.h>
 
 using Clave = std::pair<uint8_t, uint8_t>;
 
@@ -21,7 +20,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
 ) {
     // Calcular estadística por grupo
-    /* std::vector<ResultadoEstadistico> resultados;
+    std::vector<ResultadoEstadistico> resultados;
 
     std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
 
@@ -29,7 +28,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(
 
     while (csv_reader.get(reg))
     {
-        // Asignar municipio
+        /* // Asignar municipio
         reg.municipio_id = mapper.codificar(Punto { reg.latitud, reg.longitud });
 
         // Asignar franja horaria
@@ -60,40 +59,8 @@ std::vector<ResultadoEstadistico> analizar_bloque(
         cantidad_registros++;
         if (reg.velocidad < umbrales.at({reg.municipio_id, reg.franja_horaria}))
             cantidad_anomalias++;
-    } */
-
-    std::vector<Register> registros;
-    Register reg;
-    while (csv_reader.get(reg)) {
-        reg.municipio_id = mapper.codificar(Punto{reg.latitud, reg.longitud});
-        reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
-        registros.push_back(reg);
     }
 
-    std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
-    omp_lock_t aux_lock;
-    omp_init_lock(&aux_lock);
-
-    #pragma omp parallel for
-    for (size_t i = 0; i < registros.size(); ++i) {
-        const auto &reg = registros[i];
-        const Clave clave = {reg.municipio_id, reg.franja_horaria};
-        float velocidad = reg.velocidad;
-        uint8_t dia = reg.fecha.day;
-
-        omp_set_lock(&aux_lock);
-        auto &[suma, cantidad_registros, cantidad_anomalias] = aux[dia][clave.first][clave.second];
-        suma += velocidad;
-        cantidad_registros++;
-        if (velocidad < umbrales.at(clave)) {
-            cantidad_anomalias++;
-        }
-        omp_unset_lock(&aux_lock);
-    }
-
-    omp_destroy_lock(&aux_lock);
-
-    std::vector<ResultadoEstadistico> resultados;
     for (const auto &[day, aux2] : aux)
     {
         for (int municipio_id = 0; municipio_id < 8; municipio_id++)
@@ -101,14 +68,88 @@ std::vector<ResultadoEstadistico> analizar_bloque(
             for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
             {
                 auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[municipio_id][franja_horaria];
-                resultados.push_back(ResultadoEstadistico{
-                    dia,
-                    static_cast<uint8_t>(municipio_id),
-                    static_cast<uint8_t>(franja_horaria),
-                    suma,
-                    cantidad_registros,
-                    cantidad_anomalias
-                });
+                ResultadoEstadistico res;
+                res.dia = day;
+                res.municipio_id = municipio_id;
+                res.franja_horaria = franja_horaria;
+                res.suma_velocidades = suma;
+                res.cantidad_registros = cantidad_registros;
+                res.cantidad_anomalias = cantidad_anomalias;
+                resultados.push_back(res);
+            }
+        }
+    } */
+
+    std::vector<Register> registros;
+
+    Register reg;
+    while (csv_reader.get(reg)) {
+        registros.push_back(reg);
+    }
+
+    // Asignar municipio y franja horaria (en paralelo)
+    #pragma omp parallel for schedule(static)
+    for (size_t i = 0; i < registros.size(); ++i) {
+        registros[i].municipio_id = mapper.codificar(Punto{registros[i].latitud, registros[i].longitud});
+        registros[i].franja_horaria = std::to_underlying(get_franja_horaria(registros[i].hora));
+    }
+
+    // Estructura para almacenar resultados por día/municipio/franja
+    std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
+    std::mutex aux_mutex;
+
+    // Procesamiento de registros en paralelo
+    #pragma omp parallel
+    {
+        std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> local_aux;
+
+        for (auto &kv : local_aux) {
+            for (int i = 0; i < 8; ++i)
+                for (int j = 0; j < 3; ++j)
+                    local_aux[kv.first][i][j] = std::make_tuple(0.0f, 0, 0);
+        }
+
+        #pragma omp for nowait
+        for (size_t i = 0; i < registros.size(); ++i) {
+            const Register &r = registros[i];
+            auto &[suma, cantidad, anomalias] = local_aux[r.fecha.day][r.municipio_id][r.franja_horaria];
+            suma += r.velocidad;
+            cantidad++;
+            if (r.velocidad < umbrales.at({r.municipio_id, r.franja_horaria})) {
+                anomalias++;
+            }
+        }
+
+        // Fusión con estructura global
+        std::scoped_lock lock(aux_mutex);
+        for (auto &[dia, tabla] : local_aux) {
+            auto &global_tabla = aux[dia];
+            for (int i = 0; i < 8; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    auto &[s1, c1, a1] = global_tabla[i][j];
+                    auto &[s2, c2, a2] = tabla[i][j];
+                    s1 += s2;
+                    c1 += c2;
+                    a1 += a2;
+                }
+            }
+        }
+    }
+
+    // Construcción de resultados
+    std::vector<ResultadoEstadistico> resultados;
+    for (const auto &[dia, matriz] : aux) {
+        for (int municipio = 0; municipio < 8; ++municipio) {
+            for (int franja = 0; franja < 3; ++franja) {
+                const auto &[suma, cantidad, anomalias] = matriz[municipio][franja];
+                ResultadoEstadistico r;
+                r.dia = dia;
+                r.municipio_id = municipio;
+                r.franja_horaria = franja;
+                r.suma_velocidades = suma;
+                r.cantidad_registros = cantidad;
+                r.cantidad_anomalias = anomalias;
+                resultados.push_back(r);
             }
         }
     }
