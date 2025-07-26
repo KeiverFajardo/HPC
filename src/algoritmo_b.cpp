@@ -11,6 +11,7 @@
 #include <mpi.h>
 #include <vector>
 #include <unordered_map>
+#include <omp.h>
 
 using Clave = std::pair<uint8_t, uint8_t>;
 
@@ -20,7 +21,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
 ) {
     // Calcular estadística por grupo
-    std::vector<ResultadoEstadistico> resultados;
+    /* std::vector<ResultadoEstadistico> resultados;
 
     std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
 
@@ -59,8 +60,40 @@ std::vector<ResultadoEstadistico> analizar_bloque(
         cantidad_registros++;
         if (reg.velocidad < umbrales.at({reg.municipio_id, reg.franja_horaria}))
             cantidad_anomalias++;
+    } */
+
+    std::vector<Register> registros;
+    Register reg;
+    while (csv_reader.get(reg)) {
+        reg.municipio_id = mapper.codificar(Punto{reg.latitud, reg.longitud});
+        reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
+        registros.push_back(reg);
     }
 
+    std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
+    omp_lock_t aux_lock;
+    omp_init_lock(&aux_lock);
+
+    #pragma omp parallel for
+    for (size_t i = 0; i < registros.size(); ++i) {
+        const auto &reg = registros[i];
+        const Clave clave = {reg.municipio_id, reg.franja_horaria};
+        float velocidad = reg.velocidad;
+        uint8_t dia = reg.fecha.day;
+
+        omp_set_lock(&aux_lock);
+        auto &[suma, cantidad_registros, cantidad_anomalias] = aux[dia][clave.first][clave.second];
+        suma += velocidad;
+        cantidad_registros++;
+        if (velocidad < umbrales.at(clave)) {
+            cantidad_anomalias++;
+        }
+        omp_unset_lock(&aux_lock);
+    }
+
+    omp_destroy_lock(&aux_lock);
+
+    std::vector<ResultadoEstadistico> resultados;
     for (const auto &[day, aux2] : aux)
     {
         for (int municipio_id = 0; municipio_id < 8; municipio_id++)
@@ -68,14 +101,14 @@ std::vector<ResultadoEstadistico> analizar_bloque(
             for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
             {
                 auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[municipio_id][franja_horaria];
-                ResultadoEstadistico res;
-                res.dia = day;
-                res.municipio_id = municipio_id;
-                res.franja_horaria = franja_horaria;
-                res.suma_velocidades = suma;
-                res.cantidad_registros = cantidad_registros;
-                res.cantidad_anomalias = cantidad_anomalias;
-                resultados.push_back(res);
+                resultados.push_back(ResultadoEstadistico{
+                    dia,
+                    static_cast<uint8_t>(municipio_id),
+                    static_cast<uint8_t>(franja_horaria),
+                    suma,
+                    cantidad_registros,
+                    cantidad_anomalias
+                });
             }
         }
     }
