@@ -1,10 +1,12 @@
 #include "algoritmo_a.hpp"
 
 #include <mpi.h>
+#include <ranges>
 #include <set>
 #include <utility>
 
 #include "algoritmo_b.hpp"
+#include "csv_reader.hpp"
 #include "log.hpp"
 #include "mpi_datatypes.hpp"
 #include "common_constants.hpp"
@@ -15,7 +17,7 @@
 #include <unordered_map>
 #include <boost/functional/hash.hpp>
 
-constexpr int BLOCK_SIZE = 10000000;
+constexpr int BLOCK_SIZE = 1000000;
 
 AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     : m_mapper(shapefile_path)
@@ -24,7 +26,7 @@ AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     for (uint8_t municipio = 0; municipio < 8; ++municipio) {
         for (uint8_t franja_horaria = 0; franja_horaria < 3; ++franja_horaria) {
              m_umbrales[{municipio, franja_horaria}] = 15.0f;
-             m_datos_estadisticos[{municipio, franja_horaria}] = { 0.0f, 0, 0 };
+             m_datos_estadisticos_mes[{municipio, franja_horaria}] = { 0.0f, 0, 0 };
         }
     }
 }
@@ -45,25 +47,39 @@ void AlgoritmoA::enviar_umbrales()
 
 void AlgoritmoA::recalcular_umbrales()
 {
-    for (auto &[clave, datos] : m_datos_estadisticos)
+    for (auto &[clave, datos] : m_datos_estadisticos_mes)
     {
         if (datos.cantidad_registros != 0)
-            m_umbrales[clave] = (datos.suma_velocidades / datos.cantidad_registros) * 0.5;
+            m_umbrales[clave] = (datos.suma_velocidades / datos.cantidad_registros) * 0.75;
         datos.suma_velocidades = 0.0f;
         datos.cantidad_registros = 0;
     }
 }
 
-void AlgoritmoA::procesar(std::vector<std::string> files)
+const auto franjas_horarias_names = std::to_array({
+    "Mañana",
+    "Mediodia",
+    "Tarde"
+});
+
+void AlgoritmoA::procesar(std::vector<const char*> files)
 {
-    Gnuplot gp;
-    gp << "set terminal gif size 640,480 animate delay 16.6\n";
-    gp << "set output 'image.gif'\n";
-    gp << "set style fill solid\n";
-    gp << "set boxwidth 0.5\n";
-    // gp << "set yrange [0:1000]\n";
-    gp << "set xlabel 'Municipios'\n";
-    gp << "set ylabel 'Velocidad media'\n";
+    std::array<Gnuplot, 3> gps;
+    // {
+    //     Gnuplot(">script0.gs"),
+    //     Gnuplot(">script1.gs"),
+    //     Gnuplot(">script2.gs"),
+    // };
+    for (const auto &[i, gp] : std::views::enumerate(gps))
+    {
+        gp << "set terminal gif size 1280,960 animate delay 66.66\n";
+        gp << "set output 'image" << i << ".gif'\n";
+        gp << "set style fill solid\n";
+        gp << "set boxwidth 0.5\n";
+        // gp << "set yrange [0:500]\n";
+        gp << "set xlabel 'Municipios'\n";
+        gp << "set ylabel 'Cantidad de anomalias'\n";
+    }
 
     int world_rank, world_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
@@ -75,25 +91,126 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
 
     std::vector<ResultadoEstadistico> resultados;
 
-    for (size_t i = 0; i < files.size(); i++)
+    for (size_t file_index = 0; file_index < files.size(); file_index++)
     {
         int bloque = 0;
-        auto &filename = files[i];
-        filename.reserve(128);
+        auto &filename = files[file_index];
 
-        std::ifstream ifs(filename.c_str());
+        std::ifstream ifs(filename);
         ifs.seekg(0, std::ios::end);
-        size_t filesize = ifs.tellg();
+        const size_t filesize = ifs.tellg();
         ifs.close();
         size_t cursor = 0;
         info("Comienzo archivo {} ({} bytes)", filename, filesize);
 
+        size_t block_count = (filesize + BLOCK_SIZE - 1 ) / BLOCK_SIZE;
+
+        Date first_day_date;
+        {
+            CsvReader csv_reader(filename, 0, filesize);
+            Register r;
+            if (csv_reader.get(r))
+                first_day_date = r.fecha;
+            else
+                exit(1);
+        }
+
+        std::unordered_map<
+            uint8_t,
+            std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>>
+        > graph_jobs;
+
+        std::unordered_map<
+            uint8_t,
+            std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>>
+        > recolecting_graph_jobs;
+        uint8_t max_received_day = 0;
+
+        // TODO: Podemos hacer como una especie de free list para checkear que se recibieron hasta
+        // cierto bloque
+        std::vector<bool> received_blocks(block_count, false);
+        std::unordered_map<int, uint8_t> min_day_for_block;
+        std::unordered_map<int, int> assigned_jobs;
+
         enviar_umbrales();
         // ---- Envío de bloques a esclavos
         bool file_ended = false;
-        while (!file_ended || free_slaves.size() < static_cast<size_t>(world_size - 1))
+        while (!file_ended
+            || !graph_jobs.empty()
+            || !recolecting_graph_jobs.empty()
+            || free_slaves.size() < static_cast<size_t>(world_size - 1))
         {
-            if (!file_ended && !free_slaves.empty())
+            if (file_ended || free_slaves.empty())
+            {
+                if (file_ended && free_slaves.size() == static_cast<size_t>(world_size - 1))
+                {
+                    while (!recolecting_graph_jobs.empty())
+                    {
+                        auto job = recolecting_graph_jobs.extract(recolecting_graph_jobs.begin());
+                        graph_jobs.insert(std::move(job));
+                    }
+                }
+                else
+                {
+                    int first_non_received_block = 0;
+                    for (size_t i = 0; i < received_blocks.size(); i++)
+                    {
+                        if (!received_blocks[i])
+                        {
+                            first_non_received_block = i;
+                            break;
+                        }
+                    }
+
+                    if (first_non_received_block > 0)
+                    {
+                        int day_limit = min_day_for_block.at(first_non_received_block - 1);
+
+                        for (
+                            auto it = recolecting_graph_jobs.begin();
+                            it != recolecting_graph_jobs.end();
+                        ) {
+                            if (it->first < day_limit)
+                            {
+                                graph_jobs.insert({it->first, std::move(it->second)});
+                                it = recolecting_graph_jobs.erase(it);
+                            }
+                            else
+                                it++;
+                        }
+                    }
+                }
+
+                if (!graph_jobs.empty())
+                {
+                    auto job = graph_jobs.extract(graph_jobs.begin());
+                    int day = job.key();
+                    std::array<
+                        std::array<std::pair<std::string, int>, 8>,
+                        3
+                    > barras;
+
+                    for (auto &[clave, datos] : job.mapped())
+                    {
+                        barras.at(clave.second).at(clave.first).second = datos.cantidad_anomalias;
+                    }
+
+                    for (const auto &[franja_horaria, gp] : std::views::enumerate(gps))
+                    {
+                        for (int municipio = 0; municipio < 8; municipio++)
+                        {
+                            barras[franja_horaria][municipio].first
+                                = '"' + m_mapper.decodificar(municipio) + "\\n"
+                                  "(" + std::to_string(m_umbrales[{municipio, franja_horaria}]) + ")\"";
+                        }
+                        gp << "set title 'Anomalias en " << franjas_horarias_names[franja_horaria]
+                           << " - " << day << "/" << (int)first_day_date.month << "/" << first_day_date.year << "'\n";
+                        gp << "plot '-' using 2:xtic(1) with boxes\n";
+                        gp.send1d(barras.at(franja_horaria));
+                    }
+                }
+            }
+            else if (!file_ended)
             {
                 if (cursor < filesize)
                 {
@@ -102,8 +219,10 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
                     range[0] = cursor;
                     cursor += BLOCK_SIZE;
                     range[1] = cursor;
-                    info("BLOQUE {} ({}:{}) for {}", ++bloque, range[0], range[1], slave);
+                    info("BLOQUE {}/{} ({}:{}) for {}", bloque, block_count, range[0], range[1], slave);
                     MPI_Send(range, 2, MPI_UINT64_T, slave, TAG_DATA, MPI_COMM_WORLD);
+                    assigned_jobs.insert({slave, bloque});
+                    bloque++;
                 }
                 else
                 {
@@ -122,20 +241,29 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
                 resultados.resize(count);
                 MPI_Recv(resultados.data(), count, MPI_ResultadoEstadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-                //Actualizar umbrales y enviarlos a los hijos Bs y ademas pintar la grafica
-
-                // Actualizar umbrales con promedio ponderado
+                uint8_t min_day = std::numeric_limits<uint8_t>::max();
                 for (const auto &r : resultados)
                 {
                     Clave clave = {r.municipio_id, r.franja_horaria};
-                    DatosEstadisticos &datos = m_datos_estadisticos[clave];
+                    DatosEstadisticos &datos = recolecting_graph_jobs[r.dia][clave];
+
+                    if (r.dia < min_day) min_day = r.dia;
+                    if (r.dia > max_received_day) max_received_day = r.dia;
 
                     datos.suma_velocidades += r.suma_velocidades;
                     datos.cantidad_registros += r.cantidad_registros;
                     datos.cantidad_anomalias += r.cantidad_anomalias;
+
+                    DatosEstadisticos &datos_mes = m_datos_estadisticos_mes[clave];
+                    datos_mes.suma_velocidades += r.suma_velocidades;
+                    datos_mes.cantidad_registros += r.cantidad_registros;
+                    datos_mes.cantidad_anomalias += r.cantidad_anomalias;
                 }
 
                 free_slaves.emplace(status.MPI_SOURCE);
+                int block_index = assigned_jobs.extract(status.MPI_SOURCE).mapped();
+                received_blocks.at(block_index) = true;
+                min_day_for_block.insert({block_index, min_day});
 
                 //Mostrar resultados
                 // for (const auto& r : resultados)
@@ -149,31 +277,12 @@ void AlgoritmoA::procesar(std::vector<std::string> files)
             }
         }
 
-        if (static_cast<size_t>(i) != files.size() - 1)
+        if (static_cast<size_t>(file_index) != files.size() - 1)
         {
             for (int i = 1; i < world_size; ++i)
             {
                 MPI_Send(nullptr, 0, MPI_Register, i, END_OF_FILE_TAG, MPI_COMM_WORLD);
             }
-        }
-        else
-        {
-            info("ACAAAAA");
-        }
-
-        {
-            std::vector<std::pair<std::string, int>> barras(8);
-            for (int i = 0; i < 8; i++)
-            {
-                barras[i] = std::make_pair('"' + m_mapper.decodificar(i) + '"', 0);
-            }
-
-            for (auto &[clave, datos] : m_datos_estadisticos)
-            {
-                barras.at(clave.first).second = datos.cantidad_anomalias;
-            }
-            gp << "plot '-' using 2:xtic(1) with boxes notitle\n";
-            gp.send1d(barras);
         }
 
         recalcular_umbrales();

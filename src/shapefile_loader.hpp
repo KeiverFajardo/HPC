@@ -9,6 +9,8 @@
 struct Punto {
     float lat;
     float lon;
+    
+    bool operator==(const Punto& other) const = default;
 };
 
 class ShapefileLoader {

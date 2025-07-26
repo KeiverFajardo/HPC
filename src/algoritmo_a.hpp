@@ -11,7 +11,7 @@ class AlgoritmoA {
 public:
     AlgoritmoA(const std::string &shapefile_path);
 
-    void procesar(std::vector<std::string> files);
+    void procesar(std::vector<const char*> files);
     
     using Clave = std::pair<uint8_t, uint8_t>;
 
@@ -23,11 +23,11 @@ private:
     std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
 
     struct DatosEstadisticos {
-        float suma_velocidades;
-        size_t cantidad_registros;
-        size_t cantidad_anomalias;
+        float suma_velocidades = 0.0f;
+        size_t cantidad_registros = 0;
+        size_t cantidad_anomalias = 0;
     };
 
-    std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos;
+    std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos_mes;
     MunicipioMapper m_mapper;
 };
