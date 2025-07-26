@@ -9,8 +9,14 @@
 #include "mpi_datatypes.hpp"    
 
 #include <mpi.h>
+#include <omp.h>
+
 #include <vector>
 #include <unordered_map>
+#include <mutex>
+#include <array>
+#include <tuple>
+
 
 using Clave = std::pair<uint8_t, uint8_t>;
 
@@ -19,7 +25,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     MunicipioMapper &mapper,
     const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
 ) {
-    // Calcular estadística por grupo
+    /* // Calcular estadística por grupo
     std::vector<ResultadoEstadistico> resultados;
 
     std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
@@ -28,7 +34,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(
 
     while (csv_reader.get(reg))
     {
-        /* // Asignar municipio
+        // Asignar municipio
         reg.municipio_id = mapper.codificar(Punto { reg.latitud, reg.longitud });
 
         // Asignar franja horaria
