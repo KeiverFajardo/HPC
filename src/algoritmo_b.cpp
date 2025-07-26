@@ -25,61 +25,7 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     MunicipioMapper &mapper,
     const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
 ) {
-    std::vector<Register> registros;
-    Register reg;
-    while (csv_reader.get(reg)) {
-        registros.push_back(reg);
-    }
-
-    // Paralelizar solo asignación de municipio y franja
-    #pragma omp parallel for schedule(static)
-    for (size_t i = 0; i < registros.size(); ++i) {
-        registros[i].municipio_id = mapper.codificar(Punto{registros[i].latitud, registros[i].longitud});
-        registros[i].franja_horaria = std::to_underlying(get_franja_horaria(registros[i].hora));
-    }
-
-    std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
-
-    for (const Register &r : registros) {
-        auto it = aux.find(r.fecha.day);
-        if (it == aux.end()) {
-            std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8> new_elem;
-            for (int municipio_id = 0; municipio_id < 8; municipio_id++) {
-                for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++) {
-                    auto &[suma, cantidad_registros, cantidad_anomalias] = new_elem[municipio_id][franja_horaria];
-                    suma = 0.0f;
-                    cantidad_registros = 0;
-                    cantidad_anomalias = 0;
-                }
-            }
-            it = aux.insert({r.fecha.day, new_elem}).first;
-        }
-
-        auto &[suma, cantidad_registros, cantidad_anomalias] = it->second[r.municipio_id][r.franja_horaria];
-        suma += r.velocidad;
-        cantidad_registros++;
-        if (r.velocidad < umbrales.at({r.municipio_id, r.franja_horaria}))
-            cantidad_anomalias++;
-    }
-
-    std::vector<ResultadoEstadistico> resultados;
-    for (const auto &[day, aux2] : aux) {
-        for (int municipio_id = 0; municipio_id < 8; municipio_id++) {
-            for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++) {
-                auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[municipio_id][franja_horaria];
-                ResultadoEstadistico res;
-                res.dia = day;
-                res.municipio_id = municipio_id;
-                res.franja_horaria = franja_horaria;
-                res.suma_velocidades = suma;
-                res.cantidad_registros = cantidad_registros;
-                res.cantidad_anomalias = cantidad_anomalias;
-                resultados.push_back(res);
-            }
-        }
-    }
-    
-    /* // Calcular estadística por grupo
+    // Calcular estadística por grupo
     std::vector<ResultadoEstadistico> resultados;
 
     std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
@@ -127,6 +73,60 @@ std::vector<ResultadoEstadistico> analizar_bloque(
         {
             for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
             {
+                auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[municipio_id][franja_horaria];
+                ResultadoEstadistico res;
+                res.dia = day;
+                res.municipio_id = municipio_id;
+                res.franja_horaria = franja_horaria;
+                res.suma_velocidades = suma;
+                res.cantidad_registros = cantidad_registros;
+                res.cantidad_anomalias = cantidad_anomalias;
+                resultados.push_back(res);
+            }
+        }
+    }
+
+   /*  std::vector<Register> registros;
+    Register reg;
+    while (csv_reader.get(reg)) {
+        registros.push_back(reg);
+    }
+
+    // Paralelizar solo asignación de municipio y franja
+    #pragma omp parallel for schedule(static)
+    for (size_t i = 0; i < registros.size(); ++i) {
+        registros[i].municipio_id = mapper.codificar(Punto{registros[i].latitud, registros[i].longitud});
+        registros[i].franja_horaria = std::to_underlying(get_franja_horaria(registros[i].hora));
+    }
+
+    std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
+
+    for (const Register &r : registros) {
+        auto it = aux.find(r.fecha.day);
+        if (it == aux.end()) {
+            std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8> new_elem;
+            for (int municipio_id = 0; municipio_id < 8; municipio_id++) {
+                for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++) {
+                    auto &[suma, cantidad_registros, cantidad_anomalias] = new_elem[municipio_id][franja_horaria];
+                    suma = 0.0f;
+                    cantidad_registros = 0;
+                    cantidad_anomalias = 0;
+                }
+            }
+            it = aux.insert({r.fecha.day, new_elem}).first;
+        }
+
+        auto &[suma, cantidad_registros, cantidad_anomalias] = it->second[r.municipio_id][r.franja_horaria];
+        suma += r.velocidad;
+        cantidad_registros++;
+        if (r.velocidad < umbrales.at({r.municipio_id, r.franja_horaria}))
+            cantidad_anomalias++;
+    }
+
+    std::vector<ResultadoEstadistico> resultados;
+    for (const auto &[day, aux2] : aux) {
+        for (int municipio_id = 0; municipio_id < 8; municipio_id++) {
+            for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++) {
                 auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[municipio_id][franja_horaria];
                 ResultadoEstadistico res;
                 res.dia = day;
