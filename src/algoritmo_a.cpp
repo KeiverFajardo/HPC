@@ -1,15 +1,19 @@
 #include "algoritmo_a.hpp"
 
 #include <cstdio>
+#include <filesystem>
+#include <fstream>
 #include <mpi.h>
 #include <ostream>
 #include <print>
 #include <ranges>
 #include <set>
+#include <string>
 #include <utility>
 
 #include "algoritmo_b.hpp"
 #include "csv_reader.hpp"
+#include "log.hpp"
 #include "mpi_datatypes.hpp"
 #include "common_constants.hpp"
 #include "umbral.hpp"
@@ -61,6 +65,44 @@ const auto franjas_horarias_names = std::to_array({
     "Tarde"
 });
 
+void graph_bars(
+    std::array<Gnuplot, 3> &gps,
+    std::array<std::array<std::pair<std::string, int>, 8>, 3> barras,
+    MunicipioMapper &mapper,
+    Date date
+) {
+    for (const auto &[franja_horaria, gp] : std::views::enumerate(gps))
+    {
+        for (int municipio = 0; municipio < 8; municipio++)
+        {
+            barras[franja_horaria][municipio].first
+                = '"' + mapper.decodificar(municipio) + '"';
+        }
+        std::array<const char *, DIA_SEMANA_COUNT> nombres_dias = {
+            "Domingo",
+            "Lunes",
+            "Martes",
+            "Miercoles",
+            "Jueves",
+            "Viernes",
+            "Sabado"
+        };
+        uint8_t dia_semana = day_of_week(date.day, date.month, date.year);
+        
+        gp << "set title 'Anomalias en " << nombres_dias[dia_semana] << " " << franjas_horarias_names[franja_horaria]
+           << " - " << (int)date.day << "/" << (int)date.month << "/" << date.year << "'\n";
+        gp << "plot '-' using 2:xtic(1) with boxes\n";
+        // std::print("\t");
+        // for (auto &[name, val] : barras.at(franja_horaria))
+        // {
+        //     std::print("{} ", val);
+        // }
+        // std::println("");
+        gp.send1d(barras.at(franja_horaria));
+    }
+    // std::cin.get();
+}
+
 void AlgoritmoA::procesar(std::vector<const char*> files)
 {
     std::array<Gnuplot, 3> gps;
@@ -90,8 +132,60 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
 
     std::vector<ResultadoEstadistico> resultados;
 
-    for (size_t file_index = 0; file_index < files.size(); file_index++)
+    size_t start_from_file_idx = 0;
+    constexpr const char *checkpoint_file = "checkpoint.csv";
+    if (std::filesystem::exists(checkpoint_file))
     {
+        info("RECOVERING");
+        // RECOVER
+        std::array<
+            std::array<std::pair<std::string, int>, 8>,
+            3
+        > barras;
+
+        std::ifstream ifs(checkpoint_file, std::ios::binary);
+        ifs.read(reinterpret_cast<char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
+
+        size_t file_count = 0;
+        ifs.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
+        start_from_file_idx = file_count + 1;
+        for (size_t file_i = 0; file_i < file_count; file_i++)
+        {
+            size_t day_graph_count = 0;
+            ifs.read(reinterpret_cast<char*>(&day_graph_count), sizeof(day_graph_count));
+            
+            for (size_t i = 0; i < day_graph_count; i++)
+            {
+                Date date;
+                ifs.read(reinterpret_cast<char*>(&date), sizeof(date));
+                for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
+                {
+                    for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                    {
+                        ifs.read(
+                            reinterpret_cast<char*>(&barras[franja][municipio].second),
+                            sizeof(barras[franja][municipio].second)
+                        );
+                    }
+                }
+                graph_bars(gps, barras, m_mapper, date);
+            }
+        }
+    }
+
+    std::vector< // files
+        std::vector< // days
+            std::pair<
+                Date,
+                std::array<std::array<std::pair<std::string, int>, 8>, 3>
+            >
+        >
+    > history;
+
+    for (size_t file_index = start_from_file_idx; file_index < files.size(); file_index++)
+    {
+        history.emplace_back();
+
         int bloque = 0;
         auto &filename = files[file_index];
 
@@ -207,36 +301,25 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                         }
                     }
 
-                    for (const auto &[franja_horaria, gp] : std::views::enumerate(gps))
-                    {
-                        for (int municipio = 0; municipio < 8; municipio++)
-                        {
-                            barras[franja_horaria][municipio].first
-                                = '"' + m_mapper.decodificar(municipio) + '"';
+                    graph_bars(
+                        gps,
+                        barras,
+                        m_mapper,
+                        Date {
+                            first_day_date.year,
+                            first_day_date.month,
+                            static_cast<uint8_t>(day),
                         }
-                        std::array<std::string_view, DIA_SEMANA_COUNT> nombres_dias = {
-                            "Domingo",
-                            "Lunes",
-                            "Martes",
-                            "Miercoles",
-                            "Jueves",
-                            "Viernes",
-                            "Sabado"
-                        };
-                        uint8_t dia_semana = day_of_week(day, first_day_date.month, first_day_date.year);
-                        
-                        gp << "set title 'Anomalias en " << nombres_dias[dia_semana] << " " << franjas_horarias_names[franja_horaria]
-                           << " - " << day << "/" << (int)first_day_date.month << "/" << first_day_date.year << "'\n";
-                        gp << "plot '-' using 2:xtic(1) with boxes\n";
-                        // std::print("\t");
-                        // for (auto &[name, val] : barras.at(franja_horaria))
-                        // {
-                        //     std::print("{} ", val);
-                        // }
-                        // std::println("");
-                        gp.send1d(barras.at(franja_horaria));
-                    }
-                    // std::cin.get();
+                    );
+
+                    history.back().emplace_back(
+                        Date {
+                            first_day_date.year,
+                            first_day_date.month,
+                            static_cast<uint8_t>(day),
+                        },
+                        barras
+                    );
                 }
             }
             else if (!file_ended)
@@ -321,7 +404,49 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         }
 
         recalcular_umbrales();
+
+        // checkpoint
+        {
+            std::ofstream ofs("checkpoint.new", std::ios::binary);
+
+            ofs.write(reinterpret_cast<const char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
+
+            ofs.write(reinterpret_cast<const char*>(&file_index), sizeof(file_index));
+            for (size_t file_i = 0; file_i < history.size(); file_i++)
+            {
+                size_t day_graph_count = history[file_i].size();
+                ofs.write(reinterpret_cast<const char*>(&day_graph_count), sizeof(day_graph_count));
+
+                for (size_t i = 0; i < day_graph_count; i++)
+                {
+                    Date &date = history[file_i][i].first;
+                    ofs.write(reinterpret_cast<const char*>(&date), sizeof(date));
+                    auto &barras = history[file_i][i].second;
+                    for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
+                    {
+                        for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                        {
+                            ofs.write(
+                                reinterpret_cast<const char*>(&barras[franja][municipio].second),
+                                sizeof(barras[franja][municipio].second)
+                            );
+                        }
+                    }
+                }
+            }
+            ofs.close();
+
+            if (std::filesystem::exists(checkpoint_file))
+                std::filesystem::rename(checkpoint_file, "checkpoint.old");
+
+            std::filesystem::rename("checkpoint.new", checkpoint_file);
+
+            if (std::filesystem::exists("checkpoint.old"))
+                std::filesystem::remove("checkpoint.old");
+        }
     }
+    
+    std::filesystem::remove(checkpoint_file);
 
     for (int i = 1; i < world_size; ++i)
     {
