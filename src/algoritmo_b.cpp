@@ -17,66 +17,57 @@ using Clave = std::pair<uint8_t, uint8_t>;
 std::vector<ResultadoEstadistico> analizar_bloque(
     CsvReader &csv_reader,
     MunicipioMapper &mapper,
-    const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
+    const std::array<float, MAX_UMBRAL_ID> &umbrales
 ) {
     // Calcular estadística por grupo
     std::vector<ResultadoEstadistico> resultados;
 
-    std::unordered_map<uint8_t, std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8>> aux;
+    struct Accumulador {
+        float suma_velocidades = 0.0f;
+        size_t cantidad_registros = 0;
+        size_t cantidad_anomalias = 0;
+    };
+
+    std::unordered_map<uint8_t, std::array<Accumulador, MAX_UMBRAL_ID>> accumuladores;
 
     Register reg;
 
     while (csv_reader.get(reg))
     {
+        if (reg.velocidad < 0.1f) continue;
+
         // Asignar municipio
         reg.municipio_id = mapper.codificar(Punto { reg.latitud, reg.longitud });
-
         // Asignar franja horaria
         reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
-        auto it = aux.find(reg.fecha.day);
-        if (it == aux.end())
-        {
-            std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8> new_elem;
-            for (int municipio_id = 0; municipio_id < 8; municipio_id++)
-            {
-                for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
-                {
-                    auto &[suma, cantidad_registros, cantidad_anomalias]
-                        = new_elem[municipio_id][franja_horaria];
-                    suma = 0.0f;
-                    cantidad_registros = 0;
-                    cantidad_anomalias = 0;
-                }
-            }
 
-            aux.insert({reg.fecha.day, new_elem});
-            it = aux.find(reg.fecha.day);
-        }
+        // int rank;
+        // MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        // if (rank == 1) info("REG {}", reg);
 
+        uint8_t dia_semana = day_of_week(reg.fecha.day, reg.fecha.month, reg.fecha.year);
+        uint8_t umbral_id = get_umbral_id(reg.municipio_id, reg.franja_horaria, dia_semana);
         auto &[suma, cantidad_registros, cantidad_anomalias]
-            = it->second[reg.municipio_id][reg.franja_horaria];
+            = accumuladores[reg.fecha.day][umbral_id];
         suma += reg.velocidad;
         cantidad_registros++;
-        if (reg.velocidad < umbrales.at({reg.municipio_id, reg.franja_horaria}))
+        if (reg.velocidad < umbrales.at(umbral_id))
             cantidad_anomalias++;
     }
 
-    for (const auto &[day, aux2] : aux)
+    for (const auto &[day, aux2] : accumuladores)
     {
-        for (int municipio_id = 0; municipio_id < 8; municipio_id++)
+        for (int umbral_id = 0; umbral_id < MAX_UMBRAL_ID; umbral_id++)
         {
-            for (int franja_horaria = 0; franja_horaria < 3; franja_horaria++)
-            {
-                auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[municipio_id][franja_horaria];
-                ResultadoEstadistico res;
-                res.dia = day;
-                res.municipio_id = municipio_id;
-                res.franja_horaria = franja_horaria;
-                res.suma_velocidades = suma;
-                res.cantidad_registros = cantidad_registros;
-                res.cantidad_anomalias = cantidad_anomalias;
-                resultados.push_back(res);
-            }
+            auto &[suma, cantidad_registros, cantidad_anomalias] = accumuladores[day][umbral_id];
+            if (cantidad_registros <= 0) continue;
+            ResultadoEstadistico res;
+            res.umbral_id = umbral_id;
+            res.dia = day;
+            res.suma_velocidades = suma;
+            res.cantidad_registros = cantidad_registros;
+            res.cantidad_anomalias = cantidad_anomalias;
+            resultados.push_back(res);
         }
     }
 
@@ -91,14 +82,14 @@ void imprimir_umbrales(const std::unordered_map<Clave, float, boost::hash<Clave>
     }
 }
 
-std::unordered_map<Clave, float, boost::hash<Clave>> recibir_umbrales()
+std::array<float, MAX_UMBRAL_ID> recibir_umbrales()
 {
-    std::array<UmbralPorPar, 8*3> umbrales_buffer;
+    std::array<UmbralPorPar, MAX_UMBRAL_ID> umbrales_buffer;
     MPI_Bcast(umbrales_buffer.data(), umbrales_buffer.size(), MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
-    std::unordered_map<Clave, float, boost::hash<Clave>> umbrales;
+    std::array<float, MAX_UMBRAL_ID> umbrales;
     for (UmbralPorPar &umbral : umbrales_buffer)
     {
-        umbrales[{umbral.municipio_id, umbral.franja_horaria}] = umbral.umbral;
+        umbrales[umbral.id] = umbral.umbral;
     }
     return umbrales;
 }
@@ -111,7 +102,7 @@ void procesar_b(const std::string &shapefile_path, std::vector<const char*> file
 
     for (const auto &file : files)
     {
-        std::unordered_map<Clave, float, boost::hash<Clave>> umbrales = recibir_umbrales();
+        std::array<float, MAX_UMBRAL_ID> umbrales = recibir_umbrales();
         //imprimir_umbrales(umbrales);
         
         while (true)

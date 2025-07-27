@@ -39,23 +39,25 @@ bool CsvReader::get(Register &reg)
         m_file.close();
         return false;
     }
-    m_line.clear();
     m_value.clear();
     while (m_file.good() && m_value.empty()) std::getline(m_file, m_value);
     if (m_file.eof()) return false;
-    m_line << m_value;
+    m_line.clear();
+    m_line.str(m_value);
 
     std::getline(m_line, m_value, ',');
     reg.cod_detector = std::stoul(m_value);
     
     std::getline(m_line, m_value, ',');
     reg.id_carril = std::stoul(m_value);
-    
+   
     std::getline(m_line, m_value, ',');
+    m_aux_ss.clear();
     m_aux_ss.str(m_value);
     reg.fecha = parse_date(m_aux_ss);
     
     std::getline(m_line, m_value, ',');
+    m_aux_ss.clear();
     m_aux_ss.str(m_value);
     reg.hora = parse_hour(m_aux_ss);
 

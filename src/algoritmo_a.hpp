@@ -1,8 +1,8 @@
 #pragma once
 
 #include "municipio_mapper.hpp"
+#include "umbral.hpp"
 #include <boost/container_hash/hash.hpp>
-#include <unordered_map>
 #include <vector>
 #include <cstddef>
 
@@ -20,7 +20,7 @@ private:
     void enviar_umbrales();
     void recalcular_umbrales();
 
-    std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
+    std::array<float, MAX_UMBRAL_ID> m_umbrales;
 
     struct DatosEstadisticos {
         float suma_velocidades = 0.0f;
@@ -28,6 +28,6 @@ private:
         size_t cantidad_anomalias = 0;
     };
 
-    std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos_mes;
+    std::array<DatosEstadisticos, MAX_UMBRAL_ID> m_datos_estadisticos_mes;
     MunicipioMapper m_mapper;
 };
