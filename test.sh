@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+salida="salida.csv"
+
 times=20
 
 hosts_lists="
@@ -17,12 +19,13 @@ node_counts="
 32"
 
 for hosts in $hosts_lists; do
+    echo -n "\"$hosts\"," | tee "$salida"
     for node_count in $node_counts; do
-        echo -n "$node_count,"
+        echo -n "$node_count," | tee "$salida"
         for i in $(seq $times); do
-            #time mpirun -n $node_count -hosts pcunix137,pcunix139,pcunix140,pcunix141 src/hpc_project ../04_2025_short.csv
-            execution_time=$((time (mpirun -n $node_count -hosts "$hosts" src/hpc_project "$@" &>/dev/null)) 2>&1 | grep real | awk -F'[ms]' '{print $(NF - 1)}')
-            echo -n "$execution_time,"
+            #time (mpirun -n $node_count -hosts "$hosts" src/hpc_project "$@")
+            execution_time=$((time (mpirun -n $node_count -hosts "$hosts" src/hpc_project "$@")) 2>&1 | grep real | awk -F'[ms]' '{print $(NF - 1)}')
+            echo -n "$execution_time," | tee "$salida"
         done
         echo
     done
