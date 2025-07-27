@@ -117,7 +117,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         gp << "set output 'image" << i << ".gif'\n";
         gp << "set style fill solid\n";
         gp << "set boxwidth 0.5\n";
-        gp << "set yrange [0:5000]\n";
+        gp << "set yrange [0:2000]\n";
         gp << "set xlabel 'Municipios'\n";
         gp << "set ylabel 'Cantidad de anomalias'\n";
     }
@@ -452,5 +452,4 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     {
         MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
     }
-    std::println();
 }
