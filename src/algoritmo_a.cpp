@@ -10,7 +10,6 @@
 
 #include "algoritmo_b.hpp"
 #include "csv_reader.hpp"
-#include "log.hpp"
 #include "mpi_datatypes.hpp"
 #include "common_constants.hpp"
 #include "umbral.hpp"
@@ -72,11 +71,11 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     // };
     for (const auto &[i, gp] : std::views::enumerate(gps))
     {
-        // gp << "set terminal gif size 1280,960 animate delay 16.66\n";
-        // gp << "set output 'image" << i << ".gif'\n";
+        gp << "set terminal gif size 1280,960 animate delay 16.66\n";
+        gp << "set output 'image" << i << ".gif'\n";
         gp << "set style fill solid\n";
         gp << "set boxwidth 0.5\n";
-        // gp << "set yrange [0:500]\n";
+        gp << "set yrange [0:5000]\n";
         gp << "set xlabel 'Municipios'\n";
         gp << "set ylabel 'Cantidad de anomalias'\n";
     }
@@ -215,7 +214,18 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                             barras[franja_horaria][municipio].first
                                 = '"' + m_mapper.decodificar(municipio) + '"';
                         }
-                        gp << "set title 'Anomalias en " << franjas_horarias_names[franja_horaria]
+                        std::array<std::string_view, DIA_SEMANA_COUNT> nombres_dias = {
+                            "Domingo",
+                            "Lunes",
+                            "Martes",
+                            "Miercoles",
+                            "Jueves",
+                            "Viernes",
+                            "Sabado"
+                        };
+                        uint8_t dia_semana = day_of_week(day, first_day_date.month, first_day_date.year);
+                        
+                        gp << "set title 'Anomalias en " << nombres_dias[dia_semana] << " " << franjas_horarias_names[franja_horaria]
                            << " - " << day << "/" << (int)first_day_date.month << "/" << first_day_date.year << "'\n";
                         gp << "plot '-' using 2:xtic(1) with boxes\n";
                         // std::print("\t");

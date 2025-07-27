@@ -3,16 +3,88 @@
 
 #include "csv_reader.hpp"
 #include "franja_horaria.hpp"
-#include "log.hpp"
 #include "municipio_mapper.hpp"
 #include "umbral.hpp"
 #include "mpi_datatypes.hpp"    
 
 #include <mpi.h>
+#include <omp.h>
 #include <vector>
 #include <unordered_map>
 
-using Clave = std::pair<uint8_t, uint8_t>;
+std::vector<ResultadoEstadistico> analizar_bloque_parallel(
+    CsvReader &csv_reader,
+    MunicipioMapper &mapper,
+    const std::array<float, MAX_UMBRAL_ID> &umbrales
+) {
+    // Calcular estadística por grupo
+    std::vector<ResultadoEstadistico> resultados;
+
+    struct Accumulador {
+        float suma_velocidades = 0.0f;
+        size_t cantidad_registros = 0;
+        size_t cantidad_anomalias = 0;
+    };
+
+    int num_threads = omp_get_max_threads();
+    // info("MAX {}", num_threads);
+    std::vector<std::unordered_map<uint8_t, std::array<Accumulador, MAX_UMBRAL_ID>>> accumuladores_threads(num_threads);
+
+    std::vector<Register> registers;
+    registers.reserve(200000);
+
+    Register reg;
+    while (csv_reader.get(reg))
+    {
+        registers.push_back(reg);
+    }
+
+    #pragma omp parallel
+    {
+        int tid = omp_get_thread_num();
+        auto &accumuladores = accumuladores_threads[tid];
+        // info("TID {}", tid);
+
+        #pragma omp for
+        for (size_t i = 0; i < registers.size(); i++)
+        {
+            Register &reg = registers[i];
+            // Asignar municipio
+            reg.municipio_id = mapper.codificar(Punto { reg.latitud, reg.longitud });
+            // Asignar franja horaria
+            reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
+            uint8_t dia_semana = day_of_week(reg.fecha.day, reg.fecha.month, reg.fecha.year);
+            uint8_t umbral_id = get_umbral_id(reg.municipio_id, reg.franja_horaria, dia_semana);
+            auto &[suma, cantidad_registros, cantidad_anomalias]
+                = accumuladores[reg.fecha.day][umbral_id];
+            suma += reg.velocidad;
+            cantidad_registros++;
+            if (reg.velocidad < umbrales.at(umbral_id))
+                cantidad_anomalias++;
+        }
+    }
+
+    for (const auto &accumuladores : accumuladores_threads)
+    {
+        for (const auto &[day, aux2] : accumuladores)
+        {
+            for (int umbral_id = 0; umbral_id < MAX_UMBRAL_ID; umbral_id++)
+            {
+                auto &[suma, cantidad_registros, cantidad_anomalias] = aux2[umbral_id];
+                if (cantidad_registros <= 0) continue;
+                ResultadoEstadistico res;
+                res.umbral_id = umbral_id;
+                res.dia = day;
+                res.suma_velocidades = suma;
+                res.cantidad_registros = cantidad_registros;
+                res.cantidad_anomalias = cantidad_anomalias;
+                resultados.push_back(res);
+            }
+        }
+    }
+
+    return resultados;
+}
 
 std::vector<ResultadoEstadistico> analizar_bloque(
     CsvReader &csv_reader,
@@ -74,14 +146,6 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     return resultados;
 }
 
-void imprimir_umbrales(const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales)
-{
-    for (const auto &[clave, valor] : umbrales)
-    {
-        info("  Municipio {} - Franja {} => Umbral = {:.2f}", clave.first, clave.second, valor);
-    }
-}
-
 std::array<float, MAX_UMBRAL_ID> recibir_umbrales()
 {
     std::array<UmbralPorPar, MAX_UMBRAL_ID> umbrales_buffer;
@@ -132,6 +196,7 @@ void procesar_b(const std::string &shapefile_path, std::vector<const char*> file
 
                 std::vector<ResultadoEstadistico> resultados
                     = analizar_bloque(csv_reader, mapper, umbrales);
+                    // = analizar_bloque_parallel(csv_reader, mapper, umbrales);
 
                 MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD);
             }

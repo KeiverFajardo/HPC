@@ -1,6 +1,8 @@
 #include "municipio_mapper.hpp"
 #include <utility>
 
+std::mutex mtx;
+
 MunicipioMapper::MunicipioMapper(const std::string& shapefile_path)
     : loader_(shapefile_path)
 {}
@@ -10,7 +12,10 @@ uint8_t MunicipioMapper::codificar(Punto punto) const {
     uint8_t municipio_id;
     if (it == m_cache.end())
     {
+        // OGRGeometry::Contains() no es thread safe
+        mtx.lock();
         municipio_id = loader_.get_municipio(punto);
+        mtx.unlock();
         m_cache.insert(std::make_pair(punto, municipio_id));
     }
     else
