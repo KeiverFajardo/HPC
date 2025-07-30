@@ -182,6 +182,8 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         >
     > history;
 
+    std::array<std::array<int, 8>, 3> anomalias_totales_por_franja_horaria{};
+
     for (size_t file_index = start_from_file_idx; file_index < files.size(); file_index++)
     {
         history.emplace_back();
@@ -376,6 +378,8 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     datos_mes.suma_velocidades += r.suma_velocidades;
                     datos_mes.cantidad_registros += r.cantidad_registros;
                     datos_mes.cantidad_anomalias += r.cantidad_anomalias;
+
+                    anomalias_totales_por_franja_horaria.at(franja).at(municipio) += r.cantidad_anomalias;
                 }
 
                 free_slaves.emplace(status.MPI_SOURCE);
@@ -451,5 +455,21 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     for (int i = 1; i < world_size; ++i)
     {
         MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
+    }
+
+    std::print("Franja Horaria");
+    for (size_t municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+    {
+        std::print(",{}", m_mapper.decodificar(municipio));
+    }
+    std::println();
+    for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
+    {
+        std::print("{}", franja);
+        for (size_t municipio = 0; municipio < anomalias_totales_por_franja_horaria.at(franja).size(); municipio++)
+        {
+            std::print(",{}", anomalias_totales_por_franja_horaria.at(franja).at(municipio));
+        }
+        std::println();
     }
 }
