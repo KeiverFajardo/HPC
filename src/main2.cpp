@@ -1,246 +1,464 @@
-#include <mpi.h>
-
-#include "algoritmo_a.hpp"
-#include "algoritmo_b.hpp"
-#include "mpi_datatypes.hpp"
-
-
-#include <vector>
-#include <unordered_map>
-#include <fstream>
-#include <iostream>
-#include <set>
-
 #include "csv_reader.hpp"
 #include "franja_horaria.hpp"
-#include "municipio_mapper.hpp"
-#include "common_constants.hpp"
-#include "umbral.hpp"
-#include "log.hpp"
-
 #include "gnuplot-iostream.h"
+#include "municipio_mapper.hpp"
+#include "umbral.hpp"
 
-constexpr int BLOCK_SIZE = 10000000;
+#include <filesystem>
+#include <ranges>
+#include <print>
 
-using Clave = std::pair<uint8_t, uint8_t>;
+constexpr int BLOCK_SIZE = 1000000;
 
-std::unordered_map<Clave, float, boost::hash<Clave>> m_umbrales;
-
-struct DatosEstadisticos {
+struct ResultadoEstadistico {
+    uint8_t umbral_id;
+    uint8_t dia;
     float suma_velocidades;
     size_t cantidad_registros;
     size_t cantidad_anomalias;
 };
 
-std::unordered_map<Clave, DatosEstadisticos, boost::hash<Clave>> m_datos_estadisticos;
-
-std::unordered_map<Clave, float, boost::hash<Clave>> umbrales;
-std::unordered_map<Clave, std::tuple<float, size_t, size_t>, boost::hash<Clave>> estadisticas;
-
-
-
-void plot(const std::vector<float> &barras)
-{
-    Gnuplot gp;
-    
-    info("BARRAS BEGIN");
-    for (auto barra : barras)
-        info("{}", barra);
-    info("BARRAS END");
-
-	// Don't forget to put "\n" at the end of each line!
-    gp << "set terminal gif size 300,200 animate delay 2\n";
-    gp << "set output 'image.gif'\n";
-    gp << "set style fill solid\n";
-    gp << "set boxwidth 0.5\n";
-	gp << "plot '-' with boxes title 'pts_A'\n";
-	gp.send1d(barras);
-    const_cast<std::vector<float>&>(barras)[1] = 3.0f;
-	gp << "plot '-' with boxes title 'pts_A'\n";
-	gp.send1d(barras);
-}
-
-std::vector<ResultadoEstadistico> analizar_bloque2(
-    const std::vector<Register> &bloque,
-    const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales
+std::vector<ResultadoEstadistico> analizar_bloque(
+    CsvReader &csv_reader,
+    MunicipioMapper &mapper,
+    const std::array<float, MAX_UMBRAL_ID> &umbrales
 ) {
+    // Calcular estadística por grupo
     std::vector<ResultadoEstadistico> resultados;
-    std::array<std::array<std::tuple<float, size_t, size_t>, 3>, 8> aux;
 
-    for (int m = 0; m < 8; m++)
-        for (int f = 0; f < 3; f++)
-            aux[m][f] = {0.0f, 0, 0};
+    struct Accumulador {
+        float suma_velocidades = 0.0f;
+        size_t cantidad_registros = 0;
+        size_t cantidad_anomalias = 0;
+    };
 
-    for (const auto &reg : bloque) {
-        auto &[suma, cant, anomalias] = aux[reg.municipio_id][reg.franja_horaria];
+    std::unordered_map<uint8_t, std::array<Accumulador, MAX_UMBRAL_ID>> accumuladores;
+
+    Register reg;
+
+    while (csv_reader.get(reg))
+    {
+        if (reg.velocidad < 0.1f) continue;
+
+        // Asignar municipio
+        reg.municipio_id = mapper.codificar(Punto { reg.latitud, reg.longitud });
+        // Asignar franja horaria
+        reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
+
+        uint8_t dia_semana = day_of_week(reg.fecha.day, reg.fecha.month, reg.fecha.year);
+        uint8_t umbral_id = get_umbral_id(reg.municipio_id, reg.franja_horaria, dia_semana);
+        auto &[suma, cantidad_registros, cantidad_anomalias]
+            = accumuladores[reg.fecha.day][umbral_id];
         suma += reg.velocidad;
-        cant++;
-        if (reg.velocidad < umbrales.at({reg.municipio_id, reg.franja_horaria}))
-            anomalias++;
+        cantidad_registros++;
+        if (reg.velocidad < umbrales.at(umbral_id))
+            cantidad_anomalias++;
     }
 
-    for (int m = 0; m < 8; m++) {
-        for (int f = 0; f < 3; f++) {
-            auto &[suma, cant, anomalias] = aux[m][f];
-            resultados.push_back({static_cast<uint8_t>(m), static_cast<uint8_t>(f), suma, cant, anomalias});
+    for (const auto &[day, aux2] : accumuladores)
+    {
+        for (int umbral_id = 0; umbral_id < MAX_UMBRAL_ID; umbral_id++)
+        {
+            auto &[suma, cantidad_registros, cantidad_anomalias] = accumuladores[day][umbral_id];
+            if (cantidad_registros <= 0) continue;
+            ResultadoEstadistico res;
+            res.umbral_id = umbral_id;
+            res.dia = day;
+            res.suma_velocidades = suma;
+            res.cantidad_registros = cantidad_registros;
+            res.cantidad_anomalias = cantidad_anomalias;
+            resultados.push_back(res);
         }
     }
 
     return resultados;
 }
 
-bool cargar_bloque2(CsvReader &csv_reader, MunicipioMapper &mapper, std::vector<Register> &bloque)
+class AlgoritmoA {
+public:
+    AlgoritmoA(const std::string &shapefile_path);
+
+    void procesar(std::vector<const char*> files);
+    
+    using Clave = std::pair<uint8_t, uint8_t>;
+
+private:
+    // Cargar un bloque de tamaño `block_size` con registros extendidos
+    void recalcular_umbrales();
+
+    std::array<float, MAX_UMBRAL_ID> m_umbrales;
+
+    struct DatosEstadisticos {
+        float suma_velocidades = 0.0f;
+        size_t cantidad_registros = 0;
+        size_t cantidad_anomalias = 0;
+    };
+
+    std::array<DatosEstadisticos, MAX_UMBRAL_ID> m_datos_estadisticos_mes;
+    MunicipioMapper m_mapper;
+};
+
+AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
+    : m_mapper(shapefile_path)
 {
-    bloque.clear();
-    Register reg;
-
-    while (csv_reader.get(reg))
+    for (uint8_t umbral_id = 0; umbral_id < MAX_UMBRAL_ID; umbral_id++)
     {
-        // Asignar municipio
-        reg.municipio_id = mapper.codificar(Punto { reg.latitud, reg.longitud });
-
-        // Asignar franja horaria
-        reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
-
-        bloque.push_back(reg);
+        m_umbrales[umbral_id] = 15.0f;
+        m_datos_estadisticos_mes[umbral_id] = { 0.0f, 0, 0 };
     }
-
-    return !bloque.empty();
 }
 
-/*void imprimir_umbrales(const std::unordered_map<Clave, float, boost::hash<Clave>> &umbrales)
+void AlgoritmoA::recalcular_umbrales()
 {
-    for (const auto &[clave, valor] : umbrales)
+    for (size_t umbral_id = 0; umbral_id < m_datos_estadisticos_mes.size(); umbral_id++)
     {
-        info("  Municipio {} - Franja {} => Umbral = {:.2f}", clave.first, clave.second, valor);
-    }
-}*/
-
-void recalcular_umbrales2()
-{
-    for (auto &[clave, datos] : m_datos_estadisticos)
-    {
+        auto &datos = m_datos_estadisticos_mes[umbral_id];
         if (datos.cantidad_registros != 0)
-            m_umbrales[clave] = (datos.suma_velocidades / datos.cantidad_registros) * 0.5;
+            m_umbrales[umbral_id] = (datos.suma_velocidades / datos.cantidad_registros) * 0.5;
         datos.suma_velocidades = 0.0f;
         datos.cantidad_registros = 0;
     }
 }
 
-void procesar_main(const std::string &shapefile_path, std::vector<std::string> files)
-{
-     MunicipioMapper mapper(shapefile_path);
+const auto franjas_horarias_names = std::to_array({
+    "Mañana",
+    "Mediodia",
+    "Tarde"
+});
 
-    
-    info("MUNICIPIOS {}", mapper.cantidad());
-    for (uint8_t municipio = 0; municipio < 8; ++municipio) {
-        for (uint8_t franja_horaria = 0; franja_horaria < 3; ++franja_horaria) {
-            m_umbrales[{municipio, franja_horaria}] = 15.0f;
-            m_datos_estadisticos[{municipio, franja_horaria}] = { 0.0f, 0, 0 };
+void graph_bars(
+    std::array<Gnuplot, 3> &gps,
+    std::array<std::array<std::pair<std::string, int>, 8>, 3> barras,
+    MunicipioMapper &mapper,
+    Date date
+) {
+    for (const auto &[franja_horaria, gp] : std::views::enumerate(gps))
+    {
+        for (int municipio = 0; municipio < 8; municipio++)
+        {
+            barras[franja_horaria][municipio].first
+                = '"' + mapper.decodificar(municipio) + '"';
+        }
+        std::array<const char *, DIA_SEMANA_COUNT> nombres_dias = {
+            "Domingo",
+            "Lunes",
+            "Martes",
+            "Miercoles",
+            "Jueves",
+            "Viernes",
+            "Sabado"
+        };
+        uint8_t dia_semana = day_of_week(date.day, date.month, date.year);
+        
+        gp << "set title 'Anomalias en " << nombres_dias[dia_semana] << " " << franjas_horarias_names[franja_horaria]
+           << " - " << (int)date.day << "/" << (int)date.month << "/" << date.year << "'\n";
+        gp << "plot '-' using 2:xtic(1) with boxes\n";
+        // std::print("\t");
+        // for (auto &[name, val] : barras.at(franja_horaria))
+        // {
+        //     std::print("{} ", val);
+        // }
+        // std::println("");
+        gp.send1d(barras.at(franja_horaria));
+    }
+    // std::cin.get();
+}
+
+void AlgoritmoA::procesar(std::vector<const char*> files)
+{
+    std::array<Gnuplot, 3> gps;
+    // {
+    //     Gnuplot(">script0.gs"),
+    //     Gnuplot(">script1.gs"),
+    //     Gnuplot(">script2.gs"),
+    // };
+    for (const auto &[i, gp] : std::views::enumerate(gps))
+    {
+        gp << "set terminal gif size 1280,960 animate delay 16.66\n";
+        gp << "set output 'image" << i << ".gif'\n";
+        gp << "set style fill solid\n";
+        gp << "set boxwidth 0.5\n";
+        gp << "set yrange [0:2000]\n";
+        gp << "set xlabel 'Municipios'\n";
+        gp << "set ylabel 'Cantidad de anomalias'\n";
+    }
+
+    std::vector<ResultadoEstadistico> resultados;
+
+    size_t start_from_file_idx = 0;
+    constexpr const char *checkpoint_file = "checkpoint.csv";
+    if (std::filesystem::exists(checkpoint_file))
+    {
+        std::println("RECOVERING");
+        // RECOVER
+        std::array<
+            std::array<std::pair<std::string, int>, 8>,
+            3
+        > barras;
+
+        std::ifstream ifs(checkpoint_file, std::ios::binary);
+        ifs.read(reinterpret_cast<char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
+
+        size_t file_count = 0;
+        ifs.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
+        start_from_file_idx = file_count + 1;
+        for (size_t file_i = 0; file_i < file_count; file_i++)
+        {
+            size_t day_graph_count = 0;
+            ifs.read(reinterpret_cast<char*>(&day_graph_count), sizeof(day_graph_count));
+            
+            for (size_t i = 0; i < day_graph_count; i++)
+            {
+                Date date;
+                ifs.read(reinterpret_cast<char*>(&date), sizeof(date));
+                for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
+                {
+                    for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                    {
+                        ifs.read(
+                            reinterpret_cast<char*>(&barras[franja][municipio].second),
+                            sizeof(barras[franja][municipio].second)
+                        );
+                    }
+                }
+                graph_bars(gps, barras, m_mapper, date);
+            }
         }
     }
 
-    Gnuplot gp;
-    gp << "set terminal gif size 640,480 animate delay 16.6\n";
-    gp << "set output 'image.gif'\n";
-    gp << "set style fill solid\n";
-    gp << "set boxwidth 0.5\n";
-    gp << "set xlabel 'Municipios'\n";
-    gp << "set ylabel 'Velocidad media'\n";
+    std::vector< // files
+        std::vector< // days
+            std::pair<
+                Date,
+                std::array<std::array<std::pair<std::string, int>, 8>, 3>
+            >
+        >
+    > history;
 
-    std::vector<ResultadoEstadistico> resultados;
-    std::vector<Register> buffer;
+    std::array<std::array<int, 8>, 3> anomalias_totales_por_franja_horaria{};
 
-
-    for (size_t i = 0; i < files.size(); i++)
+    for (size_t file_index = start_from_file_idx; file_index < files.size(); file_index++)
     {
-        int bloque = 0;
-        auto &filename = files[i];
-        filename.reserve(128);
+        history.emplace_back();
 
-        std::ifstream ifs(filename.c_str());
+        int bloque = 0;
+        auto &filename = files[file_index];
+
+        std::ifstream ifs(filename);
         ifs.seekg(0, std::ios::end);
-        size_t filesize = ifs.tellg();
+        const size_t filesize = ifs.tellg();
         ifs.close();
         size_t cursor = 0;
-        info("Comienzo archivo {} ({} bytes)", filename, filesize);
+        //info("Comienzo archivo {} ({} bytes)", filename, filesize);
 
-        //enviar_umbrales();---------------------
-        std::vector<UmbralPorPar> umbrales_buffer;
-        for (auto &[clave, umbral] : m_umbrales)
-            umbrales_buffer.emplace_back(UmbralPorPar {
-                clave.first,
-                clave.second,
-                umbral,
-            });
+        size_t block_count = (filesize + BLOCK_SIZE - 1 ) / BLOCK_SIZE;
 
-        info("UMBRASLES_BUFFER {}", umbrales_buffer.size());
-        //---------------------------------
-        
-        bool file_ended = false;
-        while (!file_ended)
+        Date first_day_date;
         {
-            if (cursor < filesize)
-            {
-                uint64_t range[2];
-                range[0] = cursor;
-                cursor += BLOCK_SIZE;
-                range[1] = cursor;
-                info("BLOQUE {} ({}:{})", ++bloque, range[0], range[1]);
-
-                //Proceso B
-                CsvReader csv_reader(filename.c_str(), range[0], range[1]);
-                
-                cargar_bloque2(csv_reader, mapper, buffer);
-                std::vector<ResultadoEstadistico> resultados = analizar_bloque2(buffer, umbrales);
-
-                //A de vuelta
-                for (const auto &r : resultados)
-                {
-                    Clave clave = {r.municipio_id, r.franja_horaria};
-                    DatosEstadisticos &datos = m_datos_estadisticos[clave];
-
-                    datos.suma_velocidades += r.suma_velocidades;
-                    datos.cantidad_registros += r.cantidad_registros;
-                    datos.cantidad_anomalias += r.cantidad_anomalias;
-                }
-
-                std::vector<std::pair<std::string, int>> barras(8);
-                for (int i = 0; i < 8; i++)
-                {
-                    barras[i] = std::make_pair('"' + mapper.decodificar(i) + '"', 0);
-                }
-
-                for (auto &[clave, datos] : m_datos_estadisticos)
-                {
-                    barras.at(clave.first).second = datos.cantidad_anomalias;
-                }
-                gp << "plot '-' using 2:xtic(1) with boxes notitle\n";
-                gp.send1d(barras);
-
-                recalcular_umbrales2();
-            }
+            CsvReader csv_reader(filename, 0, filesize);
+            Register r;
+            if (csv_reader.get(r))
+                first_day_date = r.fecha;
             else
+                exit(1);
+        }
+
+        std::unordered_map<
+            uint8_t,
+            std::array<DatosEstadisticos, MAX_UMBRAL_ID>
+        > graph_jobs;
+
+        std::unordered_map<
+            uint8_t,
+            std::array<DatosEstadisticos, MAX_UMBRAL_ID>
+        > recolecting_graph_jobs;
+        uint8_t max_received_day = 0;
+
+        // TODO: Podemos hacer como una especie de free list para checkear que se recibieron hasta
+        // cierto bloque
+        std::unordered_map<int, uint8_t> min_day_for_block;
+        // ---- Envío de bloques a esclavos
+        bool file_ended = false;
+        while (!file_ended
+            || !graph_jobs.empty()
+            || !recolecting_graph_jobs.empty())
+        {
+            if (file_ended)
             {
-                file_ended = true;
+                while (!recolecting_graph_jobs.empty())
+                {
+                    auto job = recolecting_graph_jobs.extract(recolecting_graph_jobs.begin());
+                    graph_jobs.insert(std::move(job));
+                }
+
+                while (!graph_jobs.empty())
+                {
+                    auto job = graph_jobs.extract(graph_jobs.begin());
+                    int day = job.key();
+                    std::array<
+                        std::array<std::pair<std::string, int>, 8>,
+                        3
+                    > barras;
+
+                    for (uint8_t municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                    {
+                        for (uint8_t franja_horaria = 0; franja_horaria < FRANJA_HORARIA_COUNT; franja_horaria++)
+                        {
+                            barras.at(franja_horaria).at(municipio).second = 0;
+                            for (uint8_t dia_semana = 0; dia_semana < DIA_SEMANA_COUNT; dia_semana++)
+                            {
+                                uint8_t umbral_id = get_umbral_id(municipio, franja_horaria, dia_semana);
+                                // CAMBIAR ACA SI QUEREMOS CAMBIAR QUE SE GRAFICA
+                                barras.at(franja_horaria).at(municipio).second
+                                    += job.mapped()[umbral_id].cantidad_anomalias;
+                                    // += job.mapped()[umbral_id].suma_velocidades
+                                    //     / job.mapped()[umbral_id].cantidad_registros;
+                            }
+                            //barras.at(franja_horaria).at(municipio).second /= DIA_SEMANA_COUNT;
+                        }
+                    }
+
+                    graph_bars(
+                        gps,
+                        barras,
+                        m_mapper,
+                        Date {
+                            first_day_date.year,
+                            first_day_date.month,
+                            static_cast<uint8_t>(day),
+                        }
+                    );
+
+                    history.back().emplace_back(
+                        Date {
+                            first_day_date.year,
+                            first_day_date.month,
+                            static_cast<uint8_t>(day),
+                        },
+                        barras
+                    );
+                }
+            }
+            else if (!file_ended)
+            {
+                if (cursor < filesize)
+                {
+                    uint64_t range[2];
+                    range[0] = cursor;
+                    cursor += BLOCK_SIZE;
+                    range[1] = cursor;
+                    //std::print("\r\033[K");
+                    std::println("BLOQUE {}/{} DE ARCHIVO {}/{} ({})", bloque+1, block_count, file_index+1, files.size(), filename);
+
+                    CsvReader csv_reader(filename, range[0], range[1]);
+                    std::vector<ResultadoEstadistico> resultados
+                        = analizar_bloque(csv_reader, m_mapper, m_umbrales);
+
+                    uint8_t min_day = std::numeric_limits<uint8_t>::max();
+                    for (const auto &r : resultados)
+                    {
+                        DatosEstadisticos &datos = recolecting_graph_jobs[r.dia][r.umbral_id];
+
+                        uint8_t municipio, franja, dia_sem;
+                        reverse_umbral_id(r.umbral_id, municipio, franja, dia_sem);
+
+                        // info("\tFRANJA {} COUNT {} SUM {} ANOM", franja, r.cantidad_registros, r.suma_velocidades, r.cantidad_anomalias);
+
+                        if (r.dia < min_day) min_day = r.dia;
+                        if (r.dia > max_received_day) max_received_day = r.dia;
+
+                        datos.suma_velocidades += r.suma_velocidades;
+                        datos.cantidad_registros += r.cantidad_registros;
+                        datos.cantidad_anomalias += r.cantidad_anomalias;
+
+                        DatosEstadisticos &datos_mes = m_datos_estadisticos_mes[r.umbral_id];
+                        datos_mes.suma_velocidades += r.suma_velocidades;
+                        datos_mes.cantidad_registros += r.cantidad_registros;
+                        datos_mes.cantidad_anomalias += r.cantidad_anomalias;
+
+                        anomalias_totales_por_franja_horaria.at(franja).at(municipio) += r.cantidad_anomalias;
+                    }
+
+                    bloque++;
+                }
+                else
+                {
+                    file_ended = true;
+                }
             }
         }
+
+        recalcular_umbrales();
+
+        // checkpoint
+        {
+            std::ofstream ofs("checkpoint.new", std::ios::binary);
+
+            ofs.write(reinterpret_cast<const char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
+
+            ofs.write(reinterpret_cast<const char*>(&file_index), sizeof(file_index));
+            for (size_t file_i = 0; file_i < history.size(); file_i++)
+            {
+                size_t day_graph_count = history[file_i].size();
+                ofs.write(reinterpret_cast<const char*>(&day_graph_count), sizeof(day_graph_count));
+
+                for (size_t i = 0; i < day_graph_count; i++)
+                {
+                    Date &date = history[file_i][i].first;
+                    ofs.write(reinterpret_cast<const char*>(&date), sizeof(date));
+                    auto &barras = history[file_i][i].second;
+                    for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
+                    {
+                        for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                        {
+                            ofs.write(
+                                reinterpret_cast<const char*>(&barras[franja][municipio].second),
+                                sizeof(barras[franja][municipio].second)
+                            );
+                        }
+                    }
+                }
+            }
+            ofs.close();
+
+            if (std::filesystem::exists(checkpoint_file))
+                std::filesystem::rename(checkpoint_file, "checkpoint.old");
+
+            std::filesystem::rename("checkpoint.new", checkpoint_file);
+
+            if (std::filesystem::exists("checkpoint.old"))
+                std::filesystem::remove("checkpoint.old");
+        }
+    }
+    
+    std::filesystem::remove(checkpoint_file);
+
+    std::print("Franja Horaria");
+    for (size_t municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+    {
+        std::print(",{}", m_mapper.decodificar(municipio));
+    }
+    std::println();
+    for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
+    {
+        std::print("{}", franja);
+        for (size_t municipio = 0; municipio < anomalias_totales_por_franja_horaria.at(franja).size(); municipio++)
+        {
+            std::print(",{}", anomalias_totales_por_franja_horaria.at(franja).at(municipio));
+        }
+        std::println();
     }
 }
 
 int main(int argc, char *argv[])
-{   
-    MPI_Init(&argc, &argv); 
+{
+    std::vector<const char *> files;
 
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    for (int i = 1; i < argc; i++)
+        files.emplace_back(argv[i]);
 
-    std::vector<std::string> files = {
-        "../autoscope_04_2025_velocidad.csv",
-        "../autoscope_05_2025_velocidad.csv",
-    };
-
-    procesar_main("../shapefiles/procesado.shp", std::move(files));
-    MPI_Finalize(); 
+    AlgoritmoA algoritmo("../shapefiles/procesado.shp");
+    
+    algoritmo.procesar(std::move(files));
     return 0;
 }

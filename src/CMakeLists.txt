@@ -24,3 +24,20 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${GDAL_LIBRARY})
 find_package(Boost REQUIRED COMPONENTS iostreams)
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE Boost::iostreams)
+
+add_executable(hpc_project_secuencial
+    main2.cpp
+    csv_reader.cpp
+    estadistica.cpp
+    franja_horaria.cpp
+    shapefile_loader.cpp
+    municipio_mapper.cpp
+)
+
+find_package(GDAL REQUIRED)
+target_include_directories(hpc_project_secuencial PUBLIC ${GDAL_INCLUDE_DIR})
+target_link_libraries(hpc_project_secuencial PUBLIC ${GDAL_LIBRARY})
+
+find_package(Boost REQUIRED COMPONENTS iostreams)
+target_include_directories(hpc_project_secuencial PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(hpc_project_secuencial PRIVATE Boost::iostreams)
