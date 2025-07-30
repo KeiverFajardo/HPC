@@ -3,6 +3,7 @@
 #include "municipio_mapper.hpp"
 #include "umbral.hpp"
 #include <boost/container_hash/hash.hpp>
+#include <set>
 #include <vector>
 #include <cstddef>
 
@@ -17,7 +18,7 @@ public:
 
 private:
     // Cargar un bloque de tamaño `block_size` con registros extendidos
-    void enviar_umbrales();
+    void enviar_umbrales(const std::set<int> &free_slaves);
     void recalcular_umbrales();
 
     std::array<float, MAX_UMBRAL_ID> m_umbrales;

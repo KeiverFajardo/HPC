@@ -1,5 +1,6 @@
 #include "algoritmo_a.hpp"
 
+#include <chrono>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
@@ -24,6 +25,7 @@
 #include <boost/functional/hash.hpp>
 
 constexpr int BLOCK_SIZE = 1000000;
+constexpr int NON_RESPONSIVE_THRESHOLD = 3000; // in milliseconds
 
 AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     : m_mapper(shapefile_path)
@@ -35,16 +37,15 @@ AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     }
 }
 
-void AlgoritmoA::enviar_umbrales()
+void AlgoritmoA::enviar_umbrales(const std::set<int> &free_slaves)
 {
-    std::vector<UmbralPorPar> umbrales_buffer;
-    for (size_t umbral_id = 0; umbral_id < m_umbrales.size(); umbral_id++)
-        umbrales_buffer.emplace_back(UmbralPorPar {
-            static_cast<uint8_t>(umbral_id),
-            m_umbrales[umbral_id],
-        });
+    for (auto slave : free_slaves)
+    {
+        MPI_Send(m_umbrales.data(), m_umbrales.size(), MPI_FLOAT, slave, TAG_DATA, MPI_COMM_WORLD);
+    }
 
-    MPI_Bcast(umbrales_buffer.data(), umbrales_buffer.size(), MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
+    // No podemos usar mas esto porque ahora tenemos que tolerar que algun nodo se caiga
+    // MPI_Bcast(umbrales_buffer.data(), umbrales_buffer.size(), MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
 }
 
 void AlgoritmoA::recalcular_umbrales()
@@ -127,8 +128,8 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
     std::set<int> free_slaves;
-    for (int i = 1; i < world_size; i++)
-        free_slaves.emplace(i);
+    for (int i = 1; i < world_size; i++) free_slaves.emplace(i);
+    std::set<int> unresponsive_slaves;
 
     std::vector<ResultadoEstadistico> resultados;
 
@@ -225,20 +226,21 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         // cierto bloque
         std::vector<bool> received_blocks(block_count, false);
         std::unordered_map<int, uint8_t> min_day_for_block;
-        std::unordered_map<int, int> assigned_jobs;
+        using time_point = std::chrono::time_point<std::chrono::system_clock>;
+        std::unordered_map<int, std::tuple<int, time_point, int, int>> assigned_jobs;
         size_t old_first_non_received_block = 0;
 
-        enviar_umbrales();
+        enviar_umbrales(free_slaves);
         // ---- Envío de bloques a esclavos
         bool file_ended = false;
         while (!file_ended
             || !graph_jobs.empty()
             || !recolecting_graph_jobs.empty()
-            || free_slaves.size() < static_cast<size_t>(world_size - 1))
+            || free_slaves.size() + unresponsive_slaves.size() < static_cast<size_t>(world_size - 1))
         {
             if (file_ended || free_slaves.empty())
             {
-                if (file_ended && free_slaves.size() == static_cast<size_t>(world_size - 1))
+                if (file_ended && free_slaves.size() + unresponsive_slaves.size() == static_cast<size_t>(world_size - 1))
                 {
                     while (!recolecting_graph_jobs.empty())
                     {
@@ -336,14 +338,46 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     cursor += BLOCK_SIZE;
                     range[1] = cursor;
                     //std::print("\r\033[K");
-                    std::println("BLOQUE {}/{} DE ARCHIVO {}/{} ({})", bloque+1, block_count, file_index+1, files.size(), filename);
+                    std::println("BLOQUE {}/{} DE ARCHIVO {}/{} for {} ({})", bloque+1, block_count, file_index+1, files.size(), slave, filename);
                     MPI_Send(range, 2, MPI_UINT64_T, slave, TAG_DATA, MPI_COMM_WORLD);
-                    assigned_jobs.insert({slave, bloque});
+                    assigned_jobs.insert({slave, std::make_tuple(bloque, std::chrono::system_clock::now(), range[0], range[1])});
                     bloque++;
                 }
                 else
                 {
                     file_ended = true;
+                }
+            }
+
+            // Check if a slave is not responding
+            if (!free_slaves.empty())
+            {
+                std::vector<int> ranks_to_remove;
+                for (auto &[slave_rank, tuple] : assigned_jobs)
+                {
+                    auto &[block, time_stamp, range_start, range_end] = tuple;
+                    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - time_stamp);
+
+                    if (duration.count() > NON_RESPONSIVE_THRESHOLD)
+                        ranks_to_remove.emplace_back(slave_rank);
+                }
+
+                for (int rank_to_remove : ranks_to_remove)
+                {
+                    if (free_slaves.empty()) break;
+                    // RESEND
+                    unresponsive_slaves.insert(rank_to_remove);
+
+                    auto tuple = assigned_jobs.extract(rank_to_remove).mapped();
+                    auto &[block, time_stamp, range_start, range_end] = tuple;
+                    int slave = free_slaves.extract(free_slaves.begin()).value();
+                    uint64_t range[2];
+                    range[0] = range_start;
+                    range[1] = range_end;
+                    //std::print("\r\033[K");
+                    std::println("RESEND BLOQUE {}/{} DE ARCHIVO {}/{} {}->{} ({})", block+1, block_count, file_index+1, files.size(), rank_to_remove, slave, filename);
+                    MPI_Send(range, 2, MPI_UINT64_T, slave, TAG_DATA, MPI_COMM_WORLD);
+                    assigned_jobs.insert({slave, std::make_tuple(block, std::chrono::system_clock::now(), range[0], range[1])});
                 }
             }
 
@@ -356,7 +390,18 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 MPI_Get_count(&status, MPI_ResultadoEstadistico, &count);
                 resultados.clear();
                 resultados.resize(count);
+                info("RECV {} {}", count, status.MPI_SOURCE);
                 MPI_Recv(resultados.data(), count, MPI_ResultadoEstadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                
+                // Only happens if the job was sent to another slave
+                if (!assigned_jobs.contains(status.MPI_SOURCE))
+                {
+                    // TODO: Recover a node if it comes back
+                    // unresponsive_slaves.extract(status.MPI_SOURCE);
+                    // free_slaves.emplace(status.MPI_SOURCE);
+                    MPI_Iprobe(MPI_ANY_SOURCE, TAG_DATA, MPI_COMM_WORLD, &flag, &status);
+                    continue;
+                }
 
                 // info("BEGIN RESPONSE");
                 uint8_t min_day = std::numeric_limits<uint8_t>::max();
@@ -385,7 +430,8 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 }
 
                 free_slaves.emplace(status.MPI_SOURCE);
-                int block_index = assigned_jobs.extract(status.MPI_SOURCE).mapped();
+                auto tuple = assigned_jobs.extract(status.MPI_SOURCE).mapped();
+                int block_index = std::get<0>(tuple);
                 received_blocks.at(block_index) = true;
                 min_day_for_block.insert({block_index, min_day});
 

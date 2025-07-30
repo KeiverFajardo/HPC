@@ -2,13 +2,11 @@
 
 #include "algoritmo_b.hpp"
 #include "csv_reader.hpp"
-#include "umbral.hpp"
 
 MPI_Datatype MPI_Date;
 MPI_Datatype MPI_Hour;
 MPI_Datatype MPI_Register;
 MPI_Datatype MPI_ResultadoEstadistico;
-MPI_Datatype MPI_Umbral;
 
 void init_mpi_date()
 {
@@ -90,25 +88,12 @@ void init_mpi_resultado_estadistico()
     MPI_Type_commit(&MPI_ResultadoEstadistico);
 }
 
-void init_mpi_umbral() {
-    int blocklengths[2] = {1, 1};
-    MPI_Aint displacements[2];
-    MPI_Datatype types[2] = {MPI_UINT8_T, MPI_FLOAT};
-
-    displacements[0] = offsetof(UmbralPorPar, id);
-    displacements[1] = offsetof(UmbralPorPar, umbral);
-
-    MPI_Type_create_struct(2, blocklengths, displacements, types, &MPI_Umbral);
-    MPI_Type_commit(&MPI_Umbral);
-}
-
 void init_mpi_datatypes()
 {
     init_mpi_date();
     init_mpi_hour();
     init_mpi_register();
     init_mpi_resultado_estadistico();
-    init_mpi_umbral();
 }
 
 void free_mpi_datatypes()
@@ -117,5 +102,4 @@ void free_mpi_datatypes()
     MPI_Type_free(&MPI_Hour);
     MPI_Type_free(&MPI_Register);
     MPI_Type_free(&MPI_ResultadoEstadistico);
-    MPI_Type_free(&MPI_Umbral);
 }

@@ -148,13 +148,10 @@ std::vector<ResultadoEstadistico> analizar_bloque(
 
 std::array<float, MAX_UMBRAL_ID> recibir_umbrales()
 {
-    std::array<UmbralPorPar, MAX_UMBRAL_ID> umbrales_buffer;
-    MPI_Bcast(umbrales_buffer.data(), umbrales_buffer.size(), MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
     std::array<float, MAX_UMBRAL_ID> umbrales;
-    for (UmbralPorPar &umbral : umbrales_buffer)
-    {
-        umbrales[umbral.id] = umbral.umbral;
-    }
+    MPI_Recv(umbrales.data(), umbrales.size(), MPI_FLOAT, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    // No lo p
+    // MPI_Bcast(umbrales_buffer.data(), umbrales_buffer.size(), MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
     return umbrales;
 }
 
