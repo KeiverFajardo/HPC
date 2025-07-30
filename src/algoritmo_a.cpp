@@ -226,6 +226,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         std::vector<bool> received_blocks(block_count, false);
         std::unordered_map<int, uint8_t> min_day_for_block;
         std::unordered_map<int, int> assigned_jobs;
+        size_t old_first_non_received_block = 0;
 
         enviar_umbrales();
         // ---- Envío de bloques a esclavos
@@ -248,7 +249,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 else
                 {
                     int first_non_received_block = 0;
-                    for (size_t i = 0; i < received_blocks.size(); i++)
+                    for (size_t i = old_first_non_received_block; i < received_blocks.size(); i++)
                     {
                         if (!received_blocks[i])
                         {
@@ -256,6 +257,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                             break;
                         }
                     }
+                    old_first_non_received_block = first_non_received_block;
 
                     if (first_non_received_block > 0)
                     {
