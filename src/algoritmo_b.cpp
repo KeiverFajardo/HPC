@@ -173,12 +173,6 @@ void procesar_b(const std::string &shapefile_path, std::vector<const char*> file
         {
             MPI_Status status;
             MPI_Probe(MASTER_RANK, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-            
-            if (status.MPI_TAG == EXIT_MESSAGE_TAG)
-            {
-                MPI_Recv(nullptr, 0, MPI_Register, MASTER_RANK, EXIT_MESSAGE_TAG, MPI_COMM_WORLD, &status);
-                return;
-            }
 
             if (status.MPI_TAG == END_OF_FILE_TAG)
             {

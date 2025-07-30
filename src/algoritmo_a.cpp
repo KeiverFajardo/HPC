@@ -401,7 +401,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
             }
         }
 
-        if (static_cast<size_t>(file_index) != files.size() - 1)
+        // if (static_cast<size_t>(file_index) != files.size() - 1)
         {
             for (int i = 1; i < world_size; ++i)
             {
@@ -454,10 +454,10 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     
     std::filesystem::remove(checkpoint_file);
 
-    for (int i = 1; i < world_size; ++i)
-    {
-        MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
-    }
+    // for (int i = 1; i < world_size; ++i)
+    // {
+    //     MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
+    // }
 
     std::print("Franja Horaria");
     for (size_t municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
