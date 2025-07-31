@@ -37,12 +37,9 @@ AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
     }
 }
 
-void AlgoritmoA::enviar_umbrales(const std::set<int> &free_slaves)
+void AlgoritmoA::enviar_umbrales(int dst)
 {
-    for (auto slave : free_slaves)
-    {
-        MPI_Send(m_umbrales.data(), m_umbrales.size(), MPI_FLOAT, slave, TAG_DATA, MPI_COMM_WORLD);
-    }
+    MPI_Send(m_umbrales.data(), m_umbrales.size(), MPI_FLOAT, dst, UMBRALES_TAG, MPI_COMM_WORLD);
 
     // No podemos usar mas esto porque ahora tenemos que tolerar que algun nodo se caiga
     // MPI_Bcast(umbrales_buffer.data(), umbrales_buffer.size(), MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
@@ -132,6 +129,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     std::set<int> unresponsive_slaves;
 
     std::vector<ResultadoEstadistico> resultados;
+    std::array<std::array<int, 8>, 3> anomalias_totales_por_franja_horaria{};
 
     size_t start_from_file_idx = 0;
     constexpr const char *checkpoint_file = "checkpoint.csv";
@@ -172,6 +170,15 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 graph_bars(gps, barras, m_mapper, date);
             }
         }
+
+        // Cargar anomalias totales
+        for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
+        {
+            ifs.read(
+                reinterpret_cast<char*>(anomalias_totales_por_franja_horaria[franja].data()),
+                anomalias_totales_por_franja_horaria.size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
+            );
+        }
     }
 
     std::vector< // files
@@ -183,7 +190,6 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         >
     > history;
 
-    std::array<std::array<int, 8>, 3> anomalias_totales_por_franja_horaria{};
 
     for (size_t file_index = start_from_file_idx; file_index < files.size(); file_index++)
     {
@@ -230,7 +236,14 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         std::unordered_map<int, std::tuple<int, time_point, int, int>> assigned_jobs;
         size_t old_first_non_received_block = 0;
 
-        enviar_umbrales(free_slaves);
+        int int_file_index = file_index;
+        for (int slave : free_slaves)
+        {
+            // Cambiar archivo
+            MPI_Send(&int_file_index, 1, MPI_INT, slave, CHANGE_FILE_TAG, MPI_COMM_WORLD);
+
+            enviar_umbrales(slave);
+        }
         // ---- Envío de bloques a esclavos
         bool file_ended = false;
         while (!file_ended
@@ -339,7 +352,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     range[1] = cursor;
                     //std::print("\r\033[K");
                     std::println("BLOQUE {}/{} DE ARCHIVO {}/{} for {} ({})", bloque+1, block_count, file_index+1, files.size(), slave, filename);
-                    MPI_Send(range, 2, MPI_UINT64_T, slave, TAG_DATA, MPI_COMM_WORLD);
+                    MPI_Send(range, 2, MPI_UINT64_T, slave, BLOCKS_TAG, MPI_COMM_WORLD);
                     assigned_jobs.insert({slave, std::make_tuple(bloque, std::chrono::system_clock::now(), range[0], range[1])});
                     bloque++;
                 }
@@ -376,30 +389,34 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     range[1] = range_end;
                     //std::print("\r\033[K");
                     std::println("RESEND BLOQUE {}/{} DE ARCHIVO {}/{} {}->{} ({})", block+1, block_count, file_index+1, files.size(), rank_to_remove, slave, filename);
-                    MPI_Send(range, 2, MPI_UINT64_T, slave, TAG_DATA, MPI_COMM_WORLD);
+                    MPI_Send(range, 2, MPI_UINT64_T, slave, BLOCKS_TAG, MPI_COMM_WORLD);
                     assigned_jobs.insert({slave, std::make_tuple(block, std::chrono::system_clock::now(), range[0], range[1])});
                 }
             }
 
             int flag = 0;
             MPI_Status status;
-            MPI_Iprobe(MPI_ANY_SOURCE, TAG_DATA, MPI_COMM_WORLD, &flag, &status);
+            MPI_Iprobe(MPI_ANY_SOURCE, BLOCKS_TAG, MPI_COMM_WORLD, &flag, &status);
             while (flag) { 
                 // ---- Recepción de resultados estadísticos
                 int count;
                 MPI_Get_count(&status, MPI_ResultadoEstadistico, &count);
                 resultados.clear();
                 resultados.resize(count);
-                info("RECV {} {}", count, status.MPI_SOURCE);
+                // info("RECV {} {}", count, status.MPI_SOURCE);
                 MPI_Recv(resultados.data(), count, MPI_ResultadoEstadistico, status.MPI_SOURCE, status.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 
                 // Only happens if the job was sent to another slave
                 if (!assigned_jobs.contains(status.MPI_SOURCE))
                 {
                     // TODO: Recover a node if it comes back
-                    // unresponsive_slaves.extract(status.MPI_SOURCE);
-                    // free_slaves.emplace(status.MPI_SOURCE);
-                    MPI_Iprobe(MPI_ANY_SOURCE, TAG_DATA, MPI_COMM_WORLD, &flag, &status);
+
+                    int int_file_index = file_index;
+                    MPI_Send(&int_file_index, 1, MPI_INT, status.MPI_SOURCE, CHANGE_FILE_TAG, MPI_COMM_WORLD);
+                    enviar_umbrales(status.MPI_SOURCE);
+                    unresponsive_slaves.extract(status.MPI_SOURCE);
+                    free_slaves.emplace(status.MPI_SOURCE);
+                    MPI_Iprobe(MPI_ANY_SOURCE, BLOCKS_TAG, MPI_COMM_WORLD, &flag, &status);
                     continue;
                 }
 
@@ -443,15 +460,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 //         nombre_municipio, (int)r.franja_horaria, r.suma_velocidades, r.cantidad, status.MPI_SOURCE);
                 // }
 
-                MPI_Iprobe(MPI_ANY_SOURCE, TAG_DATA, MPI_COMM_WORLD, &flag, &status);
-            }
-        }
-
-        // if (static_cast<size_t>(file_index) != files.size() - 1)
-        {
-            for (int i = 1; i < world_size; ++i)
-            {
-                MPI_Send(nullptr, 0, MPI_Register, i, END_OF_FILE_TAG, MPI_COMM_WORLD);
+                MPI_Iprobe(MPI_ANY_SOURCE, BLOCKS_TAG, MPI_COMM_WORLD, &flag, &status);
             }
         }
 
@@ -486,6 +495,15 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     }
                 }
             }
+
+            // Guardar anomalias totales
+            for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
+            {
+                ofs.write(
+                    reinterpret_cast<const char*>(anomalias_totales_por_franja_horaria[franja].data()),
+                    anomalias_totales_por_franja_horaria.size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
+                );
+            }
             ofs.close();
 
             if (std::filesystem::exists(checkpoint_file))
@@ -500,10 +518,10 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     
     std::filesystem::remove(checkpoint_file);
 
-    // for (int i = 1; i < world_size; ++i)
-    // {
-    //     MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
-    // }
+    for (int i = 1; i < world_size; ++i)
+    {
+        MPI_Send(nullptr, 0, MPI_Register, i, EXIT_MESSAGE_TAG, MPI_COMM_WORLD);
+    }
 
     std::print("Franja Horaria");
     for (size_t municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)

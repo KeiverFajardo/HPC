@@ -146,51 +146,52 @@ std::vector<ResultadoEstadistico> analizar_bloque(
     return resultados;
 }
 
-std::array<float, MAX_UMBRAL_ID> recibir_umbrales()
-{
-    std::array<float, MAX_UMBRAL_ID> umbrales;
-    MPI_Recv(umbrales.data(), umbrales.size(), MPI_FLOAT, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    // No lo p
-    // MPI_Bcast(umbrales_buffer.data(), umbrales_buffer.size(), MPI_Umbral, MASTER_RANK, MPI_COMM_WORLD);
-    return umbrales;
-}
-
 void procesar_b(const std::string &shapefile_path, std::vector<const char*> files) {
     int world_rank; //world_rank almacena el ID de este proceso dentro del mundo MPI.
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
     MunicipioMapper mapper(shapefile_path);
+    const char *file = nullptr;
 
-    for (const auto &file : files)
+    std::array<float, MAX_UMBRAL_ID> umbrales;
+    //imprimir_umbrales(umbrales);
+    
+    for (;;)
     {
-        std::array<float, MAX_UMBRAL_ID> umbrales = recibir_umbrales();
-        //imprimir_umbrales(umbrales);
-        
-        while (true)
+        MPI_Status status;
+        MPI_Probe(MASTER_RANK, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+
+        if (status.MPI_TAG == BLOCKS_TAG) {
+            size_t range[2];
+            MPI_Recv(range, 2, MPI_UINT64_T, MASTER_RANK, BLOCKS_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+            CsvReader csv_reader(file, range[0], range[1]);
+            
+            // info("Esclavo {} recibió {} registros", world_rank, buffer.size());
+
+            std::vector<ResultadoEstadistico> resultados
+                = analizar_bloque(csv_reader, mapper, umbrales);
+                // = analizar_bloque_parallel(csv_reader, mapper, umbrales);
+
+            MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, BLOCKS_TAG, MPI_COMM_WORLD);
+        }
+
+        if (status.MPI_TAG == UMBRALES_TAG)
         {
-            MPI_Status status;
-            MPI_Probe(MASTER_RANK, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+            MPI_Recv(umbrales.data(), umbrales.size(), MPI_FLOAT, MASTER_RANK, UMBRALES_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        }
 
-            if (status.MPI_TAG == END_OF_FILE_TAG)
-            {
-                MPI_Recv(nullptr, 0, MPI_Register, MASTER_RANK, END_OF_FILE_TAG, MPI_COMM_WORLD, &status);
-                break;
-            }
+        if (status.MPI_TAG == CHANGE_FILE_TAG)
+        {
+            int file_index = -1;
+            MPI_Recv(&file_index, 1, MPI_INT, MASTER_RANK, CHANGE_FILE_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            file = files[file_index];
+        }
 
-            if (status.MPI_TAG == TAG_DATA) {
-                size_t range[2];
-                MPI_Recv(range, 2, MPI_UINT64_T, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-                CsvReader csv_reader(file, range[0], range[1]);
-                
-                // info("Esclavo {} recibió {} registros", world_rank, buffer.size());
-
-                std::vector<ResultadoEstadistico> resultados
-                    = analizar_bloque(csv_reader, mapper, umbrales);
-                    // = analizar_bloque_parallel(csv_reader, mapper, umbrales);
-
-                MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, TAG_DATA, MPI_COMM_WORLD);
-            }
+        if (status.MPI_TAG == EXIT_MESSAGE_TAG)
+        {
+            MPI_Recv(nullptr, 0, MPI_Register, MASTER_RANK, EXIT_MESSAGE_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            return;
         }
     }
 }

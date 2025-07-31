@@ -18,7 +18,7 @@ public:
 
 private:
     // Cargar un bloque de tamaño `block_size` con registros extendidos
-    void enviar_umbrales(const std::set<int> &free_slaves);
+    void enviar_umbrales(int dst);
     void recalcular_umbrales();
 
     std::array<float, MAX_UMBRAL_ID> m_umbrales;
