@@ -400,8 +400,9 @@ void AlgoritmoA::procesar()
                     range[0] = cursor;
                     cursor += BLOCK_SIZE;
                     range[1] = cursor;
-                    //std::print("\r\033[K");
-                    std::println("BLOQUE {}/{} DE ARCHIVO {}/{} for {} ({})", bloque+1, block_count, m_current_file_index+1, m_files.size(), slave, filename);
+                    std::print("\r\033[K");
+                    std::print("BLOQUE {}/{} DE ARCHIVO {}/{} for {} ({})", bloque+1, block_count, m_current_file_index+1, m_files.size(), slave, filename);
+                    std::fflush(stdout);
                     MPI_Send(range, 2, MPI_UINT64_T, slave, BLOCKS_TAG, MPI_COMM_WORLD);
                     assigned_jobs.insert({slave, std::make_tuple(bloque, std::chrono::system_clock::now(), range[0], range[1])});
                     bloque++;
@@ -520,6 +521,7 @@ void AlgoritmoA::procesar()
 
         m_current_file_index++;
     }
+    std::println();
     
     std::filesystem::remove(CHECKPOINT_FILE);
 

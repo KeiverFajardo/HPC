@@ -45,7 +45,7 @@ std::vector<ResultadoEstadistico> analizar_bloque_parallel(
         auto &accumuladores = accumuladores_threads[tid];
         // info("TID {}", tid);
 
-        #pragma omp for
+        #pragma omp for schedule(dynamic, 100)
         for (size_t i = 0; i < registers.size(); i++)
         {
             Register &reg = registers[i];
@@ -170,8 +170,8 @@ void procesar_b(const std::string &shapefile_path, std::vector<const char*> file
             // info("Esclavo {} recibió {} registros", world_rank, buffer.size());
 
             std::vector<ResultadoEstadistico> resultados
-                = analizar_bloque(csv_reader, mapper, umbrales);
-                // = analizar_bloque_parallel(csv_reader, mapper, umbrales);
+                // = analizar_bloque(csv_reader, mapper, umbrales);
+                = analizar_bloque_parallel(csv_reader, mapper, umbrales);
 
             MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, BLOCKS_TAG, MPI_COMM_WORLD);
         }
