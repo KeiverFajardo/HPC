@@ -1,5 +1,6 @@
 #include "algoritmo_a.hpp"
 
+#include <array>
 #include <chrono>
 #include <cstdio>
 #include <filesystem>
@@ -70,14 +71,17 @@ void graph_bars(
     std::array<Gnuplot, 3> &gps,
     std::array<std::array<std::pair<std::string, int>, 8>, 3> barras,
     MunicipioMapper &mapper,
+    const std::array<float, MAX_UMBRAL_ID> &umbrales,
     Date date
 ) {
     for (const auto &[franja_horaria, gp] : std::views::enumerate(gps))
     {
+        uint8_t dia_semana = day_of_week(date.day, date.month, date.year);
         for (int municipio = 0; municipio < 8; municipio++)
         {
+            uint8_t umbral_id = get_umbral_id(municipio, franja_horaria, dia_semana);
             barras[franja_horaria][municipio].first
-                = '"' + mapper.decodificar(municipio) + '"';
+                = '"' + mapper.decodificar(municipio) + "\\n(" + std::to_string(umbrales[umbral_id]) + ")\"";
         }
         std::array<const char *, DIA_SEMANA_COUNT> nombres_dias = {
             "Domingo",
@@ -88,7 +92,6 @@ void graph_bars(
             "Viernes",
             "Sabado"
         };
-        uint8_t dia_semana = day_of_week(date.day, date.month, date.year);
         
         gp << "set title 'Anomalias en " << nombres_dias[dia_semana] << " " << franjas_horarias_names[franja_horaria]
            << " - " << (int)date.day << "/" << (int)date.month << "/" << date.year << "'\n";
@@ -152,7 +155,7 @@ void AlgoritmoA::recover()
                     m_history[file_i][i].second[franja][municipio].second = count;
                 }
             }
-            graph_bars(m_gps, barras, m_mapper, date);
+            graph_bars(m_gps, barras, m_mapper, m_umbrales, date);
         }
     }
 }
@@ -374,6 +377,7 @@ void AlgoritmoA::procesar()
                         m_gps,
                         barras,
                         m_mapper,
+                        m_umbrales,
                         Date {
                             first_day_date.year,
                             first_day_date.month,
