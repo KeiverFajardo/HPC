@@ -14,7 +14,6 @@
 
 #include "algoritmo_b.hpp"
 #include "csv_reader.hpp"
-#include "log.hpp"
 #include "mpi_datatypes.hpp"
 #include "common_constants.hpp"
 #include "umbral.hpp"
@@ -130,57 +129,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
 
     std::vector<ResultadoEstadistico> resultados;
     std::array<std::array<int, 8>, 3> anomalias_totales_por_franja_horaria{};
-
-    size_t start_from_file_idx = 0;
-    constexpr const char *checkpoint_file = "checkpoint.csv";
-    if (std::filesystem::exists(checkpoint_file))
-    {
-        info("RECOVERING");
-        // RECOVER
-        std::array<
-            std::array<std::pair<std::string, int>, 8>,
-            3
-        > barras;
-
-        std::ifstream ifs(checkpoint_file, std::ios::binary);
-        ifs.read(reinterpret_cast<char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
-
-        size_t file_count = 0;
-        ifs.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
-        start_from_file_idx = file_count + 1;
-        for (size_t file_i = 0; file_i < file_count; file_i++)
-        {
-            size_t day_graph_count = 0;
-            ifs.read(reinterpret_cast<char*>(&day_graph_count), sizeof(day_graph_count));
-            
-            for (size_t i = 0; i < day_graph_count; i++)
-            {
-                Date date;
-                ifs.read(reinterpret_cast<char*>(&date), sizeof(date));
-                for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
-                {
-                    for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
-                    {
-                        ifs.read(
-                            reinterpret_cast<char*>(&barras[franja][municipio].second),
-                            sizeof(barras[franja][municipio].second)
-                        );
-                    }
-                }
-                graph_bars(gps, barras, m_mapper, date);
-            }
-        }
-
-        // Cargar anomalias totales
-        for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
-        {
-            ifs.read(
-                reinterpret_cast<char*>(anomalias_totales_por_franja_horaria[franja].data()),
-                anomalias_totales_por_franja_horaria.size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
-            );
-        }
-    }
-
+    
     std::vector< // files
         std::vector< // days
             std::pair<
@@ -190,6 +139,60 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         >
     > history;
 
+    size_t start_from_file_idx = 0;
+    constexpr const char *checkpoint_file = "checkpoint.bin";
+    if (std::filesystem::exists(checkpoint_file))
+    {
+        // RECOVER
+        std::array<
+            std::array<std::pair<std::string, int>, 8>,
+            3
+        > barras;
+
+        std::ifstream ifs(checkpoint_file, std::ios::binary);
+        // 1. Cargar umbrales
+        ifs.read(reinterpret_cast<char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
+        
+        // 2. Cargar anomalias totales
+        for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
+        {
+            ifs.read(
+                reinterpret_cast<char*>(anomalias_totales_por_franja_horaria[franja].data()),
+                anomalias_totales_por_franja_horaria[franja].size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
+            );
+        }
+
+        // 3. Cargar valores de grafica viejos
+        size_t file_count = 0;
+        ifs.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
+        history.resize(file_count);
+        start_from_file_idx = file_count;
+        std::println("RECOVERING at {}", start_from_file_idx);
+        for (size_t file_i = 0; file_i < file_count; file_i++)
+        {
+            size_t day_graph_count = 0;
+            ifs.read(reinterpret_cast<char*>(&day_graph_count), sizeof(day_graph_count));
+            history[file_i].resize(day_graph_count);
+            
+            for (size_t i = 0; i < day_graph_count; i++)
+            {
+                Date date;
+                ifs.read(reinterpret_cast<char*>(&date), sizeof(date));
+                history[file_i][i].first = date;
+                for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
+                {
+                    for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                    {
+                        int count = -1;
+                        ifs.read(reinterpret_cast<char*>(&count), sizeof(count));
+                        barras[franja][municipio].second = count;
+                        history[file_i][i].second[franja][municipio].second = count;
+                    }
+                }
+                graph_bars(gps, barras, m_mapper, date);
+            }
+        }
+    }
 
     for (size_t file_index = start_from_file_idx; file_index < files.size(); file_index++)
     {
@@ -470,9 +473,20 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         {
             std::ofstream ofs("checkpoint.new", std::ios::binary);
 
+            // 1. Guardar umbrales
             ofs.write(reinterpret_cast<const char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
 
-            ofs.write(reinterpret_cast<const char*>(&file_index), sizeof(file_index));
+            // 2. Guardar anomalias totales
+            for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
+            {
+                ofs.write(
+                    reinterpret_cast<const char*>(anomalias_totales_por_franja_horaria[franja].data()),
+                    anomalias_totales_por_franja_horaria[franja].size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
+                );
+            }
+
+            size_t hist_size = history.size();
+            ofs.write(reinterpret_cast<const char*>(&hist_size), sizeof(hist_size));
             for (size_t file_i = 0; file_i < history.size(); file_i++)
             {
                 size_t day_graph_count = history[file_i].size();
@@ -496,14 +510,6 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 }
             }
 
-            // Guardar anomalias totales
-            for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
-            {
-                ofs.write(
-                    reinterpret_cast<const char*>(anomalias_totales_por_franja_horaria[franja].data()),
-                    anomalias_totales_por_franja_horaria.size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
-                );
-            }
             ofs.close();
 
             if (std::filesystem::exists(checkpoint_file))
