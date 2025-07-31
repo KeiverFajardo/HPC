@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
 
     if (world_rank == MASTER_RANK)
     {
-        AlgoritmoA algoritmo("../shapefiles/procesado.shp");
+        AlgoritmoA algoritmo("../shapefiles/procesado.shp", std::move(files));
         
-        algoritmo.procesar(std::move(files));
+        algoritmo.procesar();
     }
     else
     {

@@ -26,8 +26,12 @@
 constexpr int BLOCK_SIZE = 1000000;
 constexpr int NON_RESPONSIVE_THRESHOLD = 3000; // in milliseconds
 
-AlgoritmoA::AlgoritmoA(const std::string &shapefile_path)
-    : m_mapper(shapefile_path)
+constexpr const char *CHECKPOINT_FILE = "checkpoint.bin";
+constexpr const char *NEW_CHECKPOINT_FILE = "checkpoint.bin.new";
+constexpr const char *OLD_CHECKPOINT_FILE = "checkpoint.bin.old";
+
+AlgoritmoA::AlgoritmoA(const std::string &shapefile_path, std::vector<const char*> csv_files)
+    : m_files(csv_files), m_mapper(shapefile_path)
 {
     for (uint8_t umbral_id = 0; umbral_id < MAX_UMBRAL_ID; umbral_id++)
     {
@@ -100,15 +104,114 @@ void graph_bars(
     // std::cin.get();
 }
 
-void AlgoritmoA::procesar(std::vector<const char*> files)
+void AlgoritmoA::recover()
 {
-    std::array<Gnuplot, 3> gps;
-    // {
-    //     Gnuplot(">script0.gs"),
-    //     Gnuplot(">script1.gs"),
-    //     Gnuplot(">script2.gs"),
-    // };
-    for (const auto &[i, gp] : std::views::enumerate(gps))
+    // RECOVER
+    std::array<
+        std::array<std::pair<std::string, int>, 8>,
+        3
+    > barras;
+
+    std::ifstream ifs(CHECKPOINT_FILE, std::ios::binary);
+    // 1. Cargar umbrales
+    ifs.read(reinterpret_cast<char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
+    
+    // 2. Cargar anomalias totales
+    for (size_t franja = 0; franja < m_anomalias_totales_por_franja_horaria.size(); franja++)
+    {
+        ifs.read(
+            reinterpret_cast<char*>(m_anomalias_totales_por_franja_horaria[franja].data()),
+            m_anomalias_totales_por_franja_horaria[franja].size() * sizeof(m_anomalias_totales_por_franja_horaria[franja][0])
+        );
+    }
+
+    // 3. Cargar valores de grafica viejos
+    size_t file_count = 0;
+    ifs.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
+    m_history.resize(file_count);
+    m_current_file_index = file_count;
+    std::println("RECOVERING at {}", m_current_file_index);
+    for (size_t file_i = 0; file_i < file_count; file_i++)
+    {
+        size_t day_graph_count = 0;
+        ifs.read(reinterpret_cast<char*>(&day_graph_count), sizeof(day_graph_count));
+        m_history[file_i].resize(day_graph_count);
+        
+        for (size_t i = 0; i < day_graph_count; i++)
+        {
+            Date date;
+            ifs.read(reinterpret_cast<char*>(&date), sizeof(date));
+            m_history[file_i][i].first = date;
+            for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
+            {
+                for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                {
+                    int count = -1;
+                    ifs.read(reinterpret_cast<char*>(&count), sizeof(count));
+                    barras[franja][municipio].second = count;
+                    m_history[file_i][i].second[franja][municipio].second = count;
+                }
+            }
+            graph_bars(m_gps, barras, m_mapper, date);
+        }
+    }
+}
+
+void AlgoritmoA::save_checkpoint()
+{
+    std::ofstream ofs(NEW_CHECKPOINT_FILE, std::ios::binary);
+
+    // 1. Guardar umbrales
+    ofs.write(reinterpret_cast<const char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
+
+    // 2. Guardar anomalias totales
+    for (size_t franja = 0; franja < m_anomalias_totales_por_franja_horaria.size(); franja++)
+    {
+        ofs.write(
+            reinterpret_cast<const char*>(m_anomalias_totales_por_franja_horaria[franja].data()),
+            m_anomalias_totales_por_franja_horaria[franja].size() * sizeof(m_anomalias_totales_por_franja_horaria[franja][0])
+        );
+    }
+
+    size_t hist_size = m_history.size();
+    ofs.write(reinterpret_cast<const char*>(&hist_size), sizeof(hist_size));
+    for (size_t file_i = 0; file_i < m_history.size(); file_i++)
+    {
+        size_t day_graph_count = m_history[file_i].size();
+        ofs.write(reinterpret_cast<const char*>(&day_graph_count), sizeof(day_graph_count));
+
+        for (size_t i = 0; i < day_graph_count; i++)
+        {
+            Date &date = m_history[file_i][i].first;
+            ofs.write(reinterpret_cast<const char*>(&date), sizeof(date));
+            auto &barras = m_history[file_i][i].second;
+            for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
+            {
+                for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
+                {
+                    ofs.write(
+                        reinterpret_cast<const char*>(&barras[franja][municipio].second),
+                        sizeof(barras[franja][municipio].second)
+                    );
+                }
+            }
+        }
+    }
+
+    ofs.close();
+
+    if (std::filesystem::exists(CHECKPOINT_FILE))
+        std::filesystem::rename(CHECKPOINT_FILE, OLD_CHECKPOINT_FILE);
+
+    std::filesystem::rename(NEW_CHECKPOINT_FILE, CHECKPOINT_FILE);
+
+    if (std::filesystem::exists(OLD_CHECKPOINT_FILE))
+        std::filesystem::remove(OLD_CHECKPOINT_FILE);
+}
+
+void AlgoritmoA::procesar()
+{
+    for (const auto &[i, gp] : std::views::enumerate(m_gps))
     {
         gp << "set terminal gif size 1280,960 animate delay 16.66\n";
         gp << "set output 'image" << i << ".gif'\n";
@@ -128,78 +231,16 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
     std::set<int> unresponsive_slaves;
 
     std::vector<ResultadoEstadistico> resultados;
-    std::array<std::array<int, 8>, 3> anomalias_totales_por_franja_horaria{};
     
-    std::vector< // files
-        std::vector< // days
-            std::pair<
-                Date,
-                std::array<std::array<std::pair<std::string, int>, 8>, 3>
-            >
-        >
-    > history;
+    if (std::filesystem::exists(CHECKPOINT_FILE))
+        recover();
 
-    size_t start_from_file_idx = 0;
-    constexpr const char *checkpoint_file = "checkpoint.bin";
-    if (std::filesystem::exists(checkpoint_file))
+    while(m_current_file_index < m_files.size())
     {
-        // RECOVER
-        std::array<
-            std::array<std::pair<std::string, int>, 8>,
-            3
-        > barras;
-
-        std::ifstream ifs(checkpoint_file, std::ios::binary);
-        // 1. Cargar umbrales
-        ifs.read(reinterpret_cast<char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
-        
-        // 2. Cargar anomalias totales
-        for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
-        {
-            ifs.read(
-                reinterpret_cast<char*>(anomalias_totales_por_franja_horaria[franja].data()),
-                anomalias_totales_por_franja_horaria[franja].size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
-            );
-        }
-
-        // 3. Cargar valores de grafica viejos
-        size_t file_count = 0;
-        ifs.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
-        history.resize(file_count);
-        start_from_file_idx = file_count;
-        std::println("RECOVERING at {}", start_from_file_idx);
-        for (size_t file_i = 0; file_i < file_count; file_i++)
-        {
-            size_t day_graph_count = 0;
-            ifs.read(reinterpret_cast<char*>(&day_graph_count), sizeof(day_graph_count));
-            history[file_i].resize(day_graph_count);
-            
-            for (size_t i = 0; i < day_graph_count; i++)
-            {
-                Date date;
-                ifs.read(reinterpret_cast<char*>(&date), sizeof(date));
-                history[file_i][i].first = date;
-                for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
-                {
-                    for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
-                    {
-                        int count = -1;
-                        ifs.read(reinterpret_cast<char*>(&count), sizeof(count));
-                        barras[franja][municipio].second = count;
-                        history[file_i][i].second[franja][municipio].second = count;
-                    }
-                }
-                graph_bars(gps, barras, m_mapper, date);
-            }
-        }
-    }
-
-    for (size_t file_index = start_from_file_idx; file_index < files.size(); file_index++)
-    {
-        history.emplace_back();
+        m_history.emplace_back();
 
         int bloque = 0;
-        auto &filename = files[file_index];
+        auto &filename = m_files[m_current_file_index];
 
         std::ifstream ifs(filename);
         ifs.seekg(0, std::ios::end);
@@ -228,7 +269,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         std::unordered_map<
             uint8_t,
             std::array<DatosEstadisticos, MAX_UMBRAL_ID>
-        > recolecting_graph_jobs;
+        > graph_jobs_en_construccion;
         uint8_t max_received_day = 0;
 
         // TODO: Podemos hacer como una especie de free list para checkear que se recibieron hasta
@@ -239,7 +280,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         std::unordered_map<int, std::tuple<int, time_point, int, int>> assigned_jobs;
         size_t old_first_non_received_block = 0;
 
-        int int_file_index = file_index;
+        int int_file_index = m_current_file_index;
         for (int slave : free_slaves)
         {
             // Cambiar archivo
@@ -251,21 +292,26 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         bool file_ended = false;
         while (!file_ended
             || !graph_jobs.empty()
-            || !recolecting_graph_jobs.empty()
+            || !graph_jobs_en_construccion.empty()
             || free_slaves.size() + unresponsive_slaves.size() < static_cast<size_t>(world_size - 1))
         {
+            // Si ya recibimos resultados de todos los bloques del archivo o todos
+            // los nodos slave estan ocupados
             if (file_ended || free_slaves.empty())
             {
                 if (file_ended && free_slaves.size() + unresponsive_slaves.size() == static_cast<size_t>(world_size - 1))
                 {
-                    while (!recolecting_graph_jobs.empty())
+                    // Pasar trabajos de graficado en construcccion a pendientes de graficar
+                    while (!graph_jobs_en_construccion.empty())
                     {
-                        auto job = recolecting_graph_jobs.extract(recolecting_graph_jobs.begin());
+                        auto job = graph_jobs_en_construccion.extract(graph_jobs_en_construccion.begin());
                         graph_jobs.insert(std::move(job));
                     }
                 }
                 else
                 {
+                    // Pasar trabajos de graficado en construccion para los que se recibieron
+                    // todos los bloques de ese dia a trabajos pendientes
                     int first_non_received_block = 0;
                     for (size_t i = old_first_non_received_block; i < received_blocks.size(); i++)
                     {
@@ -282,13 +328,13 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                         int day_limit = min_day_for_block.at(first_non_received_block - 1);
 
                         for (
-                            auto it = recolecting_graph_jobs.begin();
-                            it != recolecting_graph_jobs.end();
+                            auto it = graph_jobs_en_construccion.begin();
+                            it != graph_jobs_en_construccion.end();
                         ) {
                             if (it->first < day_limit)
                             {
                                 graph_jobs.insert({it->first, std::move(it->second)});
-                                it = recolecting_graph_jobs.erase(it);
+                                it = graph_jobs_en_construccion.erase(it);
                             }
                             else
                                 it++;
@@ -296,6 +342,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     }
                 }
 
+                // Graficar trabajos pendientes
                 if (!graph_jobs.empty())
                 {
                     auto job = graph_jobs.extract(graph_jobs.begin());
@@ -324,7 +371,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     }
 
                     graph_bars(
-                        gps,
+                        m_gps,
                         barras,
                         m_mapper,
                         Date {
@@ -334,7 +381,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                         }
                     );
 
-                    history.back().emplace_back(
+                    m_history.back().emplace_back(
                         Date {
                             first_day_date.year,
                             first_day_date.month,
@@ -354,7 +401,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     cursor += BLOCK_SIZE;
                     range[1] = cursor;
                     //std::print("\r\033[K");
-                    std::println("BLOQUE {}/{} DE ARCHIVO {}/{} for {} ({})", bloque+1, block_count, file_index+1, files.size(), slave, filename);
+                    std::println("BLOQUE {}/{} DE ARCHIVO {}/{} for {} ({})", bloque+1, block_count, m_current_file_index+1, m_files.size(), slave, filename);
                     MPI_Send(range, 2, MPI_UINT64_T, slave, BLOCKS_TAG, MPI_COMM_WORLD);
                     assigned_jobs.insert({slave, std::make_tuple(bloque, std::chrono::system_clock::now(), range[0], range[1])});
                     bloque++;
@@ -391,7 +438,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     range[0] = range_start;
                     range[1] = range_end;
                     //std::print("\r\033[K");
-                    std::println("RESEND BLOQUE {}/{} DE ARCHIVO {}/{} {}->{} ({})", block+1, block_count, file_index+1, files.size(), rank_to_remove, slave, filename);
+                    std::println("RESEND BLOQUE {}/{} DE ARCHIVO {}/{} {}->{} ({})", block+1, block_count, m_current_file_index+1, m_files.size(), rank_to_remove, slave, filename);
                     MPI_Send(range, 2, MPI_UINT64_T, slave, BLOCKS_TAG, MPI_COMM_WORLD);
                     assigned_jobs.insert({slave, std::make_tuple(block, std::chrono::system_clock::now(), range[0], range[1])});
                 }
@@ -414,7 +461,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 {
                     // TODO: Recover a node if it comes back
 
-                    int int_file_index = file_index;
+                    int int_file_index = m_current_file_index;
                     MPI_Send(&int_file_index, 1, MPI_INT, status.MPI_SOURCE, CHANGE_FILE_TAG, MPI_COMM_WORLD);
                     enviar_umbrales(status.MPI_SOURCE);
                     unresponsive_slaves.extract(status.MPI_SOURCE);
@@ -427,7 +474,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                 uint8_t min_day = std::numeric_limits<uint8_t>::max();
                 for (const auto &r : resultados)
                 {
-                    DatosEstadisticos &datos = recolecting_graph_jobs[r.dia][r.umbral_id];
+                    DatosEstadisticos &datos = graph_jobs_en_construccion[r.dia][r.umbral_id];
 
                     uint8_t municipio, franja, dia_sem;
                     reverse_umbral_id(r.umbral_id, municipio, franja, dia_sem);
@@ -446,7 +493,7 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
                     datos_mes.cantidad_registros += r.cantidad_registros;
                     datos_mes.cantidad_anomalias += r.cantidad_anomalias;
 
-                    anomalias_totales_por_franja_horaria.at(franja).at(municipio) += r.cantidad_anomalias;
+                    m_anomalias_totales_por_franja_horaria.at(franja).at(municipio) += r.cantidad_anomalias;
                 }
 
                 free_slaves.emplace(status.MPI_SOURCE);
@@ -469,60 +516,12 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
 
         recalcular_umbrales();
 
-        // checkpoint
-        {
-            std::ofstream ofs("checkpoint.new", std::ios::binary);
+        save_checkpoint();
 
-            // 1. Guardar umbrales
-            ofs.write(reinterpret_cast<const char*>(m_umbrales.data()), m_umbrales.size() * sizeof(m_umbrales[0]));
-
-            // 2. Guardar anomalias totales
-            for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
-            {
-                ofs.write(
-                    reinterpret_cast<const char*>(anomalias_totales_por_franja_horaria[franja].data()),
-                    anomalias_totales_por_franja_horaria[franja].size() * sizeof(anomalias_totales_por_franja_horaria[franja][0])
-                );
-            }
-
-            size_t hist_size = history.size();
-            ofs.write(reinterpret_cast<const char*>(&hist_size), sizeof(hist_size));
-            for (size_t file_i = 0; file_i < history.size(); file_i++)
-            {
-                size_t day_graph_count = history[file_i].size();
-                ofs.write(reinterpret_cast<const char*>(&day_graph_count), sizeof(day_graph_count));
-
-                for (size_t i = 0; i < day_graph_count; i++)
-                {
-                    Date &date = history[file_i][i].first;
-                    ofs.write(reinterpret_cast<const char*>(&date), sizeof(date));
-                    auto &barras = history[file_i][i].second;
-                    for (int franja = 0; franja < FRANJA_HORARIA_COUNT; franja++)
-                    {
-                        for (int municipio = 0; municipio < MUNICIPIO_COUNT; municipio++)
-                        {
-                            ofs.write(
-                                reinterpret_cast<const char*>(&barras[franja][municipio].second),
-                                sizeof(barras[franja][municipio].second)
-                            );
-                        }
-                    }
-                }
-            }
-
-            ofs.close();
-
-            if (std::filesystem::exists(checkpoint_file))
-                std::filesystem::rename(checkpoint_file, "checkpoint.old");
-
-            std::filesystem::rename("checkpoint.new", checkpoint_file);
-
-            if (std::filesystem::exists("checkpoint.old"))
-                std::filesystem::remove("checkpoint.old");
-        }
+        m_current_file_index++;
     }
     
-    std::filesystem::remove(checkpoint_file);
+    std::filesystem::remove(CHECKPOINT_FILE);
 
     for (int i = 1; i < world_size; ++i)
     {
@@ -535,12 +534,12 @@ void AlgoritmoA::procesar(std::vector<const char*> files)
         std::print(",{}", m_mapper.decodificar(municipio));
     }
     std::println();
-    for (size_t franja = 0; franja < anomalias_totales_por_franja_horaria.size(); franja++)
+    for (size_t franja = 0; franja < m_anomalias_totales_por_franja_horaria.size(); franja++)
     {
         std::print("{}", franja);
-        for (size_t municipio = 0; municipio < anomalias_totales_por_franja_horaria.at(franja).size(); municipio++)
+        for (size_t municipio = 0; municipio < m_anomalias_totales_por_franja_horaria.at(franja).size(); municipio++)
         {
-            std::print(",{}", anomalias_totales_por_franja_horaria.at(franja).at(municipio));
+            std::print(",{}", m_anomalias_totales_por_franja_horaria.at(franja).at(municipio));
         }
         std::println();
     }
