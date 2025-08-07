@@ -14,7 +14,7 @@
 
 std::vector<ResultadoEstadistico> analizar_bloque_parallel(
     CsvReader &csv_reader,
-    MunicipioMapper &mapper,
+    std::vector<MunicipioMapper> &mappers,
     const std::array<float, MAX_UMBRAL_ID> &umbrales
 ) {
     // Calcular estadística por grupo
@@ -50,7 +50,7 @@ std::vector<ResultadoEstadistico> analizar_bloque_parallel(
         {
             Register &reg = registers[i];
             // Asignar municipio
-            reg.municipio_id = mapper.codificar(Punto { reg.latitud, reg.longitud });
+            reg.municipio_id = mappers[tid].codificar(Punto { reg.latitud, reg.longitud });
             // Asignar franja horaria
             reg.franja_horaria = std::to_underlying(get_franja_horaria(reg.hora));
             uint8_t dia_semana = day_of_week(reg.fecha.day, reg.fecha.month, reg.fecha.year);
@@ -150,7 +150,11 @@ void procesar_b(const std::string &shapefile_path, std::vector<const char*> file
     int world_rank; //world_rank almacena el ID de este proceso dentro del mundo MPI.
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-    MunicipioMapper mapper(shapefile_path);
+    std::vector<MunicipioMapper> mappers;
+    {
+        int num_threads = omp_get_max_threads();
+        for (int i = 0; i < num_threads; i++) mappers.emplace_back(shapefile_path);
+    }
     const char *file = nullptr;
 
     std::array<float, MAX_UMBRAL_ID> umbrales;
@@ -171,7 +175,7 @@ void procesar_b(const std::string &shapefile_path, std::vector<const char*> file
 
             std::vector<ResultadoEstadistico> resultados
                 // = analizar_bloque(csv_reader, mapper, umbrales);
-                = analizar_bloque_parallel(csv_reader, mapper, umbrales);
+                = analizar_bloque_parallel(csv_reader, mappers, umbrales);
 
             MPI_Send(resultados.data(), resultados.size(), MPI_ResultadoEstadistico, MASTER_RANK, BLOCKS_TAG, MPI_COMM_WORLD);
         }

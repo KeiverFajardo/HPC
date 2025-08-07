@@ -4,7 +4,6 @@
 #include <boost/container_hash/hash.hpp>
 #include <string>
 #include <cstdint>
-#include <unordered_map>
 
 inline std::size_t hash_value(const Punto& p) {
     std::size_t seed = 0;
@@ -28,5 +27,4 @@ public:
 
 private:
     ShapefileLoader loader_;
-    mutable std::unordered_map<Punto, uint8_t, boost::hash<Punto>> m_cache;
 };
