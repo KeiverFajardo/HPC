@@ -11,6 +11,7 @@
 
 int main(int argc, char *argv[])
 {
+    GDALAllRegister();
     MPI_Init(&argc, &argv);
     init_mpi_datatypes();
 

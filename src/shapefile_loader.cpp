@@ -1,13 +1,12 @@
 #include "shapefile_loader.hpp"
 
+#include <gdal.h>
 #include <ogrsf_frmts.h>
 #include <stdexcept>
 
 ShapefileLoader::ShapefileLoader(const std::string& shapefile_path) {
-    GDALAllRegister();
-
-    std::unique_ptr<GDALDataset> dataset(
-        static_cast<GDALDataset*>(GDALOpenEx(shapefile_path.c_str(), GDAL_OF_VECTOR, nullptr, nullptr, nullptr))
+    GDALDataset *dataset = static_cast<GDALDataset*>(
+        GDALOpenEx(shapefile_path.c_str(), GDAL_OF_VECTOR, nullptr, nullptr, nullptr)
     );
 
     if (!dataset) {
@@ -30,26 +29,28 @@ ShapefileLoader::ShapefileLoader(const std::string& shapefile_path) {
             continue;
         }
 
-        std::string nombre = feature->GetFieldAsString("MUNICIPIO");
-        if (nombre.empty()) {
+        const char *nombre = feature->GetFieldAsString("MUNICIPIO");
+        if (nombre == nullptr || nombre[0] == '\0') {
             OGRFeature::DestroyFeature(feature);
             continue;
         }
 
         auto geom_clone = geometry->clone();
-        municipios_.push_back({nombre, geom_clone});
+        municipios_.push_back({std::string(nombre), geom_clone});
         nombre_to_id_[nombre] = next_id;
         ++next_id;
 
         OGRFeature::DestroyFeature(feature);
     }
+
+    GDALClose(dataset);
 }
 
 uint8_t ShapefileLoader::get_municipio(const Punto& punto) const {
     OGRPoint ogr_point(punto.lon, punto.lat);  // lon primero, luego lat
 
     for (uint8_t i = 0; i < municipios_.size(); ++i) {
-        const Municipio& m = municipios_[i];
+        const Municipio& m = municipios_.at(i);
         if (static_cast<OGRGeometry*>(m.geometria)->Contains(&ogr_point)) {
             return i;
         }
